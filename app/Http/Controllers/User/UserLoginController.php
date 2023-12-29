@@ -12,20 +12,31 @@ use Illuminate\Database\Query\Builder;
 class UserLoginController extends Controller
 {
     // protected $redirectTo = '/user/home';
+    /*check permission*/
     public function __construct()
     {
-        // $this->middleware('guest')->except('logout');
-        // $this->middleware('guest:users')->except('logout');
+        // $this->middleware('auth:users');
+        // $this->middleware('permission:create-account_type', ['only' => ['create', 'store']]);
+        // $this->middleware('permission:edit-account_type', ['only' => ['edit', 'update']]);
+        // $this->middleware('permission:delete-account_type', ['only' => ['destroy']]);
+        parent::__construct();
     }
 
     public function index()
     {
+    // dd(app()->getLocale());
         return view('front.home');
     }
 
     public function showLoginForm()
     {
-        return view('front.login', ['url' => 'admin']);
+        return view('front.login');
+    }
+
+    public function profile()
+    {
+        $data['user'] = Auth::user();
+        return view('front.profile',$data);
     }
 
     public function login(Request $request)

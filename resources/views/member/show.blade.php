@@ -89,7 +89,7 @@
                         </div>
                         @endif 
                     </div>
-                    <div class="float-start mt-4">
+                    <div class="float-start card-header-design mt-4">
                         <b>{{ __('Work Details') }}</b>
                     </div> 
                     <br> <br>

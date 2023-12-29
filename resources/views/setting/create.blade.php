@@ -147,7 +147,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card">
+                            {{-- <div class="card">
                                 <div class="card-header justify-content-between">
                                     <h4 class="card-title"><b>{{ __('Loan Setting') }}</b></h4>
                                 </div>
@@ -200,7 +200,7 @@
                                         <button type="submit" class="btn btn-primary me-1 mb-1">{{ __('Save') }}</button>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             {{-- <div class="card">
                                 <div class="card-header justify-content-between">

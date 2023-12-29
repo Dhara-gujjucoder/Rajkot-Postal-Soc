@@ -126,7 +126,7 @@
   display: inline-block;
   vertical-align: top;
   width: 100%;
-  background-color: #f9f9f9;
+  /* background-color: #f9f9f9; */
   padding: 7.5px 7.5px 3.75px;
   border: 1px solid #ddd;
   border-radius: 2.5px;
@@ -174,8 +174,8 @@
   font-weight: 500;
   margin-right: 3.75px;
   margin-bottom: 3.75px;
-  background-color: #00bcd4;
-  border: 1px solid #00a5bb;
+  background-color: rgba(8, 146, 1, 0.85);
+  border: 1px solid rgba(8, 146, 1, 1);
   color: #fff;
   word-break: break-all;
   box-sizing: border-box;

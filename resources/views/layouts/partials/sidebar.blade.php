@@ -125,7 +125,7 @@
                     </li>
                 @endcanany
 
-                @canany(['edit-general-setting', 'edit-loan-setting'])
+                @canany(['edit-general-setting', 'loaninterest-setting','share-amount-setting','monthly-saving-setting'])
                 <li
                     class="sidebar-item has-sub {{ request()->is('admin/general/setting/*') || request()->is('admin/loaninterest*') || request()->is('admin/shareamount*') || request()->is('admin/monthlysaving*') ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">

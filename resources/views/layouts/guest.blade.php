@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{__('Login')}} - {{'Rajkot Postal Soc.'}}</title>
 
-    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png')}}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset($setting->favicon) }}" type="image/x-icon">
     <link rel="shortcut icon"
-        href="{{ asset('assets/images/favicon.png')}}"
+        href="{{ asset($setting->favicon) }}"
         type="image/png">
     <link rel="stylesheet" href="{{asset('/assets/compiled/css/app.css')}}">
     <link rel="stylesheet" href="{{asset('/assets/compiled/css/app-dark.css')}}">
@@ -16,7 +16,7 @@
 
     <style>
         #auth #auth-right {
-            background: url("{{ asset('assets/images/logo.png')}}");
+            background: url("{{ asset($setting->logo) }}");
             background-repeat: no-repeat;
             background-position: center;
             background-size: 60%;
