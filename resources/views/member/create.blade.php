@@ -44,13 +44,23 @@
                                     @endif
                                 </div>
                             </div>
-
-                            <div class="col-md-12 col-12">
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="profile_picture">{{ __('Profile Picture') }}<span
+                                            class="text-danger">*</span></label>
+                                    <input type="file" id="profile_picture"
+                                        class="form-control  @error('profile_picture') is-invalid @enderror"
+                                        placeholder="{{ __('Profile Picture') }}" name="profile_picture">
+                                    @if ($errors->has('profile_picture'))
+                                        <span class="text-danger">{{ $errors->first('profile_picture') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12">
                                 <div class="row">
                                     <div class="col-md-2 form-check">
                                         <label for="Gender">{{ __('Gender') }}<span
-                                            class="text-danger">*</span><span
-                                                class="text-danger">*</span></label>
+                                            class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <div class="row ms-lg-5 p-2 ps-4">

@@ -10,7 +10,7 @@
                         data-offlabel="Gujarati" data-style="ios" {{ app()->getLocale() == 'en' ? 'checked' : ''}}>
                 </div>
                 <div class="user-image">
-                    <a href="{{ route('user.profile') }}"><img src="{{ asset('front/images/avtar-image.jpg') }}"
+                    <a href="{{ route('user.profile') }}"><img src="{{ Auth::user()->member->profile_picture ? asset(Auth::user()->member->profile_picture) : asset('front/images/avtar-image.jpg') }}"
                             alt=""></a>
                 </div>
                 <div id="cssmenu">

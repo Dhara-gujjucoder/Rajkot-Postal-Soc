@@ -12,7 +12,7 @@
                         <b>{{ __('Personal Details') }}</b>
                     </div>
                     <div class="float-end">
-                        <a href="{{ route('users.index') }}" class="btn btn-primary btn-sm">&larr; {{ __('Back') }}</a>
+                        <a href="{{ route('members.index') }}" class="btn btn-primary btn-sm">&larr; {{ __('Back') }}</a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -44,7 +44,23 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-md-12 col-12">
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="profile_picture">{{ __('Profile Picture') }}<span
+                                            class="text-danger">*</span></label>
+                                    <input type="file" id="profile_picture"
+                                        class="form-control  @error('profile_picture') is-invalid @enderror"
+                                        placeholder="{{ __('Profile Picture') }}" name="profile_picture">
+                                    @if ($errors->has('profile_picture'))
+                                        <span class="text-danger">{{ $errors->first('profile_picture') }}</span>
+                                    @endif
+                                    @if ($user->profile_picture)
+                                    <a href="{{ asset($user->profile_picture) }}" class="float-end"
+                                        target="_blank">{{ __('View') }}<i class="bi bi-eye-fill"></i></a>
+                                @endif
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12">
                                 <div class="row">
                                     <div class="col-md-2 form-check">
                                         <label for="Gender">{{ __('Gender') }}<span
@@ -73,6 +89,7 @@
                                     @endif
                                 </div>
                             </div>
+                         
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="email-id-column">{{ __('Email') }}</label>

@@ -67,7 +67,7 @@ class MemberController extends Controller
         $input = $request->all();
         $input['password'] = Hash::make($request->password);
         $input['is_member'] = '1';
-        $files = ['aadhar_card', 'pan_card',' department_id_proof','signature','witness_signature'];
+        $files = ['aadhar_card','profile_picture', 'pan_card',' department_id_proof','signature','witness_signature'];
         foreach ($files as $key => $value) {
             if ($request->has($value)) {
                 $image = $request->{$value};
@@ -131,7 +131,7 @@ class MemberController extends Controller
         } else {
             $input = $request->except('password');
         }
-        $files = ['aadhar_card', 'pan_card','department_id_proof','signature','witness_signature'];
+        $files = ['aadhar_card', 'pan_card','profile_picture','department_id_proof','signature','witness_signature'];
         foreach ($files as $key => $value) {
             if ($request->has($value)) {
                 $image = $request->{$value};
