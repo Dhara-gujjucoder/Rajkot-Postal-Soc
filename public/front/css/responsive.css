@@ -1,0 +1,57 @@
+@media (max-width: 1920px) {
+	#cssmenu{position: relative; width: 40px;}
+	#cssmenu ul{background:#089201; position:fixed; z-index:12; top:0px; left:-340px; width:340px; height:100%; overflow:auto;  transition: all 0.3s ease-in-out 0s; -moz-transition: all 0.3s ease-in-out 0s; -webkit-transition: all 0.3s ease-in-out 0s; -o-transition: all 0.3s ease-in-out 0s; }
+	#cssmenu ul.open{left:0;}
+	#cssmenu ul.open li a{color:#fff;}
+	#cssmenu ul ul, #cssmenu ul ul ul{padding:0; background:#333333; border:none; top:inherit; position:inherit; width:100%; height:auto;  overflow:inherit; left:inherit;
+	transition: none; -moz-transition: none; -webkit-transition: none; -o-transition: none; }
+	#cssmenu ul.open li{padding-right:0px;}
+	#cssmenu ul.open li a{display:inherit; padding:15px 15px;}
+	#cssmenu ul ul li a{margin-top: 0px; border-radius: 0px;}
+	#cssmenu ul.open ul li a{padding:14px 15px 14px 25px; color: #fff;}
+	#cssmenu ul.open li a:hover{background:#fff; color:#089201;}
+	#cssmenu ul.open li.active a{background:#fff; color:#089201;}
+	#cssmenu::after, #cssmenu > ul::after{content:none;}
+	#cssmenu #menu-button.menu-opened::after{transform:rotate(45deg); -moz-transform:rotate(45deg); -webkit-transform:rotate(45deg); -ms-transform:rotate(45deg); top:8px; background-color: #fff; }
+	#cssmenu #menu-button.menu-opened::before{right:3px; top:0px;  transform:rotate(-45deg); -moz-transform:rotate(-45deg); -webkit-transform:rotate(-45deg); -ms-transform:rotate(-45deg); border-top:none; border-color: #fff;}
+	#cssmenu > ul > li{margin:0px;}
+	#cssmenu > ul > li > a{border:none; border-radius:0px; line-height: normal;}
+	#cssmenu > ul > li.active > a:before{content:none;}
+	#cssmenu ul li a:after{content: none;}
+	#cssmenu #menu-button{z-index: 12; transition: all 0.3s ease-in-out 0s; -moz-transition: all 0.3s ease-in-out 0s; -webkit-transition: all 0.3s ease-in-out 0s; -o-transition: all 0.3s ease-in-out 0s; margin-top: -10px;}
+	#cssmenu ul ul {border-radius: 0px;}
+	#cssmenu ul ul li:hover > a, #cssmenu ul ul li a:hover, #cssmenu ul ul li.active a {background-color: transparent; color: #089201; }
+}
+
+
+@media (max-width: 1199px) {
+	
+}
+
+@media (max-width: 991px) {
+
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px)
+{	
+	
+}
+
+@media (max-width: 767px) {
+
+	#cssmenu ul{left:-86%; width:86%;}
+	.footer .container {padding-left: 0px; padding-right: 0px;}
+
+	.cor-img-pos {background-size: 100%; width: 100%;}
+
+}
+
+@media (max-width: 575px) {
+
+}
+
+@media (max-width: 479px) {
+
+}
+	
+img {max-width: 100%; height: auto;}
