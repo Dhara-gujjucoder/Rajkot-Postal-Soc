@@ -17,7 +17,7 @@
 
                             <div class="col-5">
                                 <input type="hidden" name="setting_name" value="share_amount">
-                                <input type="number" name="share_amount"
+                                <input type="number" step="any" name="share_amount"
                                     class="form-control @error('share_amount') is-invalid @enderror"
                                     placeholder="{{ __('Loan Interest') }}"
                                     value="{{ old('share_amount', isset($share_amount->share_amount) ? $share_amount->share_amount : '') }}">

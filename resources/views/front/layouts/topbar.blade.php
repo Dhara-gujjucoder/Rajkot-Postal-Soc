@@ -1,7 +1,7 @@
 <header class="header-bottom-borader position-fixed w-100">
     <div class="container">
         <div class="header-height d-flex align-items-center justify-content-between">
-            <div class="tab-logo"><a href="dashboard.html"><img src="{{ asset('front/images/logo.png') }}"
+            <div class="tab-logo"><a href="{{ route('user.home') }}"><img src="{{ asset('front/images/logo.png') }}"
                         alt="" /></a></div>
 
             <div class="topbar-right-sec">

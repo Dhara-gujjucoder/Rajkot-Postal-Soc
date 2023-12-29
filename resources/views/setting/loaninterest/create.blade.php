@@ -16,7 +16,7 @@
 
                             <div class="col-5">
                                 <input type="hidden" name="setting_name" value="loan_interest">
-                                <input type="number" name="loan_interest"
+                                <input type="number" step="any" name="loan_interest"
                                     class="form-control @error('loan_interest') is-invalid @enderror"
                                     placeholder="{{ __('Loan Interest') }}"
                                     value="{{ old('loan_interest', isset($setting->loan_interest) ? $setting->loan_interest : '') }}">

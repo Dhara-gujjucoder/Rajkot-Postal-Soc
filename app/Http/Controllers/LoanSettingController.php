@@ -27,7 +27,7 @@ class LoanSettingController extends Controller
         $data['loan_interest'] = LoanInterest::get();
         $data['share_amount'] = ShareAmount::get();
         $data['monthly_saving'] = MonthlySaving::get();
-        $data['page_title'] = __('Update Setting');
+        $data['page_title'] = __('Loan Interest');
         // dd($data['share_amount']);
         return view('setting.loaninterest.index', $data);
     }

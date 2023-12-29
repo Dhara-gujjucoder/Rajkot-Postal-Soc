@@ -8,6 +8,7 @@ use App\Models\Permission;
 use Illuminate\Http\Request;
 use App\Models\FinancialYear;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class HomeController extends Controller
 {
@@ -32,6 +33,7 @@ class HomeController extends Controller
     {
         $user = Auth::user();
         $user->syncPermissions();
+        // dd(Hash::make('rajkotpostalsoc12#'));
         //   dd($user->can('create-account_type'));
         $data['page_title'] = __('Dashboard');
         $data['total_members'] = Member::count();

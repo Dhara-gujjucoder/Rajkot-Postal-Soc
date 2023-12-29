@@ -15,7 +15,7 @@
                             <label class="col-2 col-form-label">{{ __('New Share Amount') }}</label>
                             <div class="col-5">
                                 <input type="hidden" name="setting_name" value="share_amount">
-                                <input type="number" name="share_amount"
+                                <input type="number" step="any" name="share_amount"
                                     class="form-control @error('share_amount') is-invalid @enderror"
                                     placeholder="{{ __('Share Amount') }}"
                                     value="{{ old('share_amount', isset($setting->share_amount) ? $setting->share_amount : '') }}">
