@@ -19,7 +19,7 @@ use App\Http\Controllers\User\UserLoginController;
 
 Route::get('/', function () {
     return view('front.login');
-});
+})->middleware(['guest:users']);
 
 /*users routes*/
 Route::prefix('user')->name('user.')->middleware(['guest:users'])->group(function () {
