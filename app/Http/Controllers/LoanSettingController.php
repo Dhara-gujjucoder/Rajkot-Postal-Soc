@@ -52,7 +52,7 @@ class LoanSettingController extends Controller
 
         $last = LoanInterest::latest()->first();
         if ($last) {
-            LoanInterest::query()->update(['is_active' => 0]);
+            LoanInterest::query()->update(['is_active' => false]);
             $last->update(['end_date' => date('Y-m-d H:i:s')]);
         }
         LoanInterest::create(['loan_interest' => $request->loan_interest, 'is_active' => 1, 'start_date' => date('Y-m-d H:i:s')]);
@@ -88,8 +88,8 @@ class LoanSettingController extends Controller
         // dd($request->all());
         $loan_interest = LoanInterest::where('id', $id)->first();
         if ($request->is_active == 1) {
-            LoanInterest::query()->where('is_active', 1)->update(['is_active' => 0, 'end_date' => date('Y-m-d H:i:s')]);
-            $loan_interest->update(['is_active' => 1]);
+            LoanInterest::query()->where('is_active', 1)->update(['is_active' => false, 'end_date' => date('Y-m-d H:i:s')]);
+            $loan_interest->update(['is_active' => true]);
         }
         $loan_interest->update(['loan_interest' => $request->loan_interest]);
         return redirect()->route('loaninterest.index')

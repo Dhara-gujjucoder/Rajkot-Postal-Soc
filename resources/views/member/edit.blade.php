@@ -89,7 +89,7 @@
                                     @endif
                                 </div>
                             </div>
-                         
+
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="email-id-column">{{ __('Email') }}</label>
@@ -182,6 +182,27 @@
                                     <b>{{ __('Work Details') }}</b>
                                 </div>
                             </div>
+
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="department">{{ __('Department') }}<span class="text-danger">*</span></label>
+                                    <select class="choices form-select @error('department_id') is-invalid @enderror" aria-label="Permissions" id="department_id" name="department_id" style="height: 210px;">
+                                        <option value="">{{__('Select Department')}}</option>
+
+                                        @forelse ($departments as $department)
+                                            <option value="{{ $department->id }}"
+                                                {{ $department->id == old('department_id',$user->department_id)  ? 'selected' : '' }}>
+                                                {{ $department->department_name }}
+                                            </option>
+                                        @empty
+                                        @endforelse
+                                    </select>
+                                        @if ($errors->has('department_id'))
+                                            <span class="text-danger">{{ $errors->first('department_id') }}</span>
+                                        @endif
+                                </div>
+                            </div>
+
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="company">{{ __('Company') }}<span class="text-danger">*</span></label>
@@ -250,8 +271,8 @@
                                     @endif
                                 </div>
                             </div> --}}
-                          
-                           
+
+
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="aadhar_card_no">{{ __('AadharCard No') }}<span
@@ -330,7 +351,7 @@
                                     <b>{{ __('Other Details') }}</b>
                                 </div>
                             </div>
-                           
+
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="nominee_name">{{ __('Nominee Name') }}<span
@@ -378,7 +399,7 @@
                                 <div class="float-start">
                                     <b>{{ __('Bank Details') }}</b>
                                 </div>
-                            </div>  
+                            </div>
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="saving_account_no">{{ __('Saving Account No') }}<span
@@ -401,7 +422,7 @@
                                         <span class="text-danger">{{ $errors->first('bank_name') }}</span>@endif
                                 </div>
                             </div>
-                           
+
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="ifsc_code">{{ __('IFSC code') }}</label>

@@ -34,7 +34,7 @@ class MonthlySavingController extends Controller
 
             $last = MonthlySaving::latest()->first();
             if($last){
-                MonthlySaving::query()->update(['is_active' => 0]);
+                MonthlySaving::query()->update(['is_active' => false]);
                 $last->update(['end_date'=> date('Y-m-d H:i:s')]);
             }
             MonthlySaving::create(['monthly_saving' => $request->monthly_saving,'is_active' => 1,'start_date' => date('Y-m-d H:i:s')]);
@@ -61,8 +61,8 @@ class MonthlySavingController extends Controller
     {
         $monthly_saving = MonthlySaving::where('id',$id)->first();
         if($request->is_active == 1){
-            MonthlySaving::query()->where('is_active',1)->update(['is_active' => 0,'end_date' => date('Y-m-d H:i:s')]);
-            $monthly_saving->update(['is_active' => 1]);
+            MonthlySaving::query()->where('is_active',1)->update(['is_active' => false,'end_date' => date('Y-m-d H:i:s')]);
+            $monthly_saving->update(['is_active' => true]);
         }
         $monthly_saving->update(['monthly_saving' => $request->monthly_saving]);
         return redirect()->route('monthlysaving.index')

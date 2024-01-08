@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AccountType;
+use App\Models\LedgerGroup;
 use Illuminate\Http\Request;
 use App\Models\LedgerAccount;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +14,6 @@ class LedgerAccountController extends Controller
     /*check permission*/
     public function __construct()
     {
-      
         $this->middleware('auth');
         $this->middleware('permission:create-ledger_account|edit-ledger_account|delete-ledger_account|view-ledger_account', ['only' => ['index','show']]);
         $this->middleware('permission:create-ledger_account', ['only' => ['create','store']]);
@@ -28,7 +28,7 @@ class LedgerAccountController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $data['ledger_accounts'] = LedgerAccount::orderBy('id','DESC')->paginate(10);
+        $data['ledger_accounts'] = LedgerAccount::orderBy('id','ASC')->get();
         $data['page_title']= __('View Ledger Accounts');
         return view('ledger_account.index', $data);
     }
@@ -40,7 +40,7 @@ class LedgerAccountController extends Controller
     {
         return view('ledger_account.create', [
             'page_title'=> __('Add New Ledger Account'),
-            'account_types' => AccountType::get()
+            'ledger_groups' => LedgerGroup::get()
         ]);
     }
 
@@ -51,9 +51,10 @@ class LedgerAccountController extends Controller
     {
         // dd($request->all());
         $request->validate([
-            'account_name' => 'required|string|max:255',
+            'account_name' => 'required|string|max:255|unique:ledger_accounts,account_name',
+            'ledger_group_id' => 'required',
         ]);
-        LedgerAccount::create(['account_name' => $request->account_name,'account_type_id' => $request->account_type_id,'created_by' => Auth::user()->id]);
+        LedgerAccount::create(['ledger_group_id' => $request->ledger_group_id,'account_name' => $request->account_name,'created_by' => Auth::user()->id]);
         return redirect()->route('ledger_account.index')
                 ->withSuccess(__('New Ledger Account is added successfully.'));
     }
@@ -74,7 +75,7 @@ class LedgerAccountController extends Controller
         $ledger_account = LedgerAccount::findOrFail($id);
         return view('ledger_account.edit', [
             'ledger_account'=> $ledger_account,
-            'account_types' => AccountType::get(),
+            'ledger_groups' => LedgerGroup::get(),
             'page_title'=> __('Edit Ledger Account')
         ]);
     }
@@ -84,8 +85,8 @@ class LedgerAccountController extends Controller
      */
     public function update(Request $request,LedgerAccount $ledger_account): RedirectResponse
     {
-        $request->validate(['account_name'=>'required|string|max:255']);
-        $input = $request->only('account_name','account_type_id');
+        $request->validate(['ledger_group_id' => 'required','account_name'=>'required|string|max:255|unique:ledger_accounts,account_name,' . $ledger_account->id]);
+        $input = $request->only('ledger_group_id','account_name','account_type_id');
         $ledger_account->update($input);
         return redirect()->route('ledger_account.index')
                 ->withSuccess(__('Ledger Account is updated successfully.'));

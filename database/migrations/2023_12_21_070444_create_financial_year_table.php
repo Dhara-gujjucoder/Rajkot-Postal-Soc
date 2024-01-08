@@ -13,10 +13,13 @@ return new class extends Migration
     {
         Schema::create('financial_year', function (Blueprint $table) {
             $table->id();
-            $table->integer('year');
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->boolean('is_selected')->default(0);	
+            $table->string('title');
+            $table->string('start_year');
+            $table->string('start_month');
+            $table->string('end_year');
+            $table->string('end_month');
+            $table->boolean('status')->default(1);	
+            $table->boolean('is_current')->default(0);	
             $table->timestamps();
         });
     }

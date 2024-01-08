@@ -10,9 +10,9 @@
                 <div class="card-header">
                     <div class="float-start">
                         <b>{{ __('Personal Details') }}</b>
-                    </div> 
+                    </div>
                     <div class="float-end">
-                        <a href="{{ route('users.index') }}" class="btn btn-primary btn-sm">&larr; {{ __('Back') }}</a>
+                        <a href="{{ route('members.index') }}" class="btn btn-primary btn-sm">&larr; {{ __('Back') }}</a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -65,7 +65,7 @@
                             {{ $user->whatsapp_no }}
                         </div>
                     </div>
-                  
+
                     <div class="mb-3 row">
                         <label for="email"
                             class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Current Address') }}:</strong></label>
@@ -87,12 +87,21 @@
                             <div class="col-md-6" style="line-height: 35px;">
                             <a href="{{ asset($user->signature) }}" target="_blank" >{{ __('View') }}<i class="bi-eye-fill"></i> </a>
                         </div>
-                        @endif 
+                        @endif
                     </div>
                     <div class="float-start card-header-design mt-4">
                         <b>{{ __('Work Details') }}</b>
-                    </div> 
+                    </div>
                     <br> <br>
+
+                    <div class="mb-3 row">
+                        <label for="email"
+                            class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Department') }}:</strong></label>
+                        <div class="col-md-6" style="line-height: 35px;">
+                            {{ $user->DepartmentName->department_name }}
+                        </div>
+                    </div>
+
                     <div class="mb-3 row">
                         <label for="email"
                             class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Company') }}:</strong></label>
@@ -123,7 +132,7 @@
                     </div>
                     <div class="float-start mt-4">
                         <b>{{ __('Document Details') }}</b>
-                    </div> 
+                    </div>
                     <br> <br>
                     <div class="mb-3 row">
                         <label for="email"
@@ -160,16 +169,16 @@
                     <div class="mb-3 row">
                         <label for="email"
                             class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Departmental ID Proof') }}:</strong></label>
-                       
+
                             @if($user->department_id_proof)
                             <div class="col-md-6" style="line-height: 35px;">
                             <a href="{{ asset($user->department_id_proof) }}" target="_blank" >{{ __('View') }}<i class="bi-eye-fill"></i> </a>
                         </div>
-                        @endif   
+                        @endif
                     </div>
                     <div class="float-start mt-4">
                         <b>{{ __('Other Details') }}</b>
-                    </div> 
+                    </div>
                     <br> <br>
                     <div class="mb-3 row">
                         <label for="email"
@@ -186,20 +195,20 @@
                         </div>
                     </div>
                     <div class="mb-3 row">
-                        <label for="email" 
+                        <label for="email"
                             class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Witness Signature') }}:</strong></label>
                         @if($user->witness_signature)
                             <div class="col-md-6" style="line-height: 35px;">
                             <a href="{{ asset($user->witness_signature) }}" target="_blank" >{{ __('View') }}<i class="bi-eye-fill"></i></a>
                         </div>
-                        @endif 
+                        @endif
                     </div>
 
                     <div class="float-start mt-4">
                         <b>{{ __('Bank Details') }}</b>
-                    </div> 
+                    </div>
                     <br> <br>
-                   
+
                     <div class="mb-3 row">
                         <label for="email"
                             class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Bank Name') }}:</strong></label>

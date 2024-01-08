@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\LoanController;
 use App\Http\Controllers\User\UserLoginController;
 
 /*
@@ -29,6 +30,8 @@ Route::prefix('user')->name('user.')->middleware(['guest:users'])->group(functio
 Route::prefix('user')->name('user.')->middleware(['auth:users'])->group(function () {
     Route::get('/home', [UserLoginController::class, 'index'])->name('home');
     Route::get('/profile', [UserLoginController::class, 'profile'])->name('profile');
+    Route::get('/loan/apply', [LoanController::class, 'apply'])->name('loan.apply');
+    Route::get('/loan/calculator', [LoanController::class, 'calculator'])->name('loan.calculator');
     Route::post('/logout', [UserLoginController::class, 'logout'])->name('logout');
     
     Route::get('locale/{locale}', function ($lang) {

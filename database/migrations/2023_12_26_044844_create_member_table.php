@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('company');
             $table->string('designation');
             $table->string('gender');
-            // $table->integer('age');
+            $table->string('profile_picture')->nullable();
             $table->string('mobile_no');
             $table->string('whatsapp_no')->nullable();
             $table->string('aadhar_card_no')->nullable();
@@ -37,7 +37,7 @@ return new class extends Migration
             $table->longText('branch_address')->nullable();
             $table->date('birthdate')->nullable();
             $table->string('bank_name')->nullable();
-            // $table->string('place');
+            $table->boolean('status')->default(1);
             $table->string('signature')->nullable();;
             $table->string('witness_signature')->nullable();;
             $table->timestamps();

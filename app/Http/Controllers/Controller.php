@@ -19,7 +19,8 @@ class Controller extends BaseController
     {
         // Fetch the Site Settings object
         $this->financial_year = FinancialYear::get();
-        $this->current_year = $this->financial_year->where('is_selected',1)->first();
+        // $current_year = $this->financial_year->where('is_current',1)->first();
+        $this->current_year = $this->financial_year->where('is_current',1)->first();
         $this->setting =  Setting::get()->first();
         // dd( $this->financial_year );
         $data = array(

@@ -14,7 +14,9 @@ class Authenticate extends Middleware
     protected function redirectTo(Request $request): ?string
     {
         // dd(Auth::user());
-        // dd('df');
+        if(request()->is('user/*')){
+            return route('user.login');
+        }
         return $request->expectsJson() ? null : route('login');
     }
 }

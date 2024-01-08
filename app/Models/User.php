@@ -77,4 +77,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Member::class);
     }
+    
+    public function getFullnameAttribute()
+    {
+        return $this->name. ' ( '.$this->member->registration_no.' )';
+    }
 }

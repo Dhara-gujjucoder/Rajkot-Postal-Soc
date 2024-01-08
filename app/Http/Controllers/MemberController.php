@@ -6,6 +6,10 @@ use App\Models\Role;
 use App\Models\User;
 use App\Models\Member;
 use Illuminate\View\View;
+use App\Models\Department;
+use App\Models\AccountType;
+use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -24,28 +28,68 @@ class MemberController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        // $this->middleware('permission:create-member|edit-member|delete-member|view-member', ['only' => ['index', 'show']]);
-        // $this->middleware('permission:create-member', ['only' => ['create', 'store']]);
-        // $this->middleware('permission:edit-member', ['only' => ['edit', 'update']]);
-        // $this->middleware('permission:delete-member', ['only' => ['destroy']]);
-        // $this->middleware('permission:view-member', ['only' => ['show', 'index']]);
+        $this->middleware('permission:create-member|edit-member|delete-member|view-member', ['only' => ['index', 'show']]);
+        $this->middleware('permission:create-member', ['only' => ['create', 'store']]);
+        $this->middleware('permission:edit-member', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:delete-member', ['only' => ['destroy']]);
+        $this->middleware('permission:view-member', ['only' => ['show', 'index']]);
         parent::__construct();
     }
 
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request)
     {
-        // $user = Auth::user();
-        // $user->syncPermissions(['create-member',
-        // 'edit-member',
-        // 'delete-member',
-        // 'view-member']);
-        return view('member.index', [
-            'members' => User::usermember()->latest('id')->paginate(10),
-            'page_title' => __('View Members')
-        ]);
+        $data['page_title'] = __('View Members');
+        $data['departments'] = 1;
+        $data['members'] = Member::orderBy('uid', 'DESC')->get();
+        if ($request->ajax()) {
+            $data = User::usermember()->with('member')->orderBy('id','DESC');
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $show_btn = '<a href="'.route('members.show', $row->member->id).'"
+                    class="btn btn-outline-info btn-sm"><i class="bi bi-eye"></i>'.__('Show').'</a>';
+                    $edit_btn = '<a href="'.route('members.edit', $row->member->id).'"
+                    class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square"></i>'.__('Edit').'</a>';
+                    $delete_btn = '<form action="'.route('members.destroy', $row->member->id).'" method="post"><button type="submit" class="btn btn-outline-danger btn-sm"
+                    onclick="return confirm('.__('Do you want to delete this salary deduction?').';"><i class="bi bi-trash"></i>'.__('Delete').'</button></form>';
+                    $action_btn = '';
+                    (Auth::user()->can('view-member')) ? $action_btn.= $show_btn : '';
+                    (Auth::user()->can('edit-member')) ? $action_btn.= $edit_btn : '';
+                    (Auth::user()->can('delete-member')) ? $action_btn.= $delete_btn : '';
+                    return $action_btn;
+                })
+                ->filterColumn('name', function($query, $search) {
+                    $query->where('id',$search);
+                })
+                ->filterColumn('registration_no', function($query, $search) {
+                    $query->whereHas('member',function($q) use ($search) {
+                        $q->where('registration_no',$search);
+                    });
+                })
+                ->orderColumn('registration_no', function($query, $order) {
+                    // $sql = "CONCAT(users.first_name,'-',users.last_name)  like ?";
+                    $query->whereHas('member',function($q) use ($order) {
+                        $q->orderBy('registration_no', $order);
+                    });
+                })
+
+                ->editColumn('registration_no', function($row){
+                    return $row->member->registration_no;
+                })
+                ->addColumn('roles', function($row){
+                    $roles = '';
+                     foreach ($row->getRoleNames()->all() as $key => $value) {
+                        $roles.= '<span class="badge bg-primary">'.$value.'</span>';
+                     }
+                     return $roles;
+                })
+                ->rawColumns(['action','roles'])
+                ->make(true);
+        }
+        return view('member.index', $data);
     }
 
     /**
@@ -54,6 +98,7 @@ class MemberController extends Controller
     public function create(): View
     {
         return view('member.create', [
+            'departments' => Department::get(),
             'roles' => Role::pluck('name')->all(),
             'page_title' => __('Add Member')
         ]);
@@ -79,10 +124,11 @@ class MemberController extends Controller
         $user = User::create($input);
         $user->assignRole(['user']);
         $input['user_id'] = $user->id;
-
+        $input['uid'] = Member::latest()->pluck('uid')->first() ? Member::latest()->pluck('uid')->first()+1 : 1;
+        $input['status'] = 1;
         unset($input['name'],$input['email'],$input['search_terms'],$input['password'],$input['is_member']);
         Member::create($input);
-       
+
         return redirect()->route('members.index')
             ->withSuccess(__('New member is added successfully.'));
     }
@@ -112,6 +158,7 @@ class MemberController extends Controller
         }
 
         return view('member.edit', [
+            'departments' => Department::get(),
             'user' => $member,
             'roles' => Role::pluck('name')->all(),
             'memberRoles' => $user->roles->pluck('name')->all(),

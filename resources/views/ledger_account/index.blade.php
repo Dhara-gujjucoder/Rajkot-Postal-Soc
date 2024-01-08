@@ -7,19 +7,22 @@
             @can('create-role')
                 <a href="{{ route('ledger_account.create') }}" class="btn btn-outline-success btn-md  float-end my-3"><i class="bi bi-plus-circle"></i> {{__('Add New Ledger Account')}}</a>
             @endcan
-            <table class="table table-bordered">
+            <div class="pt-4 mt-5">
+            <table class="table table-bordered" id="table1">
                 <thead>
                     <tr>
-                        <th scope="col">S#</th>
+                        <th scope="col">{{ __('No.') }}</th>
                         <th scope="col">{{__('Name')}}</th>
+                        <th scope="col">{{__('Ledger Group')}}</th>
                         <th scope="col" style="width: 250px;">{{__('Action')}}</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($ledger_accounts as $key => $ledger_account)
                         <tr>
-                            <th scope="row">{{ ($ledger_accounts->currentPage()>1) ? ($key+1)+$ledger_accounts->perPage() : $key+1 }}</th>
+                            <th scope="row">{{  ($key+1) }}</th>
                             <td>{{ $ledger_account->account_name }}</td>
+                            <td>{{ $ledger_account->LedgerGroupId->type_name ?? '' }}</td>
                             <td>
                                 <form action="{{ route('ledger_account.destroy', $ledger_account->id) }}" method="post">
                                     @csrf
@@ -51,10 +54,17 @@
                     @endforelse
                 </tbody>
             </table>
-
-            {{ $ledger_accounts->links() }}
+            </div>
 
         </div>
     </div>
 </section>
 @endsection
+@push('script')
+<script>
+    $(function() {
+        var table = $('#table1').DataTable({
+        });
+    });
+</script>
+@endpush

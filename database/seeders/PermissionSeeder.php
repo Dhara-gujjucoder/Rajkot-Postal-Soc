@@ -36,9 +36,34 @@ class PermissionSeeder extends Seeder
             // 'edit-member',
             // 'delete-member',
             // 'edit-general-setting',
-            'loaninterest-setting',
-            'share-amount-setting',
-            'monthly-saving-setting'
+            // 'loaninterest-setting',
+            // 'share-amount-setting',
+            // 'monthly-saving-setting',
+
+            // 'view-salary_deduction',
+            // 'create-salary_deduction',
+            // 'edit-salary_deduction',
+            // 'delete-salary_deduction',
+
+            // 'create-financial_year',
+            // 'edit-financial_year',
+            // 'delete-financial_year',
+            // 'view-financial_year'
+
+            // 'create-ledger_entries',
+            // 'edit-ledger_entries',
+            // 'delete-ledger_entries',
+            // 'view-ledger_entries'
+
+            // 'create-ledger_group',
+            // 'edit-ledger_group',
+            // 'delete-ledger_group',
+            // 'view-ledger_group'
+
+            'create-department',
+            'edit-department',
+            'delete-department',
+            'view-department'
         ];
 
         // Looping and Inserting Array's Permissions into Permission Table

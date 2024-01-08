@@ -4,16 +4,17 @@
             <li class="menu-item  has-sub ">
                 <a href="#" class="menu-link">
                     <span><i class="bi bi-calendar-date"></i> {{ __('Financial Year') }} :
-                        {{ $current_year->year }}</span>
+                        {{ $current_year->title ?? ''}}</span>
                 </a>
                 <div class="submenu">
+                    
                     <!-- Wrap to submenu-group-wrapper if you want 3-level submenu. Otherwise remove it. -->
                     <div class="submenu-group-wrapper">
                         <ul class="submenu-group">
                             @foreach ($financial_year as $year)
                                 <li class="submenu-item {{ $current_year->id == $year->id ? 'active' : '' }}">
                                     <a href="{{ route('financial_year.change', $year->id) }}"
-                                        class="submenu-link">{{ $year->year }}</a>
+                                        class="submenu-link">{{ $year->title }}</a>
                                 </li>
                             @endforeach
                         </ul>
@@ -36,7 +37,7 @@
                     </div>
                 </div>
             </li>
-           
+
         </ul>
     </div>
 </nav>

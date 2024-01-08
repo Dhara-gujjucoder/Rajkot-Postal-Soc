@@ -17,14 +17,14 @@
             </a>
         </div>
         <div class="desh-listbox bluebg-box wow fadeInRight" data-wow-delay="0.4s">
-            <a href="loan-account.html">
+            <a href="{{ route('user.loan.apply') }}">
                 <div class="dash-box-title">{{ __('Loan Account') }}</div>
                 <div class="dash-icon"><img src="{{ asset('front/images/pig-money.svg') }}" alt="">
                 </div>
             </a>
         </div>
         <div class="desh-listbox orangebg-box wow fadeInLeft" data-wow-delay="0.4s">
-            <a href="loan-calculator.html">
+            <a href="{{ route('user.loan.calculator') }}">
                 <div class="dash-box-title">{{ __('Loan Calculator') }}</div>
                 <div class="dash-icon"><img src="{{ asset('front/images/calculator.svg') }}" alt=""></div>
             </a>

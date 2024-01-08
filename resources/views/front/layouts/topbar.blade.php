@@ -18,8 +18,8 @@
                         <li><a href="{{ route('user.home') }}">{{__('Dashboard')}}</a></li>
                         <li><a href="{{ route('user.profile') }}">{{__('My Profile')}}</a></li>
                         <li><a href="my-account.html">{{__('My Account')}}</a></li>
-                        <li><a href="loan-account.html">{{__('Loan Account')}}</a></li>
-                        <li><a href="loan-calculator.html">{{__('Loan Calculator')}}</a></li>
+                        <li><a href="{{ route('user.loan.apply') }}">{{__('Loan Account')}}</a></li>
+                        <li><a href="{{ route('user.loan.calculator') }}">{{__('Loan Calculator')}}</a></li>
                         <li>
                             <a href="{{ route('user.logout') }}" data-bs-toggle="tooltip" data-bs-placement="top"
                                 title="Logout"

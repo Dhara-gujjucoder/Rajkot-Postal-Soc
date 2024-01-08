@@ -31,6 +31,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        getYearDropDown(1);
         $user = Auth::user();
         $user->syncPermissions();
         // dd(Hash::make('rajkotpostalsoc12#'));

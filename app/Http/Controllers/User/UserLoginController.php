@@ -48,6 +48,7 @@ class UserLoginController extends Controller
             ->whereExists(function (Builder $q) use ($request) {
                 $q->select(DB::raw(1))
                     ->from('members')
+                    ->where('members.status',1)
                     ->whereColumn('members.user_id', 'users.id')
                     ->where('members.registration_no', $request->registration_no);
             })

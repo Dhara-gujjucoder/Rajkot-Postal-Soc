@@ -10,75 +10,107 @@
                 <a href="{{ route('members.create') }}" class="btn btn btn-outline-success btn-md  float-end my-3"><i
                         class="bi bi-plus-circle"></i> {{ __('Add New Member') }}</a>
             @endcan
-            <table class="table table-bordered">
+            <div class="pt-4 mt-5">
+                <div class="form">
+                    <div class="row mb-3" id="filter">
+                        <div class="col-md-4">
+                            <label for="account_name" class="col-md-2 col-form-label">{{ __('Member') }}</label>
+                            <div class="col-md-12">
+                                <select class="choices filter-input form-select @error('user_id') is-invalid @enderror"
+                                    aria-label="Permissions" id="user_id" data-column="1" name="user_id"
+                                    style="height: 210px;">
+                                    <option value="">{{ __('Member') }}</option>
+                                    @forelse ($members as $key => $member)
+                                    <option value="{{ $member->user_id }}"
+                                        {{ $member->user_id == old('user_id') ? 'selected' : '' }}>
+                                        {{ $member->fullname }}
+                                    </option>
+                                @empty
+                                @endforelse
+                                </select>
+                                @if ($errors->has('user_id'))
+                                    <span class="text-danger">{{ $errors->first('user_id') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <table class="table table-bordered" id="table1">
                 <thead>
                     <tr>
                         <th scope="col">S#</th>
                         <th scope="col">{{ __('Name') }}</th>
                         <th scope="col">{{ __('Email') }}</th>
+                        <th scope="col">{{ __('Registration No.') }}</th>
                         <th scope="col">{{ __('Roles') }}</th>
                         <th scope="col">{{ __('Action') }}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($members as $member)
-                        <tr>
-                            <th scope="row">{{ $loop->iteration }}</th>
-                            <td>{{ $member->name }}</td>
-                            <td>{{ $member->email }}</td>
-                            <td>
-                                @forelse ($member->getRoleNames() as $role)
-                                    <span class="badge bg-primary">{{ $role }}</span>
-                                @empty
-                                @endforelse
-                            </td>
-                            <td>
-                                <form action="{{ route('members.destroy', $member->member->id) }}" method="post">
-                                    @csrf
-                                    @method('DELETE')
-                                    <a href="{{ route('members.show', $member->member->id) }}"
-                                        class="btn btn-outline-info btn-sm"><i class="bi bi-eye"></i>
-                                        {{ __('Show') }}</a>
-
-                                    @if (in_array('Super Admin', $member->getRoleNames()->toArray() ?? []))
-                                        {{-- @if (Auth::member()->hasRole('Admin'))
-                                            <a href="{{ route('members.edit', $member->id) }}"
-                                                class="btn btn-primary btn-sm"><i class="bi bi-pencil-square"></i>
-                                                Edit</a>
-                                        @endif --}}
-                                    @else
-                                        @can('edit-member')
-                                            <a href="{{ route('members.edit', $member->member->id) }}"
-                                                class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square"></i>
-                                                {{ __('Edit') }}</a>
-                                        @endcan
-
-                                        @can('delete-member')
-                                            @if (Auth::user()->id != $member->id)
-                                                <button type="submit" class="btn btn-outline-danger btn-sm"
-                                                    onclick="return confirm(`{{ __('Do you want to delete this members?') }}`);"><i
-                                                        class="bi bi-trash"></i> {{ __('Delete') }}</button>
-                                            @endif
-                                        @endcan
-                                    @endif
-
-
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <td colspan="5">
-                            <span class="text-danger">
-                                <strong>No User Found!</strong>
-                            </span>
-                        </td>
-                    @endforelse
+                   
                 </tbody>
             </table>
-
-            {{ $members->links() }}
-
+            </div>
         </div>
     </div>
 </section>
 @endsection
+@push('script')
+<script>
+    $(function() {
+
+        var table = $('#table1').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('members.index') }}",
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'name',
+                    name: 'name',
+                    searchable: true
+                },
+                {
+                    data: 'email',
+                    name: 'email',
+                    searchable: true
+                },
+                {
+                    data: 'registration_no',
+                    name: 'registration_no'
+                },
+                {
+                    data: 'roles',
+                    name: 'roles',
+                    searchable: false
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false
+                },
+            ],
+
+        });
+        $('#dept_id').on('change', function() {
+            table
+                .columns($(this).data('column'))
+                .search($(this).val())
+                .draw();
+        });
+        $('#user_id').on('change', function() {
+            table
+                .columns($(this).data('column'))
+                .search($(this).val())
+                .draw();
+        });
+
+    });
+</script>
+@endpush
+

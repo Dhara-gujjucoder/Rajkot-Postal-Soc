@@ -36,10 +36,10 @@ class ShareAmountController extends Controller
 
             $last = ShareAmount::latest()->first();
             if($last){
-                ShareAmount::query()->update(['is_active' => 0]);
+                ShareAmount::query()->update(['is_active' => false]);
                 $last->update(['end_date'=> date('Y-m-d H:i:s')]);
             }
-            ShareAmount::create(['share_amount' => $request->share_amount,'is_active' => 1,'start_date' => date('Y-m-d H:i:s')]);
+            ShareAmount::create(['share_amount' => $request->share_amount,'is_active' => true,'start_date' => date('Y-m-d H:i:s')]);
         
         return redirect()->route('shareamount.index')
         ->withSuccess(__('Setting is updated successfully.'));
@@ -62,8 +62,8 @@ class ShareAmountController extends Controller
     {
         $share_amount = ShareAmount::where('id',$id)->first();
         if($request->is_active == 1){
-            ShareAmount::query()->where('is_active',1)->update(['is_active' => 0,'end_date' => date('Y-m-d H:i:s')]);
-            $share_amount->update(['is_active' => 1]);
+            ShareAmount::query()->where('is_active',true)->update(['is_active' => false,'end_date' => date('Y-m-d H:i:s')]);
+            $share_amount->update(['is_active' => true]);
         }
         $share_amount->update(['share_amount' => $request->share_amount]);
         return redirect()->route('shareamount.index')

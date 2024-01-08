@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('ledger_accounts', function (Blueprint $table) {
             $table->id();
             $table->string('account_name');
-            $table->string('account_type_id');
             $table->string('created_by');
             $table->string('status')->default('Active');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -182,7 +182,25 @@ return [
         'bank_name' => 'બેંકનું નામ',
         'ifsc_code' =>'IFSC કોડ',
         'branch_address' =>'બ્રાંચનું સરનામું',
-        'birthdate' =>'જન્મતારીખ'
+        'birthdate' =>'જન્મતારીખ',
+        'account_type_id' => 'વિભાગ ખાતું',
+        'user_id' => "વપરાશકર્તા",
+        'month' => 'માસ',
+        'rec_no' => 'રેક નંબર',
+        'principal' => 'કિંમત',
+        'interest' => 'વ્યાજ',
+        'fixed' => 'નિયત માસિક બચત',
+        'total_amount' => 'કુલ રકમ',
+        'start_year' => 'પ્રારંભ વર્ષ',
+        'end_year' => 'અંત વર્ષ',
+        'start_month' => 'પ્રારંભ મહિનો',
+        'end_month' => 'અંત મહિનો',
+        'type_name' => 'નામ',
+        'account_name' => 'ખાતાનું નામ',
+        'ledger_group_id' => 'ખાતાવહી જૂથ',
+        'department_name' => 'વિભાગનું નામ',
+       
+
 
     ],
     'recaptcha' => 'La verificación de reCAPTCHA falló. Asegúrese de no ser un robot completando correctamente el desafío reCAPTCHA.',
