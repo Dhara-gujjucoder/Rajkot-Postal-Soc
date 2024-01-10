@@ -25,7 +25,7 @@
                                 <div class="form-group">
                                     <label for="ledger_ac_id">{{ __('Ledger') }}<span class="text-danger">*</span></label>
                                         <select class="choices form-select @error('ledger_ac_id') is-invalid @enderror" aria-label="Permissions" id="ledger_ac_id" name="ledger_ac_id" style="height: 210px;" ">
-                                            <option value="">{{ __('--Select Ledger--') }}</option>
+                                            <option value="">{{ __('Select Ledger') }}</option>
                                             @foreach ($ledgers as $ledger)
                                                 <option value="{{ $ledger->id }}">{{ $ledger->account_name }}</option>
                                             @endforeach

@@ -17,4 +17,9 @@ class Department extends Model
     {
         return $this->belongsTo(LedgerGroup::class, 'ledger_group_id', 'id');
     }
+
+    public function members()
+    {
+        return $this->hasMany(Member::class, 'department_id', 'id');
+    }
 }

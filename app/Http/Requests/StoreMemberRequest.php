@@ -46,6 +46,13 @@ class StoreMemberRequest extends FormRequest
             'bank_name' => 'nullable',
             'ifsc_code' =>'nullable',
             'branch_address' =>'nullable',
+
+            'profile_picture' => 'max:2048',
+            'signature' => 'max:2048',
+            'aadhar_card' => 'max:2048',
+            'pan_card' => 'max:2048',
+            'department_id_proof' => 'max:2048',
+            'witness_signature' => 'max:2048',
         ];
     }
 }

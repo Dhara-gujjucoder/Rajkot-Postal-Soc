@@ -4,7 +4,7 @@
 <section class="page-content">
     <div class="card">
         <div class="card-body">
-            @can('create-role')
+            @can('create-department')
                 <a href="{{ route('department.create') }}" class="btn btn-outline-success btn-md  float-end my-3"><i class="bi bi-plus-circle"></i> {{__('Add New Department')}}</a>
             @endcan
             <div class="pt-4 mt-5">

@@ -73,9 +73,7 @@ class SalaryDeductionController extends Controller
                     // return $rr;
                     return  date('M-Y',strtotime('01-'.$month[0].'-'.$month[1]));
                 })
-                ->editColumn('ledger_ac_id', function($row){
-                    return $row->ledger_account->account_name;
-                })
+            
                 ->orderColumn('name', function($query, $order) {
                     $query->whereHas('user',function($q) use ($order) {
                         $q->orderBy('name', $order);
@@ -96,6 +94,7 @@ class SalaryDeductionController extends Controller
             // 'departments' => AccountType::get(),
             'ledgers' => LedgerAccount::get(),
             'members' => Member::orderBy('uid', 'DESC')->get(),
+          
             'page_title' => __('Add New')
         ]);
     }
@@ -209,7 +208,7 @@ class SalaryDeductionController extends Controller
 
         Excel::import($import, $request->file('salary_import'));
         // Excel::import($import,  $request->file('salary_import'));
-        // dd($import->un);
+        dd($import->un);
 
         return redirect()->route('salary_deduction.index')
             ->withSuccess(__('Salary Deduction Imported successfully.'));

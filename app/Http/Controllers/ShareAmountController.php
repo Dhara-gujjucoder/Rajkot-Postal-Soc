@@ -60,6 +60,7 @@ class ShareAmountController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $request->validate(['share_amount' => 'required']);
         $share_amount = ShareAmount::where('id',$id)->first();
         if($request->is_active == 1){
             ShareAmount::query()->where('is_active',true)->update(['is_active' => false,'end_date' => date('Y-m-d H:i:s')]);

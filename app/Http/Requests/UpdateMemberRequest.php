@@ -25,10 +25,11 @@ class UpdateMemberRequest extends FormRequest
         return [
             'name' => 'required|string|max:250',
             'email' => 'required|string|max:250|unique:users,email,' . $this->member->user->id,
+            'department_id' => 'required',
             'company' => 'required',
             'salary'=> 'required',
             'designation' => 'required',
-            'birthdate' => 'required', 
+            'birthdate' => 'required',
             'whatsapp_no' => 'numeric',
             'aadhar_card_no' => 'required',
             'pan_no' => 'required',
@@ -41,7 +42,14 @@ class UpdateMemberRequest extends FormRequest
             'saving_account_no' => 'nullable|numeric',
             'bank_name' => 'nullable|string',
             'ifsc_code' =>'nullable',
-            'branch_address' =>'nullable'
+            'branch_address' =>'nullable',
+
+            'profile_picture' => 'max:2048',
+            'signature' => 'max:2048',
+            'aadhar_card' => 'max:2048',
+            'pan_card' => 'max:2048',
+            'department_id_proof' => 'max:2048',
+            'witness_signature' => 'max:2048',
         ];
     }
 }

@@ -63,7 +63,7 @@
             <img src="{{ asset('front/images/logo.png') }}" alt="" />
             <div class="coming-soon-text">
                 <p>Webportal Launching Soon</p>
-                @if (Route::has('login'))
+                {{-- @if (Route::has('login'))
                 <div class="">
                     @auth
                         <a href="{{ route('user.home') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Home</a>
@@ -72,7 +72,7 @@
 
                     @endauth
                 </div>
-            @endif
+            @endif --}}
             </div>
         </div>
     </div>

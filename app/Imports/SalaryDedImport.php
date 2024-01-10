@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Models\AccountType;
 use App\Models\LedgerAccount;
+use App\Models\LedgerGroup;
 use App\Models\Member;
 use App\Models\SalaryDeduction;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -18,7 +19,17 @@ class SalaryDedImport implements ToModel,WithMultipleSheets,WithHeadingRow, Skip
     public $un = [];
     public $month;
     public $year;
-    
+    public function getdept_id($id){
+        $deps = [
+             'HO'=>'1',
+             'RO'=>'2',
+             'SRM' => '3',
+             'CIVIL WING' => '4',
+             'OTHERS'=>'6'
+
+        ];
+        return $deps[$id];
+    }
     public function model(array $row)
     {
         $not_inserted[] = '';
@@ -28,27 +39,51 @@ class SalaryDedImport implements ToModel,WithMultipleSheets,WithHeadingRow, Skip
         if($row[2] == 'year'){
             $this->year = $row[3];
         }
-        if(in_array($row[0],['Ho','RO','SRM','CIVIL WING','OTHERS'])){
-            if ($row[2] != null && is_numeric($row[2])) {
+        if(in_array($row[0],['HO','RO','SRM','CIVIL WING','OTHERS'])){
+            if ($row[2] != null && is_numeric($row[2]) && $this->month == 3 && $this->year == 2022) {
                 // dd($this);
-                // if ($row[2] != null && $row[2]) {
+                // if ($row[2] != null && $row[2] == '266') {
+                //     // dd($row);
+                // }
                 $member = Member::where('uid', $row[2])->get()->first();
                 if ($member) {
+                    // dump($row[2]);
+                    $member->department_id = $this->getdept_id($row[0]);
+                    $member->save();
+                    // for ($i=1; $i <= 3; $i++) { 
+                    //     $group = LedgerGroup::where('id',$i)->first();
+                    //     $ledger_entry = LedgerAccount::where('user_id',$member->user_id)->where('ledger_group_id',$i)->first();
+                    //     if(!$ledger_entry){
+                    //         $ledger_entry = new LedgerAccount();
+                    //         $ledger_entry->ledger_group_id  = $group->id;
+                    //         $ledger_entry->account_name  = $member->user->name.'-'.$group->ledger_group;
+                    //         $ledger_entry->account_name  = $member->user->name.'-'.$group->ledger_group;
+                    //         $ledger_entry->user_id	= $member->user_id;
+                    //         $ledger_entry->opening_balance = 0;
+                    //         $ledger_entry->type	= 'DR';
+                    //         $ledger_entry->year_id	= 1;
+                    //         $ledger_entry->created_by = 1;
+                    //         $ledger_entry->status	= 1;
+                    //         $ledger_entry->save();
+                    //     }
+                    // }
                     // dd($member);
                     return new SalaryDeduction([
                         'user_id'  => $member->user_id,
                         'uid'  => $row[2],
-                        'ledger_ac_id' => LedgerAccount::where('type_name',$row[0])->pluck('id')->first() ? AccountType::where('type_name',$row[0])->pluck('id')->first() : 1 ,
+                        'department_id' => $member->department_id,
                         'rec_no'  => $row[4],
                         'principal' => $row[5],
                         'interest' => $row[6],
                         'fixed'  => $row[7],
                         'total_amount' => $row[8],
-                        'month'  => $this->month,
+                        'month'  => $this->month.'-'.$this->year,
                         'year_id' => 1,
                     ]);
-                    // dd($r );
+
+                    // dd($member);
                 } else {
+                    dump( 'nn'.$row[2]);
                     $not_inserted[] = $row;
                 }
             }

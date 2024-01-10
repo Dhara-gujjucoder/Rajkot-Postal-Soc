@@ -60,10 +60,21 @@ class PermissionSeeder extends Seeder
             // 'delete-ledger_group',
             // 'view-ledger_group'
 
-            'create-department',
-            'edit-department',
-            'delete-department',
-            'view-department'
+            // 'create-department',
+            // 'edit-department',
+            // 'delete-department',
+            // 'view-department',
+
+            // 'create-ledger_group',
+            // 'edit-ledger_group',
+            // 'delete-ledger_group',
+            // 'view-ledger_group'
+
+            'create-loan_matrix',
+            'edit-loan_matrix',
+            'delete-loan_matrix',
+            'view-loan_matrix'
+
         ];
 
         // Looping and Inserting Array's Permissions into Permission Table

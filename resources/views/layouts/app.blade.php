@@ -8,6 +8,7 @@
         {{ (isset($page_title) ? $page_title : '') . ' | ' . Config::get('name', $setting->title ?? 'Rajkot Postal Soc.') }}
     </title>
 
+
     <link rel="shortcut icon" href="{{ asset(isset($setting) ? $setting->favicon : 'assets/images/favicon.png') }}"
         type="image/x-icon">
     {{-- <link rel="shortcut icon"
@@ -16,15 +17,19 @@
 
 
 
-    <link rel="stylesheet" href="{{ asset('assets/compiled/css/app.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/compiled/css/app-dark.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/compiled/css/iconly.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/extensions/choices.js/public/assets/styles/choices.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/extensions/toastify-js/src/toastify.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/extensions/flatpickr/flatpickr.min.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/plugins/monthSelect/style.css">
-    <link rel="stylesheet" href="{{ asset('assets/extensions/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}">
-    <link rel="stylesheet" crossorigin href="{{ asset('assets/compiled/css/table-datatable-jquery.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/compiled/css/app.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/compiled/css/app-dark.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/compiled/css/iconly.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/extensions/choices.js/public/assets/styles/choices.css') }}">
+
+        <link rel="stylesheet" href="{{ asset('assets/extensions/toastify-js/src/toastify.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/extensions/flatpickr/flatpickr.min.css') }}">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/plugins/monthSelect/style.css">
+        <link rel="stylesheet" href="{{ asset('assets/extensions/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}">
+        <link rel="stylesheet" crossorigin href="{{ asset('assets/compiled/css/table-datatable-jquery.css') }}">
+        <link href="{{ asset('assets/extensions/select2/select2.min.css') }}" rel="stylesheet" />
+        <link href="{{ asset('assets/extensions/select2/select2totree.css') }}" rel="stylesheet" />
+
     @stack('style')
 </head>
 
@@ -93,7 +98,12 @@
     {{-- <script src="{{ asset('assets/extensions/apexcharts/apexcharts.min.js') }}"></script> --}}
     {{-- <script src="{{ asset('assets/static/js/pages/dashboard.js') }}"></script> --}}
     <script src="{{ asset('assets/extensions/toastify-js/src/toastify.js') }}"></script>
+    <script src="{{ asset('assets/extensions/select2/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/extensions/select2/select2totree.js') }}"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
     {{-- <script src="{{ asset('assets/static/js/pages/toastify.js') }}"></script> --}}
+
+
     @if (session('success'))
         <script>
             Toastify({
@@ -114,6 +124,7 @@
             })
         }, false);
     </script>
+
     @stack('script')
 
 </body>

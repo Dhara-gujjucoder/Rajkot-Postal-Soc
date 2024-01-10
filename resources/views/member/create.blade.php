@@ -41,7 +41,7 @@
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="profile_picture">{{ __('Profile Picture') }}<span class="text-danger">*</span></label>
-                                    <input type="file" id="profile_picture" class="form-control  @error('profile_picture') is-invalid @enderror" placeholder="{{ __('Profile Picture') }}" name="profile_picture">
+                                    <input type="file" id="profile_picture" class="form-control  @error('profile_picture') is-invalid @enderror" placeholder="{{ __('Profile Picture') }}" name="profile_picture" accept="image/jpg, image/png, image/gif, image/jpeg">
                                     @if ($errors->has('profile_picture'))
                                         <span class="text-danger">{{ $errors->first('profile_picture') }}</span>
                                     @endif
@@ -83,7 +83,7 @@
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="birthdate">{{ __('Birth Date') }}<span class="text-danger">*</span></label>
-                                    <input type="date" id="birthdate" class="form-control @error('birthdate') is-invalid @enderror" placeholder="{{ __('Birth Date') }}" name="birthdate">
+                                    <input type="text" name="birthdate" value="{{ date('Y-m-d') }}" class="date form-control @error('birthdate') is-invalid @enderror" style="width: 300px;" placeholder="{{ __('Birth Date') }}">
                                     @if ($errors->has('birthdate'))
                                         <span class="text-danger">{{ $errors->first('birthdate') }}</span>
                                     @endif
@@ -128,7 +128,7 @@
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="signature">{{ __('Signature') }}<span class="text-danger">*</span></label>
-                                    <input type="file" id="signature" class="form-control  @error('signature') is-invalid @enderror" placeholder="{{ __('Signature') }}" name="signature">
+                                    <input type="file" id="signature" class="form-control  @error('signature') is-invalid @enderror" placeholder="{{ __('Signature') }}" name="signature" accept="image/jpg, image/png, image/gif, image/jpeg">
                                     @if ($errors->has('signature'))
                                         <span class="text-danger">{{ $errors->first('signature') }}</span>
                                     @endif
@@ -219,7 +219,7 @@
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="aadhar_card">{{ __('Aadhar card') }}</label>
-                                    <input type="file" id="aadhar_card" class="form-control @error('aadhar_card') is-invalid @enderror" placeholder="{{ __('Whatsapp No') }}" name="aadhar_card">
+                                    <input type="file" id="aadhar_card" class="form-control @error('aadhar_card') is-invalid @enderror" placeholder="{{ __('Whatsapp No') }}" name="aadhar_card" accept="image/jpg, image/png, image/gif, image/jpeg">
                                     @if ($errors->has('aadhar_card'))
                                         <span class="text-danger">{{ $errors->first('aadhar_card') }}</span>
                                     @endif
@@ -237,7 +237,7 @@
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="pan_card">{{ __('PAN Card') }}</label>
-                                    <input type="file" id="pan_card" class="form-control  @error('pan_card') is-invalid @enderror" placeholder="{{ __('PAN No') }}" name="pan_card">
+                                    <input type="file" id="pan_card" class="form-control  @error('pan_card') is-invalid @enderror" placeholder="{{ __('PAN No') }}" name="pan_card" accept="image/jpg, image/png, image/gif, image/jpeg">
                                     @if ($errors->has('pan_card'))
                                         <span class="text-danger">{{ $errors->first('pan_card') }}</span>
                                     @endif
@@ -246,7 +246,7 @@
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="department_id_proof">{{ __('Departmental ID Proof') }}</label>
-                                    <input type="file" id="department_id_proof" class="form-control @error('department_id_proof') is-invalid @enderror" placeholder="{{ __('Departmental ID Proof') }}" name="department_id_proof">
+                                    <input type="file" id="department_id_proof" class="form-control @error('department_id_proof') is-invalid @enderror" placeholder="{{ __('Departmental ID Proof') }}" name="department_id_proof" accept="image/jpg, image/png, image/gif, image/jpeg">
                                     @if ($errors->has('department_id_proof'))
                                         <span class="text-danger">{{ $errors->first('department_id_proof') }}</span>
                                     @endif
@@ -280,7 +280,7 @@
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="witness_signature">{{ __('Witness Signature') }}</label>
-                                    <input type="file" id="witness_signature" class="form-control @error('witness_signature') is-invalid @enderror" placeholder="{{ __('Place') }}" name="witness_signature">
+                                    <input type="file" id="witness_signature" class="form-control @error('witness_signature') is-invalid @enderror" placeholder="{{ __('Place') }}" name="witness_signature" accept="image/jpg, image/png, image/gif, image/jpeg">
                                     @if ($errors->has('witness_signature'))
                                         <span class="text-danger">{{ $errors->first('witness_signature') }}</span>
                                     @endif
@@ -343,3 +343,12 @@
     </div>
 </div>
 @endsection
+@push('script')
+    <script type="text/javascript">
+        $('.date').flatpickr({
+            altInput: true,
+            altFormat:"d/m/Y",
+            dateFormat: "Y-m-d",
+         });
+    </script>
+@endpush

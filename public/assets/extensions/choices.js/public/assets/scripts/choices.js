@@ -2890,7 +2890,7 @@ exports.DEFAULT_CONFIG = {
   searchFields: ['label', 'value'],
   position: 'auto',
   resetScrollPosition: true,
-  shouldSort: true,
+  shouldSort: false,
   shouldSortItems: false,
   sorter: utils_1.sortByAlpha,
   placeholder: true,

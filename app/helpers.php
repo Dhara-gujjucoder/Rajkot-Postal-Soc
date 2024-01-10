@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\FinancialYear;
+use App\Models\LedgerGroup;
 
 if (! function_exists('currentYear')) {
     function currentYear() {
@@ -38,6 +39,26 @@ if (! function_exists('getYearDropDown')) {
     }
 }
 
+if (! function_exists('getLedgerGroupDropDown')) {
+    function getLedgerGroupDropDown($is_selected = null) {
+        $ledger_group_parent = LedgerGroup::whereNot('parent_id','>',0)->get()->all();
+        $html = '';
+        foreach ($ledger_group_parent as $key => $value) {
+            $children = LedgerGroup::where('parent_id',$value->id)->get();
+            if(count($children) > 0){
+                $html .= '<option value="' . $value->id . '" class="" '.($is_selected == $value->id ? 'selected="selected"' : '').'>' . $value->ledger_group . '</option>';
+                foreach ($children as $key => $ch) {
+                    # code...
+                    $html .= '<option value="' . $ch->id . '"  class="" '.($is_selected == $ch->id ? 'selected="selected"' : '').'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $ch->ledger_group . '</option>';
+                }
+            }else{
+                $html .= '<option value="' . $value->id . '" class="" '.($is_selected == $value->id ? 'selected="selected"' : '').'>' . $value->ledger_group . '</option>';
 
+            }
+
+        }
+        return $html;
+    }
+}
 
 ?>

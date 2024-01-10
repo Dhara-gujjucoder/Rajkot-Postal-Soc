@@ -48,16 +48,20 @@
                                 <div class="form-group">
                                     <label for="profile_picture">{{ __('Profile Picture') }}<span
                                             class="text-danger">*</span></label>
-                                    <input type="file" id="profile_picture"
+                                    <input type="file" id="profile_picture" accept="image/jpg, image/png, image/gif, image/jpeg"
                                         class="form-control  @error('profile_picture') is-invalid @enderror"
                                         placeholder="{{ __('Profile Picture') }}" name="profile_picture">
+
+                                        @if ($user->profile_picture)
+                                            <a href="{{ asset($user->profile_picture) }}" class="float-end"
+                                                target="_blank"><img src="{{ asset($user->profile_picture) }}" height="100" width="100"></a>
+                                                {{-- {{ __('View') }} <i class="bi bi-eye-fill"></i>--}}
+                                        @endif
+
                                     @if ($errors->has('profile_picture'))
                                         <span class="text-danger">{{ $errors->first('profile_picture') }}</span>
                                     @endif
-                                    @if ($user->profile_picture)
-                                    <a href="{{ asset($user->profile_picture) }}" class="float-end"
-                                        target="_blank">{{ __('View') }}<i class="bi bi-eye-fill"></i></a>
-                                @endif
+
                                 </div>
                             </div>
                             <div class="col-md-6 col-12">
@@ -68,7 +72,7 @@
                                     </div>
                                 </div>
                                 <div class="row ms-lg-5 p-2 ps-4">
-                                    <div class="col-md-5 col-lg-2 form-check">
+                                    <div class="col-md-5 col-lg-3 form-check">
                                         <input class="form-check-input" type="radio" name="gender" id="male"
                                             value="male"
                                             {{ old('gender', $user->gender) == 'male' ? 'checked' : '' }}>
@@ -105,7 +109,7 @@
                                 <div class="form-group">
                                     <label for="birthdate">{{ __('Birth Date') }}<span
                                             class="text-danger">*</span></label>
-                                    <input type="date" id="birthdate" class="form-control @error('birthdate') is-invalid @enderror"
+                                    <input type="text" id="birthdate" class="date form-control @error('birthdate') is-invalid @enderror"
                                         placeholder="{{ __('Birth Date') }}" name="birthdate" value="{{ old('birthdate', $user->birthdate) }}">
                                         @if ($errors->has('birthdate'))
                                         <span class="text-danger">{{ $errors->first('birthdate') }}</span>
@@ -163,16 +167,18 @@
                                 <div class="form-group">
                                     <label for="signature">{{ __('Signature') }}<span
                                             class="text-danger">*</span></label>
-                                    <input type="file" id="signature"
+                                    <input type="file" id="signature" accept="image/jpg, image/png, image/gif, image/jpeg"
                                         class="form-control  @error('signature') is-invalid @enderror"
                                         placeholder="{{ __('Signature') }}" name="signature">
+
+                                        @if ($user->signature)
+                                            <a href="{{ asset($user->signature) }}" class="float-end"
+                                                target="_blank"><img src="{{ asset($user->signature) }}" height="100" width="100"></a>
+                                        @endif
                                     @if ($errors->has('signature'))
                                         <span class="text-danger">{{ $errors->first('signature') }}</span>
                                     @endif
-                                    @if ($user->signature)
-                                        <a href="{{ asset($user->signature) }}" class="float-end"
-                                            target="_blank">{{ __('View') }}<i class="bi bi-eye-fill"></i></a>
-                                    @endif
+
                                 </div>
                             </div>
                         </div>
@@ -277,7 +283,7 @@
                                 <div class="form-group">
                                     <label for="aadhar_card_no">{{ __('AadharCard No') }}<span
                                             class="text-danger">*</span></label>
-                                    <input type="number" id="aadhar_card_no"
+                                    <input type="number" id="aadhar_card_no" accept="image/jpg, image/png, image/gif, image/jpeg"
                                         class="form-control @error('aadhar_card_no') is-invalid @enderror"
                                         placeholder="{{ __('AadharCard No') }}" name="aadhar_card_no"
                                         value="{{ old('aadhar_card_no', $user->aadhar_card_no) }}">
@@ -289,16 +295,19 @@
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="aadhar_card">{{ __('Aadhar card') }}</label>
-                                    <input type="file" id="aadhar_card"
+                                    <input type="file" id="aadhar_card" accept="image/jpg, image/png, image/gif, image/jpeg"
                                         class="form-control @error('aadhar_card') is-invalid @enderror"
                                         placeholder="{{ __('aadhar_card') }}" name="aadhar_card">
+
+                                        @if ($user->aadhar_card)
+                                            <a href="{{ asset($user->aadhar_card) }}" class="float-end"
+                                                target="_blank"><img src="{{ asset($user->aadhar_card) }}" height="100" width="180"></i></a>
+                                        @endif
+
                                     @if ($errors->has('aadhar_card'))
                                         <span class="text-danger">{{ $errors->first('aadhar_card') }}</span>
                                     @endif
-                                    @if ($user->aadhar_card)
-                                        <a href="{{ asset($user->aadhar_card) }}" class="float-end"
-                                            target="_blank">{{ __('View') }}<i class="bi bi-eye-fill"></i></a>
-                                    @endif
+
                                 </div>
                             </div>
                             <div class="col-md-6 col-12">
@@ -317,31 +326,37 @@
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="pan_card">{{ __('PAN Card') }}</label>
-                                    <input type="file" id="pan_card"
+                                    <input type="file" id="pan_card" accept="image/jpg, image/png, image/gif, image/jpeg"
                                         class="form-control  @error('pan_card') is-invalid @enderror"
                                         placeholder="{{ __('PAN card') }}" name="pan_card">
+
+                                        @if ($user->pan_card)
+                                            <a href="{{ asset($user->pan_card) }}" class="float-end"
+                                                target="_blank"><img src="{{ asset($user->pan_card) }}" height="100" width="180"></a>
+                                        @endif
+
                                     @if ($errors->has('pan_card'))
                                         <span class="text-danger">{{ $errors->first('pan_card') }}</span>
                                     @endif
-                                    @if ($user->pan_card)
-                                        <a href="{{ asset($user->pan_card) }}" class="float-end"
-                                            target="_blank">{{ __('View') }}<i class="bi bi-eye-fill"></i></a>
-                                    @endif
+
                                 </div>
                             </div>
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="department_id_proof">{{ __('Departmental ID Proof') }}</label>
-                                    <input type="file" id="department_id_proof"
+                                    <input type="file" id="department_id_proof" accept="image/jpg, image/png, image/gif, image/jpeg"
                                         class="form-control @error('department_id_proof') is-invalid @enderror"
                                         placeholder="{{ __('Departmental ID Proof') }}" name="department_id_proof">
+
+                                        @if (!empty($user->department_id_proof))
+                                            <a href="{{ asset($user->department_id_proof) }}" class="float-end"
+                                                target="_blank"><img src="{{ asset($user->department_id_proof) }}" height="100" width="180"></a>
+                                        @endif
+
                                     @if ($errors->has('department_id_proof'))
                                         <span class="text-danger">{{ $errors->first('department_id_proof') }}</span>
                                     @endif
-                                    @if ($user->department_id_proof)
-                                        <a href="{{ asset($user->department_id_proof) }}" class="float-end"
-                                            target="_blank">{{ __('View') }}<i class="bi bi-eye-fill"></i></a>
-                                    @endif
+
                                 </div>
                             </div>
                         </div>
@@ -381,16 +396,19 @@
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="witness_signature">{{ __('Witness Signature') }}</label>
-                                    <input type="file" id="witness_signature"
+                                    <input type="file" id="witness_signature" accept="image/jpg, image/png, image/gif, image/jpeg"
                                         class="form-control @error('witness_signature') is-invalid @enderror"
                                         placeholder="{{ __('Place') }}" name="witness_signature">
+
+                                        @if ($user->witness_signature)
+                                            <a href="{{ asset($user->witness_signature) }}" class="float-end"
+                                                target="_blank"><img src="{{ asset($user->witness_signature) }}" height="100" width="100"></a>
+                                        @endif
+
                                     @if ($errors->has('witness_signature'))
                                         <span class="text-danger">{{ $errors->first('witness_signature') }}</span>
                                     @endif
-                                    @if ($user->witness_signature)
-                                        <a href="{{ asset($user->witness_signature) }}" class="float-end"
-                                            target="_blank">{{ __('View') }}<i class="bi bi-eye-fill"></i></a>
-                                    @endif
+
                                 </div>
                             </div>
                         </div>
@@ -456,3 +474,12 @@
     </div>
 </div>
 @endsection
+@push('script')
+    <script type="text/javascript">
+        $('.date').flatpickr({
+            altInput: true,
+            altFormat:"d/m/Y",
+            dateFormat: "Y-m-d",
+         });
+    </script>
+@endpush

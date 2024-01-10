@@ -9,6 +9,8 @@ for (let i = 0; i < choices.length; i++) {
       removeItemButton: true,
     })
   } else {
-    initChoice = new Choices(choices[i])
+    initChoice = new Choices(choices[i],{
+      allowHTML: true,
+    })
   }
 }

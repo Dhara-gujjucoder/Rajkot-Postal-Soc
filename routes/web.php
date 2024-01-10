@@ -22,6 +22,8 @@ Route::get('/', function () {
     return view('front.login');
 })->middleware(['guest:users']);
 
+Route::get('/home', [UserLoginController::class, 'comingsoon'])->name('front.home');
+
 /*users routes*/
 Route::prefix('user')->name('user.')->middleware(['guest:users'])->group(function () {
         Route::get('/login', [UserLoginController::class, 'showLoginForm'])->name('login');

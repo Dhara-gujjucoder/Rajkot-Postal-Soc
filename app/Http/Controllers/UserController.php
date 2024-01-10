@@ -173,6 +173,6 @@ class UserController extends Controller
         return redirect()->back()
             ->withSuccess(__('Profile is updated successfully.'));
     }
-
+    
     
 }

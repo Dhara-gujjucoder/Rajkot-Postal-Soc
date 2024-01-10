@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class LedgerEntry extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
     protected $table = 'ledger_entries';
     protected $fillable = [
         'ledger_ac_id',
@@ -20,12 +20,11 @@ class LedgerEntry extends Model
         'entry_type',
         'opening_balance',
         'year_id'
-        	
+
     ];
 
     public function LedgerAcountName()
     {
         return $this->belongsTo(LedgerAccount::class, 'ledger_ac_id', 'id');
     }
-
 }

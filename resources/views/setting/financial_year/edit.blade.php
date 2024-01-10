@@ -167,14 +167,14 @@
                                 <div class="row ms-lg-5 p-2 ps-4">
                                     <div class="col-md-5 col-lg-2 form-check">
                                         <input class="form-check-input" type="radio" name="status"
-                                            value="1" {{ old('is_current', $financial->status) == 1 ? 'checked' : '' }}>
+                                            value="1" {{ old('status', $financial->status) == 1 ? 'checked' : '' }}>
                                         <label class="form-check-label" for="active">
                                             {{ __('Active') }}
                                         </label>
                                     </div>
                                     <div class="col-md-5 col-lg-2  form-check">
                                         <input class="form-check-input" type="radio" name="status"
-                                            id="deactive"value="0" {{ old('is_current', $financial->status) == 0 ? 'checked' : '' }}>
+                                            id="deactive"value="0" {{ old('status', $financial->status) == 0 ? 'checked' : '' }}>
                                         <label class="form-check-label" for="deactive">
                                             {{ __('Deactive') }}
                                         </label>

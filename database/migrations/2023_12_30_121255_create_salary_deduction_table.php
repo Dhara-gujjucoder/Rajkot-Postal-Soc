@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('salary_deduction', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
+            $table->bigInteger('user_id');
             $table->string('uid');
             $table->string('year');
+            $table->bigInteger('ledger_ac_id');
             $table->string('month');
             $table->bigInteger('rec_no')->nullable();
             $table->double('principal')->nullable();
@@ -23,6 +24,7 @@ return new class extends Migration
             $table->double('fixed')->nullable();
             $table->double('total_amount');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -11,8 +11,11 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\BulkEntryController;
+use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\AccountTypeController;
 use App\Http\Controllers\LedgerEntryController;
+use App\Http\Controllers\LoanCalculationMatrixController;
 use App\Http\Controllers\LedgerGroupController;
 use App\Http\Controllers\LoanSettingController;
 use App\Http\Controllers\ShareAmountController;
@@ -21,7 +24,6 @@ use App\Http\Controllers\LedgerAccountController;
 use App\Http\Controllers\MonthlySavingController;
 use App\Http\Controllers\User\UserLoginController;
 use App\Http\Controllers\SalaryDeductionController;
-use App\Http\Controllers\DepartmentController;
 
 
 Route::prefix('admin')->group(function () {
@@ -42,6 +44,7 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
     Route::post('/import/salary', [App\Http\Controllers\SalaryDeductionController::class, 'importsalary'])->name('salary.import');
 
 
+
     Route::resource('loaninterest', LoanSettingController::class);
     Route::resource('shareamount', ShareAmountController::class);
     Route::resource('monthlysaving', MonthlySavingController::class);
@@ -50,10 +53,11 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
         'roles' => RoleController::class,
         'users' => UserController::class,
         'members' => MemberController::class,
-        // 'account_type' => AccountTypeController::class,
         'ledger_group' => LedgerGroupController::class,
         'ledger_account' => LedgerAccountController::class,
         'ledger_entries' => LedgerEntryController::class,
+        'bulk_entries' => BulkEntryController::class,
+        'loan_matrix' => LoanCalculationMatrixController::class,
         'department' => DepartmentController::class,
         'salary_deduction' => SalaryDeductionController::class,
         'financial_year' => FinancialYearController::class,

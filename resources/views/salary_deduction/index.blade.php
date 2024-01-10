@@ -76,7 +76,6 @@
                             <th scope="col">S#</th>
                             <th scope="col">{{ __('Month Year') }}</th>
                             <th scope="col">{{ __('Name') }} </th>
-                            <th scope="col">{{ __('Ledger Account') }} </th>
                             <th scope="col">{{ __('Rec No.') }} </th>
                             <th scope="col">{{ __('Principal') }} (Rs.)</th>
                             <th scope="col">{{ __('Interest') }} (Rs.)</th>
@@ -86,16 +85,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+
 
 
                     </tbody>
@@ -112,7 +102,7 @@
     $(function() {
 
         var table = $('#table1').DataTable({
-            
+
             processing: true,
             serverSide: true,
             ajax: "{{ route('salary_deduction.index') }}",
@@ -130,11 +120,6 @@
                 {
                     data: 'name',
                     name: 'name',
-                    searchable: true
-                },
-                {
-                    data: 'ledger_ac_id',
-                    name: 'ledger_ac_id',
                     searchable: true
                 },
                 {

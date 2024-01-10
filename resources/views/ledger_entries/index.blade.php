@@ -16,8 +16,8 @@
                             <th>{{ __('No.') }}</th>
                             <th>{{ __('Ledger') }}</th>
                             <th>{{ __('Particular') }}</th>
-                            <th>{{ __('Amount ') }}</th>
-                            <th>{{ __('Date ') }}</th>
+                            <th>{{ __('Amount') }}</th>
+                            <th>{{ __('Date') }}</th>
                             <th>{{ __('Action') }} </th>
                         </tr>
                     </thead>
@@ -25,7 +25,7 @@
                         @foreach ($ledger_entries as $key => $entry)
                         <tr>
                             <td>{{ $entry->id }}</td>
-                            <td>{{ $entry->LedgerAcountName->account_name }}</td>
+                            <td>{{ $entry->LedgerAcountName->account_name ?? ''}}</td>
                             <td>{{ $entry->particular }}</td>
                             <td>{{ $entry->amount }}</td>
                             <td>{{ $entry->date }}</td>

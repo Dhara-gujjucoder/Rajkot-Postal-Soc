@@ -18,18 +18,36 @@
                         @csrf
                         @method('PUT')
 
-                      
                         <div class="mb-3 row">
-                            <label for="type_name" class="col-md-4 col-form-label text-md-end text-start">{{__('Ledger Group')}}</label>
+                            <label for="parent_id" class="col-md-4 col-form-label text-md-end text-start">{{ __('Parent Ledger Group') }}</label>
                             <div class="col-md-6">
-                                <input type="text" class="form-control @error('type_name') is-invalid @enderror"
-                                    id="type_name" name="type_name" value="{{ $ledger_group->type_name }}">
-                                @if ($errors->has('type_name'))
-                                    <span class="text-danger">{{ $errors->first('type_name') }}</span>
+                                <select class="choices form-select" aria-label="Permissions" id="parent_id" name="parent_id" style="height: 210px;" ">
+                                    <option value="0">{{ __('Select Parent Ledger Group') }}</option>
+                                    @foreach ($ledgers as $ledger)
+                                        <option value="{{ $ledger->id }}"
+                                            {{ $ledger->id == old('parent_id',$ledger_group->parent_id)  ? 'selected' : '' }}>
+                                            {{ $ledger->ledger_group }}</option>
+
+                                    @endforeach
+
+
+
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="mb-3 row">
+                            <label for="ledger_group" class="col-md-4 col-form-label text-md-end text-start">{{__('Ledger Group')}}</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control @error('ledger_group') is-invalid @enderror"
+                                    id="ledger_group" name="ledger_group" value="{{ $ledger_group->ledger_group }}">
+                                @if ($errors->has('ledger_group'))
+                                    <span class="text-danger">{{ $errors->first('ledger_group') }}</span>
                                 @endif
                             </div>
                         </div>
-                    
+
 
                         <div class="mb-3 row">
                             <input type="submit" class="col-md-3 offset-md-5 btn btn-primary" value="{{__('Update Ledger Group')}}">

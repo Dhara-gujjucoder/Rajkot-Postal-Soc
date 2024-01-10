@@ -11502,7 +11502,7 @@ fieldset:disabled .btn {
     }
 
     .text-md-end {
-        text-align: right !important
+        /*text-align: right !important*/
     }
 
     .text-md-center {
@@ -24132,3 +24132,6 @@ a {
 }
 
 .card-header-design {  }
+
+
+

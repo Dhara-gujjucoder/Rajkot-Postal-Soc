@@ -13,6 +13,7 @@
             <div class="pt-4 mt-5">
                 <div class="form">
                     <div class="row mb-3" id="filter">
+
                         <div class="col-md-4">
                             <label for="account_name" class="col-md-2 col-form-label">{{ __('Member') }}</label>
                             <div class="col-md-12">
@@ -33,6 +34,25 @@
                                 @endif
                             </div>
                         </div>
+
+                        <div class="col-md-4">
+                            <label for="department_id" class="col-md-4 col-form-label">{{ __('Department') }}</label>
+                            <div class="col-md-12">
+                                <select class="choices filter-input form-select @error('department_id') is-invalid @enderror"
+                                    aria-label="Permissions" id="department_id" data-column="3" name="department_id"
+                                    style="height: 210px;">
+                                    <option value="">{{ __('Department') }}</option>
+                                    @forelse ($departments as $key => $department)
+                                        <option value="{{ $department->id }}"
+                                            {{ $department->id == old('department_id') ? 'selected' : '' }}>
+                                            {{ $department->department_name }}
+                                        </option>
+                                        @empty
+                                    @endforelse
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             <table class="table table-bordered" id="table1">
@@ -41,13 +61,14 @@
                         <th scope="col">S#</th>
                         <th scope="col">{{ __('Name') }}</th>
                         <th scope="col">{{ __('Email') }}</th>
+                        <th scope="col">{{ __('Department') }}</th>
                         <th scope="col">{{ __('Registration No.') }}</th>
                         <th scope="col">{{ __('Roles') }}</th>
                         <th scope="col">{{ __('Action') }}</th>
                     </tr>
                 </thead>
                 <tbody>
-                   
+
                 </tbody>
             </table>
             </div>
@@ -56,6 +77,7 @@
 </section>
 @endsection
 @push('script')
+
 <script>
     $(function() {
 
@@ -80,6 +102,11 @@
                     searchable: true
                 },
                 {
+                    data: 'department_id',
+                    name: 'department_id',
+                    searchable: true
+                },
+                {
                     data: 'registration_no',
                     name: 'registration_no'
                 },
@@ -97,7 +124,7 @@
             ],
 
         });
-        $('#dept_id').on('change', function() {
+        $('#department_id').on('change', function() {
             table
                 .columns($(this).data('column'))
                 .search($(this).val())
@@ -111,6 +138,8 @@
         });
 
     });
+
 </script>
+
 @endpush
 

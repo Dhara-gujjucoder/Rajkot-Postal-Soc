@@ -1,5 +1,7 @@
 @extends('layouts.app')
 @section('content')
+
+
 @section('title')
     {{ $page_title }}
 @endsection
@@ -31,6 +33,16 @@
                         </div>
                     </div>
                     <div class="mb-3 row">
+                        <label for="name"
+                            class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Profile Picture') }}:</strong></label>
+
+                            @if($user->profile_picture)
+                                <div class="col-md-6" style="line-height: 35px;">
+                                    <a href="{{ asset($user->profile_picture) }}" target="_blank" ><img src="{{ asset($user->profile_picture) }}" height="100" width="100"></a>
+                                </div>
+                            @endif
+                    </div>
+                    <div class="mb-3 row">
                         <label for="email"
                             class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Gender') }}:</strong></label>
                         <div class="col-md-6" style="line-height: 35px;">
@@ -48,7 +60,9 @@
                         <label for="email"
                             class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Birth Date') }}:</strong></label>
                         <div class="col-md-6" style="line-height: 35px;">
-                            {{ $user->birthdate }}
+                            {{-- {{ $user->birthdate }} --}}
+                            {{ date('d/m/Y', strtotime($user->birthdate)) }}
+
                         </div>
                     </div>
                     <div class="mb-3 row">
@@ -85,8 +99,8 @@
                             class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Signature') }}:</strong></label>
                         @if($user->signature)
                             <div class="col-md-6" style="line-height: 35px;">
-                            <a href="{{ asset($user->signature) }}" target="_blank" >{{ __('View') }}<i class="bi-eye-fill"></i> </a>
-                        </div>
+                                <a href="{{ asset($user->signature) }}" target="_blank" ><img src="{{ asset($user->signature) }}" height="100" width="100"></a>
+                            </div>
                         @endif
                     </div>
                     <div class="float-start card-header-design mt-4">
@@ -98,7 +112,7 @@
                         <label for="email"
                             class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Department') }}:</strong></label>
                         <div class="col-md-6" style="line-height: 35px;">
-                            {{ $user->DepartmentName->department_name }}
+                            {{ $user->department->department_name ?? '' }}
                         </div>
                     </div>
 
@@ -146,7 +160,7 @@
                             class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Aadhar card') }}:</strong></label>
                         @if($user->aadhar_card)
                             <div class="col-md-6" style="line-height: 35px;">
-                            <a href="{{ asset($user->aadhar_card) }}" target="_blank" >{{ __('View') }}<i class="bi-eye-fill"></i> </a>
+                            <a href="{{ asset($user->aadhar_card) }}" target="_blank" ><img src="{{ asset($user->aadhar_card) }}" height="100" width="180"> </a>
                         </div>
                         @endif
                     </div>
@@ -162,7 +176,7 @@
                             class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('PAN Card') }}:</strong></label>
                             @if($user->pan_card)
                             <div class="col-md-6" style="line-height: 35px;">
-                            <a href="{{ asset($user->pan_card) }}" target="_blank" >{{ __('View') }}<i class="bi-eye-fill"></i> </a>
+                            <a href="{{ asset($user->pan_card) }}" target="_blank" ><img src="{{ asset($user->pan_card) }}" height="100" width="180"> </a>
                         </div>
                         @endif
                     </div>
@@ -172,7 +186,7 @@
 
                             @if($user->department_id_proof)
                             <div class="col-md-6" style="line-height: 35px;">
-                            <a href="{{ asset($user->department_id_proof) }}" target="_blank" >{{ __('View') }}<i class="bi-eye-fill"></i> </a>
+                            <a href="{{ asset($user->department_id_proof) }}" target="_blank" ><img src="{{ asset($user->department_id_proof) }}" height="100" width="180"> </a>
                         </div>
                         @endif
                     </div>
@@ -199,7 +213,7 @@
                             class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Witness Signature') }}:</strong></label>
                         @if($user->witness_signature)
                             <div class="col-md-6" style="line-height: 35px;">
-                            <a href="{{ asset($user->witness_signature) }}" target="_blank" >{{ __('View') }}<i class="bi-eye-fill"></i></a>
+                            <a href="{{ asset($user->witness_signature) }}" target="_blank" ><img src="{{ asset($user->witness_signature) }}" height="100" width="100"></a>
                         </div>
                         @endif
                     </div>
@@ -243,3 +257,4 @@
     </div>
 </section>
 @endsection
+

@@ -288,7 +288,9 @@ textarea {resize: none;}
 
 /*-------------------------*/
 
+.form-select,
 .form-control {border-radius: 10px; border: 1px solid #E0E0E0; background-color: var(--whitebg);  box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.10); font-size: 15px; padding: 14px 15px;}
+.form-select:focus ,
 .form-control:focus {border-color: #ccc; box-shadow: 0 0 0 0.25rem rgba(200, 200, 200, 0.25);}
 .main-middle-section {position: relative; z-index: 1; width: 100%;}
 .mob-login-form .btn {padding-top: 14px; padding-bottom: 14px;}
@@ -345,3 +347,93 @@ textarea {resize: none;}
 .switch.btn-xs{ min-width: 3.125rem;min-height: 1.375rem;}
 .switch-on.btn-xs{ padding-right: .8rem;}
 .switch-off.btn-xs{ padding-left: .8rem;}
+
+.dashboard-detail-page .desh-listbox { height: auto; }
+.dashboard-detail-page .desh-listbox .dash-box-title { background-color: #1fc6b3; color: #fff; padding: 10px 15px; border-radius: 10px; font-size: 16px; font-weight: 500; letter-spacing: 0.44px; }
+.dashboard-detail-page .dashboard-detail-data { display: grid; gap: 10px; grid-template-columns: 1fr 1.5fr; margin-bottom: 15px; }
+.dashboard-detail-page .dashboard-detail-data .col-form-info { padding-top: calc(.375rem + var(--bs-border-width)); }
+.dashboard-detail-page .dashboard-box-listing .row::before { content: none; }
+.dashboard-detail-page .dashboard-detail-data .col-form-info img { width: 100px; height: 100px; object-fit: contain; }
+
+.calculator-detail-page.dashboard-detail-page .desh-listbox .dash-box-title { background-color: #fd7e2b; }
+.calculator-detail-page .range-slider { display: grid; }
+
+input[type=range] {
+  -webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	display: block;
+	width: 100%;
+	height: 3px;
+	padding: 0;
+	border-radius: 14px;
+	background: rgba(8, 146, 1, 0.85);
+	box-sizing: content-box;
+  margin: 15px 0 10px;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-thumb {
+  cursor: pointer;
+  -webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	width: 20px;
+	height: 20px;
+	border-radius: 25px;
+	background: #fd7e2b;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  background-image: linear-gradient(#fff, #fff), linear-gradient(to right, #da6926, #fd7e2b);
+  background-attachment: fixed, fixed;
+  background-clip: padding-box, border-box;
+}
+input[type=range]::-moz-range-thumb {
+  cursor: pointer;
+  -webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	width: 20px;
+	height: 20px;
+	border: 1px solid #fd7e2b;
+	border-radius: 35px;
+	background: #fd7e2b;
+}
+
+.calculator-detail-page .final-value { 
+  background-color: #f2f2f2;
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: block;
+  width: fit-content;
+  font-weight: 600;
+  font-size: 16px;
+}
+.dashboard-detail-page .col-md-12 > .dashboard-detail-data { grid-template-columns: 0.19fr 0.81fr; }
+.calculator-detail-page.dashboard-detail-page .dashboard-detail-data { grid-template-columns: 0.25fr 0.75fr; }
+
+.loan-details,
+.calculator-detail-page .calculator-details { background-color: rgba(8, 146, 1, 0.1); padding: 30px 16px; border-radius: 16px; }
+.loan-details .btn,
+.calculator-detail-page .calculator-details .btn { padding: 10px; margin-top: 20px; }
+.loan-details .calculator__info,
+.calculator-detail-page .calculator__info { font-weight: 500; padding: 0 10px; column-gap: 70px; }
+.loan-details .calculator__info-text,
+.calculator-detail-page .calculator__info-text { font-weight: 500; width: 50%; }
+.calculator-detail-page .f-12 { font-size: 12px; line-height: 15px; }
+.loan-details .calculator__info-text ul { list-style-type: disc; padding-left: 1.5rem; }
+.loan-details .calculator__info-text p { font-weight: normal; margin-bottom: 15px; }
+.loan-details .calculator__info-text .info-text,
+.calculator-detail-page .calculator__info-text p:last-child { font-size: 20px; font-weight: 600; }
+
+
+.apply-detail-page .desh-listbox .dash-box-title { background-color: rgba(8, 146, 1, 0.8); }
+
+.loan-details .btn { font-size: 18px; letter-spacing: 0.44px; }
+.loan-declined { background-color: #eee; }
+.loan-declined .btn { opacity: 0.4; background-color: rgba(8, 146, 1, 0.8) !important; border-color: rgba(8, 146, 1, 0.8) !important; }
+
+.dashboard-detail-page .form-select,
+.dashboard-detail-page .form-control { box-shadow: none; width: 100%; padding: 7px 12px; }

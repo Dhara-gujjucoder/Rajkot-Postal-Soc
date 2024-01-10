@@ -177,8 +177,8 @@ return [
         "Address" => "સરનામું",
         "Phone No" => "ફોન નંબર",
         'loan_interest' => 'લોન વ્યાજ',
-        'monthly_saving' => 'માસિક_બચત',
-        'share_amount' => 'શેર_રકમ',
+        'monthly_saving' => 'માસિક બચત',
+        'share_amount' => 'શેર રકમ',
         'bank_name' => 'બેંકનું નામ',
         'ifsc_code' =>'IFSC કોડ',
         'branch_address' =>'બ્રાંચનું સરનામું',
@@ -199,7 +199,16 @@ return [
         'account_name' => 'ખાતાનું નામ',
         'ledger_group_id' => 'ખાતાવહી જૂથ',
         'department_name' => 'વિભાગનું નામ',
-       
+        'department_id' => 'વિભાગ',
+        'ledger_group' => 'ખાતાવહી જૂથ',
+        'opening_balance'=>'પ્રારંભિક સિલક',
+        'amount'=> 'રકમ',
+        'minimum_emi'=> 'ન્યૂનતમ EMI',
+        'permissions'=> 'પરવાનગીઓ',
+        'type'=> 'પ્રકાર',
+        'ledger_ac_id'=> 'ખાતાવહી',
+        'particular'=> 'ખાસ',
+        'phone' => 'ફોન',
 
 
     ],

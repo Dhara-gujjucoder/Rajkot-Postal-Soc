@@ -35,7 +35,7 @@
                                 <select class="choices form-select @error('ledger_group_id') is-invalid @enderror"
                                     aria-label="Permissions" id="ledger_group_id" name="ledger_group_id"
                                     style="height: 210px;">
-                                    <option value="">{{__('---Select Ledger Group---')}}</option>
+                                    <option value="">{{__('Select Ledger Group')}}</option>
                                     @forelse ($ledger_groups as $ledger_group)
                                         <option value="{{ $ledger_group->id }}"
                                             {{ $ledger_group->id == old('ledger_group_id')  ? 'selected' : '' }}>
