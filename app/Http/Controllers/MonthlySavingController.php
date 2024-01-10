@@ -59,6 +59,8 @@ class MonthlySavingController extends Controller
      */
     public function update(Request $request, string $id)
     {
+
+        $request->validate(['monthly_saving' => 'required']);
         $monthly_saving = MonthlySaving::where('id',$id)->first();
         if($request->is_active == 1){
             MonthlySaving::query()->where('is_active',1)->update(['is_active' => false,'end_date' => date('Y-m-d H:i:s')]);
