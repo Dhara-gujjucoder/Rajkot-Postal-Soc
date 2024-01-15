@@ -11,19 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bulk_entries', function (Blueprint $table) {
+        Schema::create('bulk_entry_master', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('bulk_master_id');
-            $table->bigInteger('user_id');
             $table->bigInteger('year_id');
-            $table->bigInteger('ledger_group_id');
-            $table->string('month');
+            $table->bigInteger('department_id');
             $table->bigInteger('rec_no')->nullable();
-            $table->double('principal')->nullable();
-            $table->double('interest')->nullable();
-            $table->double('fixed')->nullable();
-            $table->double('ms')->nullable();
-            $table->double('total_amount');
+            $table->string('month')->nullable();
+            $table->integer('is_ms_applicable')->default(0);
+            $table->double('ms_value')->default(0);
+            $table->double('month_total')->default(0);
+            $table->double('department_total')->default(0);
+            $table->integer('status')->default(1);
+            $table->bigInteger('created_by');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -34,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bulk_entry');
+        Schema::dropIfExists('bulk_entry_master');
     }
 };

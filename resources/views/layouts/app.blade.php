@@ -116,6 +116,18 @@
             }).showToast();
         </script>
     @endif
+    @if (session('error'))
+    <script>
+        Toastify({
+            text: "{{ session('error') }}",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "#f27474",
+        }).showToast();
+    </script>
+@endif
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))

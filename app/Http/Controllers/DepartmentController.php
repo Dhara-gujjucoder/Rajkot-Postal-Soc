@@ -36,7 +36,7 @@ class DepartmentController extends Controller
     {
         return view('department.create', [
             'page_title'=> __('Add New Department'),
-            'ledger_groups' => LedgerGroup::get()
+            'ledger_groups' => LedgerGroup::where('parent_id',0)->get()
         ]);
     }
 
@@ -71,7 +71,7 @@ class DepartmentController extends Controller
         $department = Department::findOrFail($id);
         return view('department.edit', [
             'department'=> $department,
-            'ledger_groups' => LedgerGroup::get(),
+            'ledger_groups' => LedgerGroup::where('parent_id',0)->get(),
             'page_title'=> __('Edit Department')
         ]);
     }

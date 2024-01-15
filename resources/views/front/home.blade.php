@@ -9,7 +9,6 @@
                 <div class="dash-icon"><img src="{{ asset('front/images/user.svg') }}" alt=""></div>
             </a>
         </div>
-
         <div class="desh-listbox greenbg-box wow fadeInLeft" data-wow-delay="0.4s">
             <a href="my-account.html">
                 <div class="dash-box-title">{{ __('My Account') }}</div>
@@ -29,13 +28,11 @@
                 <div class="dash-icon"><img src="{{ asset('front/images/calculator.svg') }}" alt=""></div>
             </a>
         </div>
-
         <div class="applyloanbtn mt-5 wow fadeInUp" data-wow-delay="0.4s">
-            <a href="" class="btn btn-primary w-100">
+            <a href="{{ route('user.loan.calculator') }}" class="btn btn-primary w-100">
                 {{ __('Apply for Loan') }}
             </a>
         </div>
-
     </div>
 </div>
 @endsection

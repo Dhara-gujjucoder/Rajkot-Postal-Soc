@@ -10,15 +10,32 @@ class BulkEntry extends Model
 {
     use HasFactory,SoftDeletes;
     protected $fillable = [
+        'bulk_entry_master_id',
         'user_id',	
+        'department_id',
         'year_id',	
         'ledger_group_id',
         'month',	
         'rec_no',	
         'principal',	
         'interest',	
-        'fixed',	
+        'fixed',
+        'ms',
         'total_amount'
     ];
 
+    public function member()
+    {
+        return $this->hasOne(Member::class, 'user_id', 'user_id');
+    }
+
+    public function master_entry()
+    {
+        return $this->hasOne(BulkEntryMaster::class, 'id', 'bulk_entry_master_id');
+    }
+
+    public function department()
+    {
+        return $this->hasOne(Member::class, 'user_id', 'user_id');
+    }
 }

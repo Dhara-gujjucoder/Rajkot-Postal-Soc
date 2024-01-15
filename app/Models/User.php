@@ -61,7 +61,7 @@ class User extends Authenticatable
     {
         return $query->when(!auth()->user()->is_member, function ($q) {
             $q->where('is_member', 0);
-        });
+        }); 
     }
 
     public function scopeUserMember($query)

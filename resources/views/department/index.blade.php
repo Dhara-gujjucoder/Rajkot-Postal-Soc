@@ -22,7 +22,7 @@
                         <tr>
                             <th scope="row">{{  ($key+1) }}</th>
                             <td>{{ $department->department_name }}</td>
-                            <td>{{ $department->LedgerGroupId->type_name ?? '' }}</td>
+                            <td>{{ $department->LedgerGroupId->ledger_group ?? '' }}</td>
                             <td>
                                 <form action="{{ route('department.destroy', $department->id) }}" method="post">
                                     @csrf

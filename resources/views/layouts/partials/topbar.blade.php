@@ -23,7 +23,7 @@
             </li>
             <li class="menu-item  has-sub ">
                 <a href="#" class="menu-link">
-                    <span><i class="bi bi-person"></i> {{ Auth::user()->name }} </span>
+                    <span><i class="bi bi-person"></i> {{ Auth::user()->name }}</span>
                 </a>
                 <div class="submenu">
                     <!-- Wrap to submenu-group-wrapper if you want 3-level submenu. Otherwise remove it. -->
@@ -31,7 +31,7 @@
                         <ul class="submenu-group">
                                 <li class="submenu-item {{ request()->is('home*') ? 'active' : '' }}">
                                     <a href="{{ route('users.profile', auth()->user()->id) }}"
-                                        class="submenu-link">{{ 'Edit Profile' }}</a>
+                                        class="submenu-link">{{ __('Edit Profile') }}</a>
                                 </li>
                         </ul>
                     </div>

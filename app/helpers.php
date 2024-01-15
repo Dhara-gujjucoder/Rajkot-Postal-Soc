@@ -1,11 +1,20 @@
 <?php
 
-use App\Models\FinancialYear;
+use App\Models\Setting;
 use App\Models\LedgerGroup;
+use App\Models\FinancialYear;
+
+if (! function_exists('Setting')){
+
+    function getSetting(){
+        $setting = Setting::first();
+        return ($setting);
+    }
+}
 
 if (! function_exists('currentYear')) {
     function currentYear() {
-        return FinancialYear::where('is_selected',1)->pluck('year')->first();
+        return FinancialYear::where('is_current',1)->first();
     }
 }
 

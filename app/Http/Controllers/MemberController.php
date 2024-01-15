@@ -77,12 +77,15 @@ class MemberController extends Controller
                     });
                 })
                 ->orderColumn('registration_no', function($query, $order) {
-                    // $sql = "CONCAT(users.first_name,'-',users.last_name)  like ?";
                     $query->whereHas('member',function($q) use ($order) {
                         $q->orderBy('registration_no', $order);
                     });
                 })
-
+                ->orderColumn('department_id', function($query, $order) {
+                    $query->whereHas('member',function($q) use ($order) {
+                        $q->orderBy('department_id', $order);
+                    });
+                })
                 ->editColumn('registration_no', function($row){
                     return $row->member->registration_no;
                 })

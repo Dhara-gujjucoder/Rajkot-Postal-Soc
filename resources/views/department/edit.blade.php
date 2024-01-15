@@ -17,7 +17,7 @@
                     <form action="{{ route('department.update', $department->id) }}" method="post">
                         @csrf
                         @method('PUT')
-                        
+
                         <div class="mb-3 row">
                             <label for="department_name" class="col-md-4 col-form-label text-md-end text-start">{{__('Department Name')}}</label>
                             <div class="col-md-6">
@@ -28,17 +28,18 @@
                                 @endif
                             </div>
                         </div>
-                       
+
                         <div class="mb-3 row">
                             <label for="ledger_group_id" class="col-md-4 col-form-label text-md-end text-start">{{__('Ledger Group')}}</label>
                             <div class="col-md-6">
                                 <select class="choices form-select @error('ledger_group_id') is-invalid @enderror"
                                     aria-label="Permissions" id="ledger_group_id" name="ledger_group_id"
                                     style="height: 210px;">
-                                    @forelse ($ledger_groups as $ledger_group)
-                                        <option value="{{ $ledger_group->id }}"
-                                            {{ $ledger_group->id == old('ledger_group_id',$department->ledger_group_id)  ? 'selected' : '' }}>
-                                            {{ $ledger_group->type_name }}
+                                    <option value="">{{ __('Select Ledger Group') }}</option>
+                                    @forelse ($ledger_groups as $ledger)
+                                        <option value="{{ $ledger->id }}"
+                                            {{ $ledger->id == old('ledger_group_id',$department->ledger_group_id)  ? 'selected' : '' }}>
+                                            {{ $ledger->ledger_group }}
                                         </option>
                                     @empty
                                     @endforelse

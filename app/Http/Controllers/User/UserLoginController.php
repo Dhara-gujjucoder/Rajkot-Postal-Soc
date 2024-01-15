@@ -19,18 +19,16 @@ class UserLoginController extends Controller
         // $this->middleware('permission:create-account_type', ['only' => ['create', 'store']]);
         // $this->middleware('permission:edit-account_type', ['only' => ['edit', 'update']]);
         // $this->middleware('permission:delete-account_type', ['only' => ['destroy']]);
-        // parent::__construct();
+        parent::__construct();
     }
 
     public function index()
     {
-    // dd(app()->getLocale());
         return view('front.home');
     }
 
     public function comingsoon()
     {
-    // dd(app()->getLocale());
         // return view('front.home');
         return view('welcome');
     }
@@ -43,6 +41,8 @@ class UserLoginController extends Controller
     public function profile()
     {
         $data['user'] = Auth::user();
+        $data['member'] = $data['user']->member;
+        // dd($data['user']->email);
         return view('front.profile',$data);
     }
 

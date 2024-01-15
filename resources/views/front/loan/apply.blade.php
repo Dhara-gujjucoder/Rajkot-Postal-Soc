@@ -9,13 +9,13 @@
             <div class="row wow fadeInRight" data-wow-delay="0.2s">
                 <div class="col-md-12">
                     <div class="dashboard-detail-data mb-3 align-items-center">
-                    <label class="col-form-label"><strong>Loan Amount</strong></label>
+                    <label class="col-form-label"><strong>{{ __('Loan Amount') }}</strong></label>
                     <div class="col-form-info pt-0"><input type="text" class="form-control" name="name"></div>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="dashboard-detail-data mb-4 align-items-center">
-                    <label class="col-form-label"><strong>Tenure (months)</strong></label>
+                    <label class="col-form-label"><strong>{{ __('Tenure (months)') }}</strong></label>
                     <div class="col-form-info pt-0">
                         <select class="form-select" aria-label="Default select example">
                             <option selected value="1">1</option>
@@ -36,7 +36,7 @@
                 </div>
             </div>
 
-            <div class="desh-listbox skybluebg-box wow fadeInRight" data-wow-delay="0.2s">
+            {{-- <div class="desh-listbox skybluebg-box wow fadeInRight" data-wow-delay="0.2s">
                 <div class="dash-box-title">Personal Details</div>
             </div>
             <div class="row wow fadeInRight" data-wow-delay="0.2s">
@@ -57,7 +57,7 @@
                     <label class="col-form-label"><strong>Present Address:</strong></label>
                     <div class="col-form-info">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Non provident hic saepe aliquid velit quaerat!</div>
                     </div>
-                </div>                
+                </div>
             </div>
 
             <div class="desh-listbox skybluebg-box pt-2 mt-4 wow fadeInLeft" data-wow-delay="0.2s">
@@ -82,8 +82,8 @@
                     <div class="col-form-info">&#8377; 30,000</div>
                     </div>
                 </div>
-                       
-            </div>
+
+            </div> --}}
 
             <div class="mt-5 justify-content-center skybluebg-box wow fadeInUp" data-wow-delay="0.2s">
                 <div class="loan-details">
@@ -100,7 +100,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="text-center"><a href="#" class="btn btn-primary w-100">Eligible for Loan</a></div>
+                    <div class="text-center"><a href="#" class="btn btn-primary w-100">{{ __('Eligible for Loan') }}</a></div>
                 </div>
             </div>
 
@@ -119,10 +119,10 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="text-center"><a href="#" class="btn btn-primary w-100">Not Eligible for Loan</a></div>
+                    <div class="text-center"><a href="#" class="btn btn-primary w-100">{{ __('Not Eligible for Loan') }}</a></div>
                 </div>
             </div>
-        </div>    
-    </div>   
+        </div>
+    </div>
     </div>
 @endsection

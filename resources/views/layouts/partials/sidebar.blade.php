@@ -127,7 +127,7 @@
                 @canany(['create-department', 'edit-department', 'delete-department', 'view-department'])
                     <li class="sidebar-item {{ request()->is('admin/department*') ? 'active' : '' }}">
                         <a href="{{ route('department.index') }}" class='sidebar-link'>
-                            <i class="bi bi-bookmark-dash-fill"></i>
+                            <i class="bi bi-bounding-box"></i>
                             <span>{{ __('Department') }}</span>
                         </a>
                     </li>
@@ -153,7 +153,8 @@
                 @canany(['create-bulk_entries', 'edit-bulk_entries', 'delete-bulk_entries', 'view-bulk_entries'])
                     <li class="sidebar-item {{ request()->is('admin/bulk_entries*') ? 'active' : '' }}">
                         <a href="{{ route('bulk_entries.index') }}" class='sidebar-link'>
-                            <i class="bi bi-bookmark-dash-fill"></i>
+                            <i class="bi bi-list-check"></i>
+
                             <span>{{ __('Bulk Entries') }}</span>
                         </a>
                     </li>
@@ -163,7 +164,7 @@
                     <li
                         class="sidebar-item  has-sub {{ request()->is('admin/loan_matrix*') || request()->is('admin/loaninterest*') ? 'active' : '' }}">
                         <a href="#" class="sidebar-link">
-                            <i class="bi bi-people-fill"></i>
+                            <i class="bi bi-clipboard-plus"></i>
                             <span>{{ __('Loan') }}</span>
                         </a>
                         <ul
@@ -175,13 +176,13 @@
                                     </a>
                                 </li>
                             @endcan
-                            @canany(['loaninterest-setting'])
+                            {{-- @canany(['loaninterest-setting'])
                                 <li class="submenu-item {{ request()->is('admin/loaninterest*') ? 'active' : '' }}">
                                     <a href="{{ route('loaninterest.index') }}" class='submenu-link'>
                                         <span>{{ __('Loan Interest') }}</span>
                                     </a>
                                 </li>
-                            @endcan
+                            @endcan --}}
                         </ul>
                     </li>
                 @endcan

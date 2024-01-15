@@ -13,7 +13,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\BulkEntryController;
 use App\Http\Controllers\DepartmentController;
-use App\Http\Controllers\AccountTypeController;
 use App\Http\Controllers\LedgerEntryController;
 use App\Http\Controllers\LoanCalculationMatrixController;
 use App\Http\Controllers\LedgerGroupController;
@@ -22,7 +21,6 @@ use App\Http\Controllers\ShareAmountController;
 use App\Http\Controllers\FinancialYearController;
 use App\Http\Controllers\LedgerAccountController;
 use App\Http\Controllers\MonthlySavingController;
-use App\Http\Controllers\User\UserLoginController;
 use App\Http\Controllers\SalaryDeductionController;
 
 
@@ -42,13 +40,10 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
     Route::post('/import/member', [App\Http\Controllers\MemberImportController::class, 'storewithimage'])->name('member.import');
     Route::get('/import/salary', [App\Http\Controllers\SalaryDeductionController::class, 'salary_import'])->name('salary.import');
     Route::post('/import/salary', [App\Http\Controllers\SalaryDeductionController::class, 'importsalary'])->name('salary.import');
+    Route::get('/export/bulk_entries/{id}', [App\Http\Controllers\BulkEntryController::class, 'export'])->name('bulk_entries.export');
 
 
-
-    Route::resource('loaninterest', LoanSettingController::class);
-    Route::resource('shareamount', ShareAmountController::class);
-    Route::resource('monthlysaving', MonthlySavingController::class);
-    /*all masters*/
+    /*all modules*/
     Route::resources([
         'roles' => RoleController::class,
         'users' => UserController::class,
@@ -61,6 +56,9 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
         'department' => DepartmentController::class,
         'salary_deduction' => SalaryDeductionController::class,
         'financial_year' => FinancialYearController::class,
+        'loaninterest'=> LoanSettingController::class,
+        'shareamount' => ShareAmountController::class,
+        'monthlysaving'=>  MonthlySavingController::class
     ]);
 
 

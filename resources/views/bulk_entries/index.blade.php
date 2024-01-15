@@ -6,48 +6,48 @@
 <section class="page-content">
     <div class="card">
         <div class="card-body">
-            @can('create-role')
-                <a href="{{ route('bulk_entries.create') }}" class="btn btn-outline-success btn-md  float-end my-3"><i class="bi bi-plus-circle"></i> {{ __('Add New Bulk Entry') }}</a>
+            @can('create-bulk_entries')
+                <a href="{{ route('bulk_entries.create') }}" class="btn btn-outline-success btn-md  float-end my-3"><i
+                        class="bi bi-plus-circle"></i> {{ __('Add New Bulk Entry') }}</a>
             @endcan
             <div class="pt-4 mt-5">
                 <table class="table table-bordered" id="table1">
                     <thead>
                         <tr>
                             <th>{{ __('No.') }}</th>
-                            <th>{{ __('Ledger') }}</th>
-                            <th>{{ __('Particular') }}</th>
-                            <th>{{ __('Amount ') }}</th>
-                            <th>{{ __('Date ') }}</th>
+                            <th>{{ __('Month') }}</th>
+                            <th>{{ __('Total') }}</th>
+                            <th>{{ __('Status') }}</th>
                             <th>{{ __('Action') }} </th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($ledger_entries as $key => $entry)
-                        <tr>
-                            <td>{{ $entry->id }}</td>
-                            <td>{{ $entry->LedgerAcountName->account_name }}</td>
-                            <td>{{ $entry->particular }}</td>
-                            <td>{{ $entry->amount }}</td>
-                            <td>{{ $entry->date }}</td>
-                            <td>
-                                <form action="{{ route('ledger_entries.destroy', $entry->id) }}" method="post">
-                                    @csrf
-                                    @method('DELETE')
+                        @foreach ($bulk_entries as $key => $entry)
+                            <tr>
+                                <td>{{ $entry->id }}</td>
+                                <td>{{ date('M-Y',strtotime('01-'.$entry->month)) }}</td>
+                                <td>{{ $entry->total }}</td>
+                                <td>{{ $entry->status }}</td>
+                                <td>
+                                    <form action="{{ route('bulk_entries.destroy', $entry->id) }}" method="post">
+                                        @csrf
+                                        @method('DELETE')
 
-                                        @can('edit-ledger_entries')
-                                            <a href="{{ route('ledger_entries.edit', $entry->id) }}" class="btn btn-outline-warning btn-sm"><i
-                                                    class="bi bi-pencil-square"></i> {{__('Edit')}}</a>
+                                        @can('edit-bulk_entries')
+                                            @if($entry->getRawOriginal('status') != '2')
+                                            <a href="{{ route('bulk_entries.edit', $entry->id) }}"
+                                                class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square"></i>
+                                                {{ __('Edit') }}</a>
+                                            @endif
                                         @endcan
-
-                                        @can('delete-ledger_entries')
-                                                <button type="submit" class="btn btn-outline-danger btn-sm"
-                                                    onclick="return confirm(`{{__('Do you want to delete this ledger Entry?')}}`);"><i
-                                                        class="bi bi-trash"></i> {{__('Delete')}}</button>
+                                        @can('export-bulk_entries')
+                                            <a href="{{ route('bulk_entries.export', $entry->id) }}"
+                                                class="btn btn-outline-info btn-sm"><i class="bi bi-file-earmark-excel"></i>
+                                                {{ __('Export') }}</a>
                                         @endcan
-
-                                </form>
-                            </td>
-                        </tr>
+                                    </form>
+                                </td>
+                            </tr>
                         @endforeach
 
                 </table>
@@ -57,10 +57,9 @@
     </div>
 @endsection
 @push('script')
-<script>
-    $(function() {
-        var table = $('#table1').DataTable({
+    <script>
+        $(function() {
+            var table = $('#table1').DataTable({});
         });
-    });
-</script>
+    </script>
 @endpush

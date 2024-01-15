@@ -70,10 +70,14 @@ class PermissionSeeder extends Seeder
             // 'delete-ledger_group',
             // 'view-ledger_group'
 
-            'create-loan_matrix',
-            'edit-loan_matrix',
-            'delete-loan_matrix',
-            'view-loan_matrix'
+            // 'create-loan_matrix',
+            // 'edit-loan_matrix',
+            // 'delete-loan_matrix',
+            // 'view-loan_matrix',
+
+            // 'create-bulk_entries',
+            // 'edit-bulk_entries',
+            // 'export-bulk_entries'
 
         ];
 

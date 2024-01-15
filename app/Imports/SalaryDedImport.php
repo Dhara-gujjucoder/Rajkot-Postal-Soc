@@ -2,11 +2,13 @@
 
 namespace App\Imports;
 
-use App\Models\AccountType;
-use App\Models\LedgerAccount;
-use App\Models\LedgerGroup;
+use App\Models\User;
 use App\Models\Member;
+use App\Models\AccountType;
+use App\Models\LedgerGroup;
+use App\Models\LedgerAccount;
 use App\Models\SalaryDeduction;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -83,6 +85,36 @@ class SalaryDedImport implements ToModel,WithMultipleSheets,WithHeadingRow, Skip
 
                     // dd($member);
                 } else {
+                    $user = new User();
+                    // $user->id = $row[1];
+                    $user->name = $row[3];
+                    $user->email = $row[3].rand(11,99);
+                    $user->password = Hash::make('rajkotpostalsoc12#');
+                    $user->save();
+                    $user->assignRole('User');
+
+                    $member = new Member();
+                    $member->user_id = $user->id;
+                    $member->department_id = $this->getdept_id($row[0]);
+                    $member->registration_no = '11111111';
+                    $member->uid =  $row[2];
+                    $member->mobile_no =  11111111;
+                    $member->whatsapp_no = 11111111;
+                    $member->aadhar_card_no =  11111111;
+                    $member->status = 0;
+                    $member->save();
+                    return new SalaryDeduction([
+                        'user_id'  => $member->user_id,
+                        'uid'  => $row[2],
+                        'department_id' => $member->department_id,
+                        'rec_no'  => $row[4],
+                        'principal' => $row[5],
+                        'interest' => $row[6],
+                        'fixed'  => $row[7],
+                        'total_amount' => $row[8],
+                        'month'  => $this->month.'-'.$this->year,
+                        'year_id' => 1,
+                    ]);
                     dump( 'nn'.$row[2]);
                     $not_inserted[] = $row;
                 }
