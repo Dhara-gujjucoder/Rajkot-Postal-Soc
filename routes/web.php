@@ -18,9 +18,7 @@ use App\Http\Controllers\User\UserLoginController;
 |
 */
 
-Route::get('/', function () {
-    return view('front.login');
-})->middleware(['guest:users','blockIP']);
+Route::get('/', [UserLoginController::class, 'showLoginForm'])->middleware(['guest:users','blockIP']);
 
 Route::get('/home', [UserLoginController::class, 'comingsoon'])->name('front.home');
 
