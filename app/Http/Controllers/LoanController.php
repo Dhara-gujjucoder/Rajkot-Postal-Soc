@@ -49,6 +49,8 @@ class LoanController extends Controller
     public function apply()
     {
         $data['page_title'] = __('Loan Apply');
+        $data['user'] =  Auth::user();
+        $data['member'] = $data['user']->member;
         return view('front.loan.apply', $data);
     }
 

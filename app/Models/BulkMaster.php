@@ -15,7 +15,7 @@ class BulkMaster extends Model
     protected function Status(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => $value == 2 ? __('Completed') : __('Pending'),
+            get: fn (string $value) => $value == 2 ? __('Completed') : __('Draft'),
         );
     }
     protected static function booted()

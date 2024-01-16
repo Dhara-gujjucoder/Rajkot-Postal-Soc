@@ -209,6 +209,7 @@ return [
         'ledger_ac_id'=> 'ખાતાવહી',
         'particular'=> 'ખાસ',
         'phone' => 'ફોન',
+        'required_share' => 'જરૂરી શેર',
 
 
     ],

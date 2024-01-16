@@ -48,7 +48,7 @@ class DepartmentController extends Controller
         // dd($request->all());
         $request->validate([
             'department_name' => 'required|string|max:255|unique:department,department_name',
-            'ledger_group_id' => 'required',
+            // 'ledger_group_id' => 'required',
         ]);
         Department::create(['ledger_group_id' => $request->ledger_group_id,'department_name' => $request->department_name,'created_by' => Auth::user()->id]);
         return redirect()->route('department.index')
@@ -81,7 +81,7 @@ class DepartmentController extends Controller
      */
     public function update(Request $request,Department $department): RedirectResponse
     {
-        $request->validate(['ledger_group_id' => 'required','department_name'=>'required|string|max:255|unique:department,department_name,' . $department->id]);
+        $request->validate(['department_name'=>'required|string|max:255|unique:department,department_name,' . $department->id]);
         $input = $request->only('ledger_group_id','department_name');
         $department->update($input);
         return redirect()->route('department.index')

@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->integer('year_id');
             $table->string('month');
-            $table->integer('is_ms_applicable');
-            $table->double('ms_value');
+            $table->integer('is_ms_applicable')->default(0);
+            $table->double('ms_value')->default(0);
             $table->integer('created_by');
             $table->double('total');
             $table->integer('status');

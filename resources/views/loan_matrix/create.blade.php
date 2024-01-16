@@ -47,6 +47,19 @@
                         </div>
 
                         <div class="mb-3 row">
+                            <label for="required_share"
+                                class="col-md-2 col-form-label text-md-end text-start">{{ __('Required share') }}</label>
+                            <div class="col-md-9">
+                                <input type="number" class="form-control @error('required_share') is-invalid @enderror"
+                                    {{-- step="any" --}} id="required_share" name="required_share"
+                                    value="{{ old('required_share') }}" placeholder="{{ __('Required share') }}">
+                                @if ($errors->has('required_share'))
+                                    <span class="text-danger">{{ $errors->first('required_share') }}</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
                             <label for="Status"
                                 class="col-md-2 col-form-label text-md-end text-start">{{ __('Status') }}
                             </label>

@@ -30,7 +30,7 @@ class BulkEntryMaster extends Model
     protected function Status(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => $value == 2 ? __('Done') : __('Pending'),
+            get: fn (string $value) => $value == 2 ? __('Done') : __('Draft'),
         );
     }
     protected static function booted()

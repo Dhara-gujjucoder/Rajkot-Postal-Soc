@@ -6,8 +6,8 @@
     <div class="dashboard-detail-page apply-detail-page">
     <div class="container">
         <div class="dashboard-box-listing">
-            <div class="row wow fadeInRight" data-wow-delay="0.2s">
-                <div class="col-md-12">
+            {{--<div class="row wow fadeInRight" data-wow-delay="0.2s">
+                 <div class="col-md-12">
                     <div class="dashboard-detail-data mb-3 align-items-center">
                     <label class="col-form-label"><strong>{{ __('Loan Amount') }}</strong></label>
                     <div class="col-form-info pt-0"><input type="text" class="form-control" name="name"></div>
@@ -34,58 +34,72 @@
                     </div>
                     </div>
                 </div>
+            </div>--}}
+
+            <div class="desh-listbox skybluebg-box wow fadeInDown" data-wow-delay="0.2s">
+                <div class="dash-box-title">{{ __('Personal Details') }}</div>
             </div>
 
-            {{-- <div class="desh-listbox skybluebg-box wow fadeInRight" data-wow-delay="0.2s">
-                <div class="dash-box-title">Personal Details</div>
-            </div>
-            <div class="row wow fadeInRight" data-wow-delay="0.2s">
+            <div class="row wow fadeInUp" data-wow-delay="0.2s">
                 <div class="col-md-6">
                     <div class="dashboard-detail-data">
-                    <label class="col-form-label"><strong>Name:</strong></label>
-                    <div class="col-form-info">Calvin Talley</div>
+                    <label class="col-form-label"><strong>{{ __('Name') }}:</strong></label>
+                    <div class="col-form-info">{{ $user->name }}</div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="dashboard-detail-data">
-                    <label class="col-form-label"><strong>PAN Number:</strong></label>
-                    <div class="col-form-info">CNEPS6645W</div>
+                    <label class="col-form-label"><strong>{{ __('PAN Number') }}:</strong></label>
+                    <div class="col-form-info">{{ $member->pan_no }}</div>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="dashboard-detail-data">
-                    <label class="col-form-label"><strong>Present Address:</strong></label>
-                    <div class="col-form-info">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Non provident hic saepe aliquid velit quaerat!</div>
+                    <label class="col-form-label"><strong>{{ __('Present Address') }}:</strong></label>
+                    <div class="col-form-info">{{ $member->parmenant_address }}</div>
                     </div>
                 </div>
             </div>
 
-            <div class="desh-listbox skybluebg-box pt-2 mt-4 wow fadeInLeft" data-wow-delay="0.2s">
-                <div class="dash-box-title">Details of other Liabilities</div>
+            <div class="desh-listbox skybluebg-box pt-2 mt-4 wow fadeInDown" data-wow-delay="0.2s">
+                <div class="dash-box-title">{{ __('Details of other Liabilities') }}</div>
+            </div>
+            <div class="row wow fadeInUp" data-wow-delay="0.2s">
+                <div class="col-md-6">
+                    <div class="dashboard-detail-data">
+                    <label class="col-form-label"><strong>{{ __('Current loan') }}:</strong></label>
+                    <div class="col-form-info">&#8377; 0</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="dashboard-detail-data">
+                    <label class="col-form-label"><strong>{{ __('Remaining Loan') }}:</strong></label>
+                    <div class="col-form-info">&#8377; 0</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="dashboard-detail-data">
+                    <label class="col-form-label"><strong>{{ __('Share') }}:</strong></label>
+                    <div class="col-form-info">&#8377; 0</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="dashboard-detail-data">
+                    <label class="col-form-label"><strong>{{ __('Required share') }}:</strong></label>
+                    <div class="col-form-info" id="required_share">&#8377; 0</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="desh-listbox skybluebg-box wow fadeInRight" data-wow-delay="0.2s">
+                <div class="dash-box-title">Your Loan Detail</div>
             </div>
             <div class="row wow fadeInLeft" data-wow-delay="0.2s">
-                <div class="col-md-6">
-                    <div class="dashboard-detail-data">
-                    <label class="col-form-label"><strong>Loans from Employer:</strong></label>
-                    <div class="col-form-info">&#8377; 50,000</div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="dashboard-detail-data">
-                    <label class="col-form-label"><strong>Materials/Assets purchased from the seller on credit:</strong></label>
-                    <div class="col-form-info">&#8377; 30,000</div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="dashboard-detail-data">
-                    <label class="col-form-label"><strong>Other liabilities:</strong></label>
-                    <div class="col-form-info">&#8377; 30,000</div>
-                    </div>
-                </div>
+                coming soon ....
+            </div>
 
-            </div> --}}
-
-            <div class="mt-5 justify-content-center skybluebg-box wow fadeInUp" data-wow-delay="0.2s">
+            {{-- <div class="mt-5 justify-content-center skybluebg-box wow fadeInUp" data-wow-delay="0.2s">
                 <div class="loan-details">
                     <div class="calculator__info d-flex justify-content-between blue-text-dark">
                         <div class="calculator__info-text radius-12 w-100">
@@ -121,7 +135,7 @@
                     </div>
                     <div class="text-center"><a href="#" class="btn btn-primary w-100">{{ __('Not Eligible for Loan') }}</a></div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
     </div>

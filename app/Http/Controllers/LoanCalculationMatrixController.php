@@ -32,7 +32,7 @@ class LoanCalculationMatrixController extends Controller
         return view('loan_matrix.index', $data);
     }
 
-    
+
     public function create()
     {
         return view('loan_matrix.create', [
@@ -44,18 +44,20 @@ class LoanCalculationMatrixController extends Controller
     {
         $request->validate([
             'amount' => 'required',
-            'minimum_emi' => 'required'
+            'minimum_emi' => 'required',
+            'required_share' =>'required'
         ]);
         LoanCalculationMatrix::create([
             'amount' => $request->amount,
             'minimum_emi' => $request->minimum_emi,
+            'required_share' => $request->required_share,
             'status' => $request->status
         ]);
         return redirect()->route('loan_matrix.index')
                 ->withSuccess(__('New Loan is added successfully.'));
     }
 
-    
+
     public function show(string $id)
     {
         //
@@ -70,18 +72,18 @@ class LoanCalculationMatrixController extends Controller
         ]);
     }
 
-   
+
     public function update(Request $request,LoanCalculationMatrix $loan_matrix): RedirectResponse
     {
-        $request->validate(['amount' => 'required','minimum_emi'=>'required' ]);
-        $input = $request->only('amount','minimum_emi','status');
+        $request->validate(['amount' => 'required','minimum_emi'=>'required', 'required_share' =>'required']);
+        $input = $request->only('amount','minimum_emi','required_share','status');
         $loan_matrix->update($input);
-        
+
         return redirect()->route('loan_matrix.index')
                 ->withSuccess(__('Loan is updated successfully.'));
     }
 
-    
+
     public function destroy(LoanCalculationMatrix $loan_matrix): RedirectResponse
     {
         $loan_matrix->delete();

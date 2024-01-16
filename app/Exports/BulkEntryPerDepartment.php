@@ -62,7 +62,7 @@ class BulkEntryPerDepartment implements FromCollection, WithTitle, WithMapping, 
             return [
                 $bulk_entry->member->uid,
                 $bulk_entry->member->user->name,
-                $bulk_entry->master_entry->receipt->cheque_no ? $bulk_entry->rec_no : '',
+                $bulk_entry->master_entry->cheque_no ? $bulk_entry->rec_no : '',
                 $bulk_entry->principal,
                 $bulk_entry->interest,
                 $bulk_entry->fixed,

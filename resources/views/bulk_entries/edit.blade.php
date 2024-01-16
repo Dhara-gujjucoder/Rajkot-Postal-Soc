@@ -17,7 +17,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('bulk_entries.update', $bulk_master->id) }}" method="post"
+                    <form action="{{ route('bulk_entries.update', $bulk_master->id) }}" method="post" id="bulkform"
                         enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
@@ -349,7 +349,7 @@
                                         <option value="">{{ __('Select Status') }}</option>
                                         <option value="{{ '1' }}"
                                             {{ old('status', $bulk_master->getRawOriginal('status')) == '1' ? 'selected' : '' }}>
-                                            {{ 'Pending' }}</option>
+                                            {{ 'Draft' }}</option>
                                         <option value="{{ '2' }}"
                                             {{ old('status', $bulk_master->getRawOriginal('status')) == '2' ? 'selected' : '' }}>
                                             {{ 'Completed' }}</option>
@@ -357,8 +357,49 @@
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <input type="submit" class="col-md-3 offset-md-5 btn btn-primary"
-                                    value="{{ __('Submit') }}">
+                                <input type="button" class="col-md-3 offset-md-5 btn btn-primary"
+                                    value="{{ __('Submit') }}" id="submitbtn" onclick="validateStatus()">
+                            </div>
+                            <button type="button" class="btn btn-outline-primary block" style="display:none"
+                                data-bs-toggle="modal" data-bs-target="#exampleModalCenter" id="notmatch"></button>
+                            <div class="modal fade text-left" id="exampleModalCenter" tabindex="-1"
+                                aria-labelledby="myModalLabel1" style="display: none;" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="myModalLabel1">
+                                                {{ __('Amount Confirmation') }}</h5>
+                                            <button type="button" class="close rounded-pill" data-bs-dismiss="modal"
+                                                aria-label="Close">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="feather feather-x">
+                                                    <line x1="18" y1="6" x2="6"
+                                                        y2="18"></line>
+                                                    <line x1="6" y1="6" x2="18"
+                                                        y2="18"></line>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p id="not_matched_dept">
+
+                                            </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn" data-bs-dismiss="modal">
+                                                <i class="bx bx-x d-block d-sm-none"></i>
+                                                <span class="d-none d-sm-block">{{ __('No') }}</span>
+                                            </button>
+                                            <button type="button" id="still_continue" class="btn btn-primary ms-1"
+                                                data-bs-dismiss="modal">
+                                                <i class="bx bx-check d-block d-sm-none"></i>
+                                                <span class="d-none d-sm-block">{{ __('Yes') }}</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                     </form>
                 </div>
@@ -371,16 +412,35 @@
 @push('script')
 <script>
     var departments = @json($departments);
-    var previous = $("#status").val();
-
-    $('#status').change(function() {
-        if ($(this).val() == 2) {
-            var sure = confirm("{{ __('Are you sure about compelete this month and its verification?') }}");
-            if (!sure) {
-                $('#status').val(previous);
-            }
-        }
+    $('#still_continue').on('click', function() {
+        $('#bulkform').trigger('submit');
     });
+
+    function validateStatus() {
+        var status = $("#status").val();
+        if (status == 2) {
+            var not_matched_dept =
+                `<div>{{ __('Exact amount of following deparments') }}<br><br><table class="table table-bordered"><tr><th>{{ __('Department') }}</th><th>{{ __('Total') }}</th><th>{{ __('Exact Amount') }}</th></tr>`;
+            departments.forEach(department => {
+                var dept_total = $('#summary_total_amount_total_' + department.id).val();
+                var exact_amt = $('#exact_amount_' + department.id).val();
+                if (dept_total > exact_amt) {
+                    not_matched_dept += `<tr><td><span >` + department.department_name +
+                        `&nbsp;</span></td><td>` + dept_total + `</td><td><span class="text-danger">` +
+                        exact_amt + `</span></td></tr>`;
+                }
+            });
+            not_matched_dept += `</table><br>` +
+                `{{ __('are not matched with its total, still are you sure want to continue ?') }}`;
+
+            $('#not_matched_dept').html(not_matched_dept);
+            $('#notmatch').trigger('click');
+
+            return false;
+        } else {
+            $('#bulkform').trigger('submit');
+        }
+    }
 
     function apply_ms() {
 

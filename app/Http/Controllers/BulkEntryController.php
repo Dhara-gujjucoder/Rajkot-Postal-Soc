@@ -108,8 +108,8 @@ class BulkEntryController extends Controller
             $bulk_master = BulkMaster::create([
                 'year_id' => $this->current_year->id,
                 'month' =>  $request->month,
-                'is_ms_applicable' =>  $request->is_ms_applicable,
-                'ms_value' => $request->ms_value,
+                'is_ms_applicable' =>  $request->is_ms_applicable ?? 0,
+                'ms_value' => $request->ms_value ?? 0,
                 'created_by' => Auth::user()->id,
                 'total' =>  $month_total,
                 'status' => $request->status,
@@ -125,7 +125,7 @@ class BulkEntryController extends Controller
                     // 'bulk_entry_master_id' => $bulk_entry_master[$key]->id,
                     'receipt_no' => $receipt_no,
                     'cheque_no' => $request->{'cheque_no_' . $department->id},
-                    'exact_amount' => $request->{'exact_amount_' . $department->id}
+                    'exact_amount' => $request->{'exact_amount_' . $department->id} ?? 0
                 ]);
                 $bulk_entry_master = BulkEntryMaster::create([
                     'department_id' => $department->id,
@@ -133,6 +133,7 @@ class BulkEntryController extends Controller
                     'year_id' => $this->current_year->id,
                     'month'    => $request->month,
                     'receipt_id' => $receipt->id,
+                    'rec_no' => $receipt_no,
                     'exact_amount' =>  $request->{'exact_amount_' . $department->id} ?? 0,
                     'cheque_no' =>  $request->{'cheque_no_' . $department->id},
                     'department_total'    =>     $request->{'summary_total_amount_total_' . $department->id},
@@ -179,7 +180,11 @@ class BulkEntryController extends Controller
      */
     public function edit(string $id)
     {
+
         $data['bulk_master'] = BulkMaster::where('id', $id)->first();
+        if($data['bulk_master']->getRawOriginal('status') == 2){
+            return redirect()->back()->withError(__('Bulk Entry already completed.'));
+        }
         $data['bulk_entry_master'] = BulkEntryMaster::where('bulk_master_id', $data['bulk_master']->id)->get();
         $data['page_title'] = __('Edit Bulk Entry');
         $data['departments'] = Department::whereIn('id',  $data['bulk_entry_master']->pluck('department_id'))->get();
@@ -246,13 +251,13 @@ class BulkEntryController extends Controller
         BulkEntry::whereIn('bulk_entry_master_id', $bulk_entry_master->pluck('id')->all())->delete();
         foreach ($data['departments'] as $key => $department) {
             $bulk_entry_master[$key]->update([
-                'exact_amount' =>  $request->{'exact_amount_' . $department->id},
+                'exact_amount' =>  $request->{'exact_amount_' . $department->id} ?? 0,
                 'cheque_no' =>  $request->{'cheque_no_' . $department->id},
                 'department_total' => $request->{'summary_total_amount_total_' . $department->id} ?? 00,
             ]);
             $bulk_entry_master[$key]->receipt->update([
                 'cheque_no' => $request->{'cheque_no_' . $department->id},
-                'exact_amount' => $request->{'exact_amount_' . $department->id},
+                'exact_amount' => $request->{'exact_amount_' . $department->id} ?? 0,
             ]);
             foreach ($department->members as $subkey => $member) {
                 BulkEntry::create([
@@ -260,6 +265,7 @@ class BulkEntryController extends Controller
                     'department_id' => $department->id,
                     'bulk_entry_master_id' =>  $bulk_entry_master[$key]->id,
                     'year_id' => $this->current_year->id,
+                    'rec_no' => $bulk_entry_master[$key]->receipt->receipt_no,
                     'ledger_group_id' => $this->current_year->id,
                     'month' => $bulk_entry_master[$key]->month,
                     'principal' =>     $request->{'principal_' . $department->id . '_' . $member->user_id},
@@ -288,6 +294,7 @@ class BulkEntryController extends Controller
     public function export(string $id)
     {
         $month = BulkMaster::where('id', $id)->first()->month;
-        return (new ExportsBulkEntry($month))->download('invoices.xlsx');
+        $filename = date('M-Y',strtotime('01-'.$month)).'-'.$this->current_year->title;
+        return (new ExportsBulkEntry($month))->download($filename.'.xlsx');
     }
 }

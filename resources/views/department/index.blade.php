@@ -13,7 +13,7 @@
                     <tr>
                         <th scope="col">{{ __('No.') }}</th>
                         <th scope="col">{{__('Name')}}</th>
-                        <th scope="col">{{__('Ledger Group')}}</th>
+                        {{-- <th scope="col">{{__('Ledger Group')}}</th> --}}
                         <th scope="col" style="width: 250px;">{{__('Action')}}</th>
                     </tr>
                 </thead>
@@ -22,7 +22,7 @@
                         <tr>
                             <th scope="row">{{  ($key+1) }}</th>
                             <td>{{ $department->department_name }}</td>
-                            <td>{{ $department->LedgerGroupId->ledger_group ?? '' }}</td>
+                            {{-- <td>{{ $department->LedgerGroupId->ledger_group ?? '' }}</td> --}}
                             <td>
                                 <form action="{{ route('department.destroy', $department->id) }}" method="post">
                                     @csrf

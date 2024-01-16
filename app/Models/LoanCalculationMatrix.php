@@ -11,6 +11,7 @@ class LoanCalculationMatrix extends Model
     protected $fillable = [
         'amount',
         'minimum_emi',
+        'required_share',
         'status',
     ];
 

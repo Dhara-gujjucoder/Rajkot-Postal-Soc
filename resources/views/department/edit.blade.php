@@ -29,7 +29,7 @@
                             </div>
                         </div>
 
-                        <div class="mb-3 row">
+                        {{-- <div class="mb-3 row">
                             <label for="ledger_group_id" class="col-md-4 col-form-label text-md-end text-start">{{__('Ledger Group')}}</label>
                             <div class="col-md-6">
                                 <select class="choices form-select @error('ledger_group_id') is-invalid @enderror"
@@ -48,7 +48,7 @@
                                     <span class="text-danger">{{ $errors->first('ledger_group_id') }}</span>
                                 @endif
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="mb-3 row">
                             <input type="submit" class="col-md-3 offset-md-5 btn btn-primary" value="{{__('Update Department')}}">

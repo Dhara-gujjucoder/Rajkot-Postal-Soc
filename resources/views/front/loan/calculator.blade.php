@@ -60,19 +60,19 @@
                         <div class="row wow fadeInUp" data-wow-delay="0.2s">
                             <div class="col-md-6">
                                 <div class="dashboard-detail-data">
-                                <label class="col-form-label"><strong>{{ __('Name') }}:</strong></label>
+                                <label class="col-form-label"><strong>{{ __('Name') }} :</strong></label>
                                 <div class="col-form-info">{{ $user->name }}</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="dashboard-detail-data">
-                                <label class="col-form-label"><strong>{{ __('PAN Number') }}:</strong></label>
+                                <label class="col-form-label"><strong>{{ __('PAN Number') }} :</strong></label>
                                 <div class="col-form-info">{{ $member->pan_no }}</div>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="dashboard-detail-data">
-                                <label class="col-form-label"><strong>{{ __('Present Address') }}:</strong></label>
+                                <label class="col-form-label"><strong>{{ __('Present Address') }} :</strong></label>
                                 <div class="col-form-info">{{ $member->parmenant_address }}</div>
                                 </div>
                             </div>
@@ -84,26 +84,26 @@
                         <div class="row wow fadeInUp" data-wow-delay="0.2s">
                             <div class="col-md-6">
                                 <div class="dashboard-detail-data">
-                                <label class="col-form-label"><strong>{{ __('Current loan') }}:</strong></label>
-                                <div class="col-form-info">&#8377; coming soon...</div>
+                                <label class="col-form-label"><strong>{{ __('Current loan') }} :</strong></label>
+                                <div class="col-form-info">&#8377; 0</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="dashboard-detail-data">
-                                <label class="col-form-label"><strong>{{ __('Remaining Loan') }}:</strong></label>
-                                <div class="col-form-info">&#8377; coming soon...</div>
+                                <label class="col-form-label"><strong>{{ __('Remaining Loan') }} :</strong></label>
+                                <div class="col-form-info">&#8377; 0</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="dashboard-detail-data">
-                                <label class="col-form-label"><strong>{{ __('Share') }}:</strong></label>
-                                <div class="col-form-info">&#8377; coming soon...</div>
+                                <label class="col-form-label"><strong>{{ __('Share') }} :</strong></label>
+                                <div class="col-form-info">&#8377; 0</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="dashboard-detail-data">
-                                <label class="col-form-label"><strong>{{ __('Required share') }}:</strong></label>
-                                <div class="col-form-info">&#8377; coming soon...</div>
+                                <label class="col-form-label"><strong>{{ __('Required share') }} :</strong></label>
+                                <div class="col-form-info" id="required_share">&#8377; data placed hear</div>
                                 </div>
                             </div>
 
@@ -168,6 +168,7 @@
 
         $('#emi_amount').on('input', function() {
             console.log($('#emi_amount').val() + '__' + min_value);
+
             if ($('#emi_amount').val() < min_value) {
                 $('#myButton').attr('disabled', true);
             } else {
@@ -195,6 +196,7 @@
 
                     amount = element.amount;
                     min_value = element.minimum_emi;
+                    required_share = element.required_share;
                     interestAmount = (element.amount * interestRate) / 100;
                     emi_month = (element.amount / element.minimum_emi);
 
@@ -205,6 +207,7 @@
             console.log('min_value__' + min_value);
 
             $('#emi_amount').val(min_value);   //EMI Amount
+            $('#required_share').html('<span>&#8377;' + required_share + '</span>*');   //required_share
             $('#myButton').attr('disabled', false);
 
             $('#comissionLabel').html('<span>&#8377;' + amount + '</span>*');        // Loan Amount

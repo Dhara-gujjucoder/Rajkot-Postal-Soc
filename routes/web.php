@@ -20,16 +20,16 @@ use App\Http\Controllers\User\UserLoginController;
 
 Route::get('/', function () {
     return view('front.login');
-})->middleware(['guest:users']);
+})->middleware(['guest:users','blockIP']);
 
 Route::get('/home', [UserLoginController::class, 'comingsoon'])->name('front.home');
 
 /*users routes*/
-Route::prefix('user')->name('user.')->middleware(['guest:users'])->group(function () {
+Route::prefix('user')->name('user.')->middleware(['guest:users','blockIP'])->group(function () {
         Route::get('/login', [UserLoginController::class, 'showLoginForm'])->name('login');
         Route::post('/login', [UserLoginController::class, 'login'])->name('login');
 });
-Route::prefix('user')->name('user.')->middleware(['auth:users'])->group(function () {
+Route::prefix('user')->name('user.')->middleware(['auth:users','blockIP'])->group(function () {
     Route::get('/home', [UserLoginController::class, 'index'])->name('home');
     Route::get('/profile', [UserLoginController::class, 'profile'])->name('profile');
     Route::get('/loan/account', [LoanController::class, 'apply'])->name('loan.apply');

@@ -132,7 +132,7 @@
                         </a>
                     </li>
                 @endcanany
-                @canany(['create-ledger_entries', 'edit-ledger_entries', 'delete-ledger_entries',
+                {{-- @canany(['create-ledger_entries', 'edit-ledger_entries', 'delete-ledger_entries',
                     'view-ledger_entries'])
                     <li class="sidebar-item {{ request()->is('admin/ledger_entries*') ? 'active' : '' }}">
                         <a href="{{ route('ledger_entries.index') }}" class='sidebar-link'>
@@ -149,7 +149,7 @@
                             <span>{{ __('Salary Deduction') }}</span>
                         </a>
                     </li>
-                @endcanany
+                @endcanany --}}
                 @canany(['create-bulk_entries', 'edit-bulk_entries', 'delete-bulk_entries', 'view-bulk_entries'])
                     <li class="sidebar-item {{ request()->is('admin/bulk_entries*') ? 'active' : '' }}">
                         <a href="{{ route('bulk_entries.index') }}" class='sidebar-link'>
