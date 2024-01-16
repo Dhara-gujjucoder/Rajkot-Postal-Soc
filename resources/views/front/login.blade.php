@@ -6,7 +6,8 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <meta name="description" content="
       avicon.png">
-      <title>Rajkot Postal SOC</title>
+      <title>{{ $setting->title ?? 'Rajkot Postal SOC' }}</title>
+      <link rel="shortcut icon" href="{{asset($setting->favicon)}}">
       <link href="{{ asset('front/css/bootstrap.css') }}" rel="stylesheet">
       <link href="{{ asset('front/css/animate.css') }}" rel="stylesheet">
       <link href="{{ asset('front/css/fontawesome.css') }}" rel="stylesheet">

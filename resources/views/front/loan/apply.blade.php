@@ -93,10 +93,10 @@
             </div>
 
             <div class="desh-listbox skybluebg-box wow fadeInRight" data-wow-delay="0.2s">
-                <div class="dash-box-title">Your Loan Detail</div>
+                <div class="dash-box-title">{{ __('Your Loan Detail') }}</div>
             </div>
             <div class="row wow fadeInLeft" data-wow-delay="0.2s">
-                coming soon ....
+                {{ __('coming soon') }} ....
             </div>
 
             {{-- <div class="mt-5 justify-content-center skybluebg-box wow fadeInUp" data-wow-delay="0.2s">
