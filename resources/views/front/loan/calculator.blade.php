@@ -206,13 +206,13 @@
             });
             console.log('min_value__' + min_value);
 
-            $('#emi_amount').val(min_value);   //EMI Amount
-            $('#required_share').html('<span>&#8377;' + required_share + '</span>*');   //required_share
+            $('#emi_amount').val(min_value);                                             // EMI Amount
+            $('#required_share').html('<span>&#8377;' + required_share + '</span>*');    // required_share
             $('#myButton').attr('disabled', false);
 
-            $('#comissionLabel').html('<span>&#8377;' + amount + '</span>*');        // Loan Amount
-            $('#emi_month').html('<span>' + Math.trunc(emi_month) + '</span>*');     // EMI Month(Around)
-            $('#emi_amount_label').html('<span>&#8377;' + min_value + '</span>*');   // EMI Amount
+            $('#comissionLabel').html('<span>&#8377;' + amount + '</span>*');            // Loan Amount
+            $('#emi_month').html('<span>' + Math.trunc(emi_month) + '</span>*');         // EMI Month(Around)
+            $('#emi_amount_label').html('<span>&#8377;' + min_value + '</span>*');       // EMI Amount
             $('#interest_payable').html('<span>&#8377;' + interestAmount + '</span>*');  // Interest Payable
             $('#min_amt').val(min_value);
 
@@ -223,9 +223,7 @@
             $('#interest_pay').val(interestAmount);
 
 
-
             $('#amt_min').css("display", "block");
-
 
             // document.getElementById("emi_amount").setAttribute('value', min_value);
             // document.getElementById("comissionLabel").innerHTML = '<span>&#8377;' + amount + '</span>*';
