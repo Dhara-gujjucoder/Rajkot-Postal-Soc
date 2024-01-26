@@ -13,6 +13,7 @@
             <div class="pt-4 mt-5">
                 <div class="form">
                     <div class="row mb-3" id="filter">
+
                         <div class="col-md-4">
                             <label for="account_name" class="col-md-2 col-form-label">{{ __('Member') }}</label>
                             <div class="col-md-12">
@@ -39,7 +40,7 @@
                                 class="col-md-4 col-form-label text-md-end">{{ __('Ledger Group') }}</label>
                             <div class="col-md-12">
                                 <select class="choices filter-input form-select @error('ledger_ac_id') is-invalid @enderror"
-                                    aria-label="Permissions" id="ledger_ac_id" name="ledger_ac_id"  data-column="2"
+                                    aria-label="Permissions" id="ledger_ac_id" name="ledger_ac_id" data-column="2"
                                     style="height: 210px;">
                                     <option value="">{{ __('Select Ledger Group') }}</option>
                                     {!! getLedgerGroupDropDown() !!}
@@ -54,6 +55,7 @@
                                 @endif
                             </div>
                         </div>
+
                         <div class="col-md-4">
                             <label for="type"
                                 class="col-md-4 col-form-label text-md-end">{{ __('Type') }}</label>
@@ -74,6 +76,7 @@
                                 @endif
                             </div>
                         </div>
+
                     </div>
                 </div>
                 <div class="pt-4 mt-5">

@@ -83,13 +83,14 @@
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="birthdate">{{ __('Birth Date') }}<span class="text-danger">*</span></label>
-                                    <input type="text" name="birthdate" value="{{ date('Y-m-d') }}" class="date form-control @error('birthdate') is-invalid @enderror" style="width: 300px;" placeholder="{{ __('Birth Date') }}">
+                                    <input type="text" name="birthdate" value="{{ date('Y-m-d') }}"
+                                    class="form-control date @error('birthdate') is-invalid @enderror"
+                                    style="" placeholder="{{ __('Birth Date') }}">
                                     @if ($errors->has('birthdate'))
                                         <span class="text-danger">{{ $errors->first('birthdate') }}</span>
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="mobile_no">{{ __('Mobile No') }}<span class="text-danger">*</span></label>
                                     <input type="number" id="mobile_no" class="form-control @error('mobile_no') is-invalid @enderror" placeholder="{{ __('Mobile No') }}" name="mobile_no">
@@ -128,7 +129,7 @@
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="signature">{{ __('Signature') }}<span class="text-danger">*</span></label>
-                                    <input type="file" id="signature" class="form-control  @error('signature') is-invalid @enderror" placeholder="{{ __('Signature') }}" name="signature" accept="image/jpg, image/png, image/gif, image/jpeg">
+                                    <input type="file" id="signature" class="form-control @error('signature') is-invalid @enderror" placeholder="{{ __('Signature') }}" name="signature" accept="image/jpg, image/png, image/gif, image/jpeg">
                                     @if ($errors->has('signature'))
                                         <span class="text-danger">{{ $errors->first('signature') }}</span>
                                     @endif
@@ -147,19 +148,18 @@
                                 <div class="form-group">
                                     <label for="department">{{ __('Department') }}<span class="text-danger">*</span></label>
                                     <select class="choices form-select @error('department_id') is-invalid @enderror" aria-label="Permissions" id="department_id" name="department_id" style="height: 210px;">
-                                        <option value="">{{__('Select Department')}}</option>
+                                        <option value="">{{ __('Select Department') }}</option>
 
                                         @forelse ($departments as $department)
-                                            <option value="{{ $department->id }}"
-                                                {{ $department->id == old('department_id')  ? 'selected' : '' }}>
+                                            <option value="{{ $department->id }}" {{ $department->id == old('department_id') ? 'selected' : '' }}>
                                                 {{ $department->department_name }}
                                             </option>
                                         @empty
                                         @endforelse
                                     </select>
-                                        @if ($errors->has('department_id'))
-                                            <span class="text-danger">{{ $errors->first('department_id') }}</span>
-                                        @endif
+                                    @if ($errors->has('department_id'))
+                                        <span class="text-danger">{{ $errors->first('department_id') }}</span>
+                                    @endif
                                 </div>
                             </div>
 
@@ -209,7 +209,7 @@
 
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
-                                    <label for="aadhar_card_no">{{ __('AadharCard No') }}<span class="text-danger">*</span></label>
+                                    <label for="aadhar_card_no">{{ __('Aadhar Card No') }}<span class="text-danger">*</span></label>
                                     <input type="number" id="aadhar_card_no" class="form-control @error('aadhar_card_no') is-invalid @enderror" placeholder="{{ __('AadharCard No') }}" name="aadhar_card_no">
                                     @if ($errors->has('aadhar_card_no'))
                                         <span class="text-danger">{{ $errors->first('aadhar_card_no') }}</span>
@@ -312,7 +312,6 @@
                                     @endif
                                 </div>
                             </div>
-
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="ifsc_code">{{ __('IFSC code') }}</label>
@@ -331,6 +330,16 @@
                                     @endif
                                 </div>
                             </div>
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="total_share">{{ __('Total Share') }}</label>
+                                    <input type="number" id="total_share" class="form-control @error('total_share') is-invalid @enderror" placeholder="{{ __('Total Share') }}" name="total_share" value="{{ old('total_share', $minimum_share) }}">
+                                    <label style="color: red;">*{{ __('Minimum Share') }}: {{ $minimum_share }}</label>
+                                    @if ($errors->has('total_share'))
+                                        <span class="text-danger">{{ $errors->first('total_share') }}</span>
+                                    @endif
+                                </div>
+                            </div>
                             <div class="col-12 d-flex justify-content-end">
                                 <button type="submit" class="btn btn-primary me-1 mb-1">{{ __('Submit') }}</button>
                                 <button type="reset" class="btn btn-light-secondary me-1 mb-1">{{ __('Reset') }}</button>
@@ -344,11 +353,13 @@
 </div>
 @endsection
 @push('script')
-    <script type="text/javascript">
-        $('.date').flatpickr({
-            altInput: true,
-            altFormat:"d/m/Y",
-            dateFormat: "Y-m-d",
-         });
-    </script>
+<script type="text/javascript">
+    $('.date').flatpickr({
+        allowInput:true,
+        altInput: true,
+        altFormat: "d/m/Y",
+        dateFormat: "Y-m-d",
+    });
+
+</script>
 @endpush

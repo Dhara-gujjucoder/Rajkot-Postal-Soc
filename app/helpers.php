@@ -2,7 +2,9 @@
 
 use App\Models\Setting;
 use App\Models\LedgerGroup;
+use App\Models\ShareAmount;
 use App\Models\FinancialYear;
+use App\Models\MonthlySaving;
 
 if (! function_exists('Setting')){
 
@@ -15,6 +17,18 @@ if (! function_exists('Setting')){
 if (! function_exists('currentYear')) {
     function currentYear() {
         return FinancialYear::where('is_current',1)->first();
+    }
+}
+
+if (! function_exists('current_share_amount')) {
+    function current_share_amount() {
+        return ShareAmount::where('is_active', 1)->first();
+    }
+}
+
+if (! function_exists('current_fixed_saving')) {
+    function current_fixed_saving() {
+        return MonthlySaving::where('is_active', 1)->first();
     }
 }
 
@@ -34,8 +48,8 @@ if (! function_exists('getYear')) {
     }
 }
 
-if (! function_exists('getYearDropDown')) {
-    function getYearDropDown($id) {
+if (! function_exists('getMonthsOfYear')) {
+    function getMonthsOfYear($id) {
         $year = FinancialYear::where('id',$id)->first();
         $options = [];
         $a = $year->start_year.'-'.$year->start_month.'-01';

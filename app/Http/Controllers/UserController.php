@@ -117,7 +117,7 @@ class UserController extends Controller
         } else {
             $input = $request->except('password');
         }
-    
+
         $user->update($input);
         // $user->syncRoles(['user']);
 
@@ -167,12 +167,12 @@ class UserController extends Controller
         } else {
             $input = $request->except('password');
         }
-    
+
         $user->update($input);
         // dd( $user);
         return redirect()->back()
             ->withSuccess(__('Profile is updated successfully.'));
     }
-    
-    
+
+
 }

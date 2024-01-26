@@ -79,6 +79,11 @@ class PermissionSeeder extends Seeder
             // 'edit-bulk_entries',
             // 'export-bulk_entries'
 
+            'create-loan',
+            'edit-loan',
+            'delete-loan',
+            'view-loan',
+
         ];
 
         // Looping and Inserting Array's Permissions into Permission Table

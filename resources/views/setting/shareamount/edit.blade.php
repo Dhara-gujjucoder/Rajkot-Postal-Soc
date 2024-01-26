@@ -28,6 +28,24 @@
                                 @enderror
                             </div>
                         </div>
+
+                        <div class="form-group mb-3 row">
+                            <label class="col-4 col-form-label">{{ __('Minimum Share') }}</label>
+                            <div class="col-5">
+                                <input type="hidden" name="minimum_share" value="minimum_share">
+                                <input type="number" step="any" name="minimum_share"
+                                    class="form-control @error('minimum_share') is-invalid @enderror"
+                                    placeholder="{{ __('Minimum Share') }}"
+                                    value="{{ old('minimum_share', isset($share_amount->minimum_share) ? $share_amount->minimum_share : '') }}">
+
+                                @error('minimum_share')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+
                         <div class="form-group mb-3 mt-2 row">
                             <label class="col-4 col-form-label">{{__('Set as Current (Active) ?')}} </label>
                             <div class="col-md-5 col-lg-2 form-check">

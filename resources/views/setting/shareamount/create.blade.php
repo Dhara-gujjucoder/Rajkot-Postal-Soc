@@ -12,7 +12,7 @@
                     <form action="{{ route('shareamount.store') }}" method="POST">
                         @csrf
                         <div class="form-group mb-3 row">
-                            <label class="col-2 col-form-label">{{ __('New Share Amount') }}</label>
+                            <label class="col-4 col-form-label">{{ __('New Share Amount') }}</label>
                             <div class="col-5">
                                 <input type="hidden" name="setting_name" value="share_amount">
                                 <input type="number" step="any" name="share_amount"
@@ -25,6 +25,42 @@
                                     </div>
                                 @enderror
                             </div>
+                        </div>
+
+                        <div class="form-group mb-3 row">
+                            <label class="col-4 col-form-label">{{ __('Minimum Share') }}</label>
+                            <div class="col-5">
+                                <input type="hidden" name="minimum_share" value="minimum_share">
+                                <input type="number" step="any" name="minimum_share"
+                                    class="form-control @error('minimum_share') is-invalid @enderror"
+                                    placeholder="{{ __('Minimum Share') }}"
+                                    value="{{ old('minimum_share', 10) }}">
+
+                                @error('minimum_share')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        {{-- <div class="form-group mb-3 mt-2 row">
+                            <label class="col-4 col-form-label">{{__('Set as Current (Active) ?')}} </label>
+                            <div class="col-md-5 col-lg-2 form-check">
+                                <input class="form-check-input" type="radio" name="is_active" id="yes" value="1" checked>
+                                <label class="form-check-label" for="yes">
+                                    {{ __('Yes') }}
+                                </label>
+                            </div>
+                            <div class="col-md-5 col-lg-2 form-check">
+                                <input class="form-check-input" type="radio" name="is_active"
+                                    id="no" value="0" >
+                                <label class="form-check-label" for="no">
+                                    {{ __('No') }}
+                                </label>
+                            </div>
+                        </div> --}}
+
                         <div class="mb-3 mt-4 row">
                             <input type="submit" class="col-md-3 offset-md-5 btn btn-primary"
                                 value="{{ __('Add') }}">

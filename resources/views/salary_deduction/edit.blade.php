@@ -70,7 +70,7 @@
                                 <select class="choices form-select @error('month') is-invalid @enderror"
                                     aria-label="Permissions" id="month" name="month" style="height: 210px;">
                                     <option value="">{{ __('Select Month') }}</option>
-                                    @foreach (getYearDropDown($current_year->id) as $item)
+                                    @foreach (getMonthsOfYear($current_year->id) as $item)
                                     <option value="{{ $item['value'] }}" {{ old('month',date('m-Y',strtotime('01-'.$salary_deduction->month))) ==  $item['month']  ? 'selected':''}}>{{  $item['month']  }}</option>
                                     @endforeach
                                 </select>

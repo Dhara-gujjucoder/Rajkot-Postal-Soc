@@ -97,7 +97,7 @@
                                 </li>
                             @endcan
                             @canany(['create-user', 'edit-user', 'delete-user', 'view-user'])
-                                <li class="submenu-item  {{ request()->is('admin/users*') ? 'active' : '' }}">
+                                <li class="submenu-item {{ request()->is('admin/users*') ? 'active' : '' }}">
                                     <a href="{{ route('users.index') }}" class='submenu-link'>
                                         {{-- <i class="bi bi-person-check-fill"></i> --}}
                                         <span>{{ __('Users') }}</span>
@@ -107,6 +107,14 @@
                         </ul>
                     </li>
                 @endcan
+                @canany(['create-share_account', 'edit-share_account', 'delete-share_account', 'view-share_account'])
+                    <li class="sidebar-item {{ request()->is('admin/share_account*') ? 'active' : '' }}">
+                        <a href="{{ route('ledger_sharecapital.index') }}" class='sidebar-link'>
+                            <i class="bi bi-window-split"></i>
+                            <span>{{ __('All Shares') }}</span>
+                        </a>
+                    </li>
+                @endcanany
                 @canany(['create-ledger_group', 'edit-ledger_group', 'delete-ledger_group', 'view-ledger_group'])
                     <li class="sidebar-item {{ request()->is('admin/ledger_group*') ? 'active' : '' }}">
                         <a href="{{ route('ledger_group.index') }}" class='sidebar-link'>
@@ -160,7 +168,7 @@
                     </li>
                 @endcanany
 
-                @canany(['create-loan_matrix', 'edit-loan_matrix', 'delete-loan_matrix', 'view-loan_matrix', 'create-loaninterest', 'edit-loaninterest','delete-loaninterest', 'view-loaninterest'])
+                @canany(['create-loan_matrix', 'edit-loan_matrix', 'delete-loan_matrix', 'view-loan_matrix', 'create-loaninterest', 'edit-loaninterest','delete-loaninterest', 'view-loaninterest','loan-create','loan-edit','loan-delete','loan-view'])
                     <li
                         class="sidebar-item  has-sub {{ request()->is('admin/loan_matrix*') || request()->is('admin/loaninterest*') ? 'active' : '' }}">
                         <a href="#" class="sidebar-link">
@@ -169,6 +177,13 @@
                         </a>
                         <ul
                             class="submenu {{ request()->is('admin/loan_matrix*') || request()->is('admin/loaninterest*') ? 'active submenu-open' : '' }}">
+                            @canany(['loan-create','loan-edit','loan-delete','loan-view'])
+                                <li class="submenu-item {{ request()->is('admin/loan*') ? 'active' : '' }}">
+                                    <a href="{{ route('loan.index') }}" class='submenu-link'>
+                                        <span>{{ __('Loan') }}</span>
+                                    </a>
+                                </li>
+                            @endcan
                             @canany(['create-loan_matrix', 'edit-loan_matrix', 'delete-loan_matrix', 'view-loan_matrix'])
                                 <li class="submenu-item  {{ request()->is('admin/loan_matrix*') ? 'active' : '' }}">
                                     <a href="{{ route('loan_matrix.index') }}" class='submenu-link'>

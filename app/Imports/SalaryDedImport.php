@@ -52,7 +52,7 @@ class SalaryDedImport implements ToModel,WithMultipleSheets,WithHeadingRow, Skip
                     // dump($row[2]);
                     $member->department_id = $this->getdept_id($row[0]);
                     $member->save();
-                    // for ($i=1; $i <= 3; $i++) { 
+                    // for ($i=1; $i <= 3; $i++) {
                     //     $group = LedgerGroup::where('id',$i)->first();
                     //     $ledger_entry = LedgerAccount::where('user_id',$member->user_id)->where('ledger_group_id',$i)->first();
                     //     if(!$ledger_entry){

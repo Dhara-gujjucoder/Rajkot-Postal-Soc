@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\ShareAmount;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreMemberRequest extends FormRequest
@@ -46,6 +47,7 @@ class StoreMemberRequest extends FormRequest
             'bank_name' => 'nullable',
             'ifsc_code' =>'nullable',
             'branch_address' =>'nullable',
+            'total_share' => 'required|numeric|gte:'.current_share_amount()->minimum_share,
 
             'profile_picture' => 'max:2048',
             'signature' => 'max:2048',

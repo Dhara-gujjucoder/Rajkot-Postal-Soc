@@ -10,7 +10,7 @@
             </a>
         </div>
         <div class="desh-listbox greenbg-box wow fadeInLeft" data-wow-delay="0.4s">
-            <a href="my-account.html">
+            <a href="#">
                 <div class="dash-box-title">{{ __('My Account') }}</div>
                 <div class="dash-icon"><img src="{{ asset('front/images/my-account.svg') }}" alt=""></div>
             </a>

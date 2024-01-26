@@ -20,9 +20,7 @@ class LedgerAccount extends Model
         'type',
         'created_by',
         'status',
-
     ];
-
 
     protected function yearId(): Attribute
     {
@@ -37,6 +35,6 @@ class LedgerAccount extends Model
     }
     public function user()
     {
-        return $this->hasOne(User::class, 'id', 'user_id');
+        return $this->hasOne(User::class, 'id', 'user_id')->withTrashed();
     }
 }

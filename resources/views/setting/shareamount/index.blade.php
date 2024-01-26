@@ -15,6 +15,7 @@
                     <tr>
                         <th>{{ __('No.') }}</th>
                         <th>{{ __('Share Amount') }}</th>
+                        <th>{{ __('Minimun Share') }}</th>
                         <th>{{ __('Start Date') }}</th>
                         <th>{{ __('End Date') }}</th>
                         <th>{{ __('Is current ?') }} </th>
@@ -24,6 +25,7 @@
                         <tr>
                             <td>{{ $key + 1 }}</td>
                             <td>{{ $amount->share_amount }}</td>
+                            <td>{{ $amount->minimum_share }}</td>
                             <td>{{ $amount->start_date ? date('d-m-Y H:i:s', strtotime($amount->start_date)) : '' }}
                             </td>
                             <td>{{ $amount->end_date && $amount->is_active == 0 ? date('d-m-Y H:i:s', strtotime($amount->end_date)) : '' }}

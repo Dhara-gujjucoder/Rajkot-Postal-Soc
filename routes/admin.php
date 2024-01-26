@@ -8,13 +8,14 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LoanController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\BulkEntryController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\LoanMasterController;
 use App\Http\Controllers\LedgerEntryController;
-use App\Http\Controllers\LoanCalculationMatrixController;
 use App\Http\Controllers\LedgerGroupController;
 use App\Http\Controllers\LoanSettingController;
 use App\Http\Controllers\ShareAmountController;
@@ -22,6 +23,9 @@ use App\Http\Controllers\FinancialYearController;
 use App\Http\Controllers\LedgerAccountController;
 use App\Http\Controllers\MonthlySavingController;
 use App\Http\Controllers\SalaryDeductionController;
+use App\Http\Controllers\LedgerShareCapitalController;
+use App\Http\Controllers\MemberShareAccountController;
+use App\Http\Controllers\LoanCalculationMatrixController;
 
 
 Route::prefix('admin')->group(function () {
@@ -41,8 +45,11 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
     Route::get('/import/salary', [App\Http\Controllers\SalaryDeductionController::class, 'salary_import'])->name('salary.import');
     Route::post('/import/salary', [App\Http\Controllers\SalaryDeductionController::class, 'importsalary'])->name('salary.import');
     Route::get('/export/bulk_entries/{id}', [App\Http\Controllers\BulkEntryController::class, 'export'])->name('bulk_entries.export');
+    Route::get('/get/member/{member}', [App\Http\Controllers\MemberController::class, 'getmember'])->name('member.get');
+    Route::get('/get/guarantor_count/{member}', [App\Http\Controllers\LoanMasterController::class, 'guarantor_count'])->name('guarantor_count.get');
 
-
+    Route::get('/import/all-share', [App\Http\Controllers\LedgerShareCapitalController::class, 'all_share'])->name('all_share.import');
+    Route::post('/import/all-share', [App\Http\Controllers\LedgerShareCapitalController::class, 'import_all_share'])->name('all_share.import');
     /*all modules*/
     Route::resources([
         'roles' => RoleController::class,
@@ -52,13 +59,16 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
         'ledger_account' => LedgerAccountController::class,
         'ledger_entries' => LedgerEntryController::class,
         'bulk_entries' => BulkEntryController::class,
+        'loan' => LoanMasterController::class,
         'loan_matrix' => LoanCalculationMatrixController::class,
         'department' => DepartmentController::class,
         'salary_deduction' => SalaryDeductionController::class,
         'financial_year' => FinancialYearController::class,
         'loaninterest'=> LoanSettingController::class,
         'shareamount' => ShareAmountController::class,
-        'monthlysaving'=>  MonthlySavingController::class
+        'monthlysaving'=>  MonthlySavingController::class,
+        // 'share_account' => MemberShareAccountController::class,
+        'ledger_sharecapital' => LedgerShareCapitalController::class,
     ]);
 
 

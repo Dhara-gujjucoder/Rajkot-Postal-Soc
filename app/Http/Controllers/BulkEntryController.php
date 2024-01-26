@@ -33,7 +33,7 @@ class BulkEntryController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $months = getYearDropDown($this->current_year->id);
+        $months = getMonthsOfYear($this->current_year->id);
         $data['bulk_entries'] = BulkMaster::get();
         $data['page_title'] = __('Bulk Entries');
         return view('bulk_entries.index', $data);
@@ -53,7 +53,7 @@ class BulkEntryController extends Controller
         $data['total']['ms'] = 0;
         $data['total']['total_amount'] = 0;
 
-        $data['months'] = getYearDropDown($this->current_year->id);
+        $data['months'] = getMonthsOfYear($this->current_year->id);
         $data['previous_month'] = BulkEntryMaster::get()->last()->month ?? '';
         $data['next_month'] = date('m-Y', strtotime(date('01-' . $data['previous_month']) . " +1 month"));
         foreach ($data['months'] as $key => $month) {
@@ -65,7 +65,7 @@ class BulkEntryController extends Controller
             $department->principal_total = 0;
             //   dd($data['previous_month']);
             $members->map(function ($item, $subkey) use ($data, $department) {
-                $prefill = SalaryDeduction::where('user_id', $item->user_id)->where('department_id', $department->id)->where('month', '3-2022')->first();
+                $prefill = BulkEntry::where('user_id', $item->user_id)->where('department_id', $department->id)->where('month', $data['previous_month'])->first();
                 foreach ($data['ledger_type'] as $key => $value) {
                     // for prefill previous month value 
                     $item->{$value} = $prefill->{$value} ?? 0;
@@ -143,6 +143,7 @@ class BulkEntryController extends Controller
                 foreach ($department->members as $key => $member) {
                     BulkEntry::create([
                         'user_id' => $member->user_id,
+                        'member_id' => $member->id,
                         'department_id' => $department->id,
                         'bulk_entry_master_id' =>  $bulk_entry_master->id,
                         'year_id' => $this->current_year->id,
@@ -154,6 +155,7 @@ class BulkEntryController extends Controller
                         'fixed' => $request->{'fixed_' . $department->id . '_' . $member->user_id},
                         'ms' => $request->{'ms_' . $department->id . '_' . $member->user_id},
                         'total_amount' => $request->{'total_amount_' . $department->id . '_' . $member->user_id},
+                        'status' => $request->status,
                     ]);
                 }
             }
@@ -195,7 +197,7 @@ class BulkEntryController extends Controller
         $data['total']['ms'] = 0;
         $data['total']['total_amount'] = 0;
 
-        $data['months'] = getYearDropDown($this->current_year->id);
+        $data['months'] = getMonthsOfYear($this->current_year->id);
         $data['previous_month'] = $data['bulk_master']->month ?? '';
         $data['next_month'] = $data['bulk_master']->month ?? '';
 
@@ -262,6 +264,7 @@ class BulkEntryController extends Controller
             foreach ($department->members as $subkey => $member) {
                 BulkEntry::create([
                     'user_id' => $member->user_id,
+                    'member_id' => $member->id,
                     'department_id' => $department->id,
                     'bulk_entry_master_id' =>  $bulk_entry_master[$key]->id,
                     'year_id' => $this->current_year->id,
@@ -273,6 +276,7 @@ class BulkEntryController extends Controller
                     'fixed' => $request->{'fixed_' . $department->id . '_' . $member->user_id},
                     'ms' => $request->{'ms_' . $department->id . '_' . $member->user_id},
                     'total_amount' => $request->{'total_amount_' . $department->id . '_' . $member->user_id},
+                    'status' => $request->status
                 ]);
             }
         }

@@ -12,6 +12,7 @@ class BulkEntry extends Model
     protected $fillable = [
         'bulk_entry_master_id',
         'user_id',	
+        'member_id',
         'department_id',
         'year_id',	
         'ledger_group_id',
@@ -21,7 +22,8 @@ class BulkEntry extends Model
         'interest',	
         'fixed',
         'ms',
-        'total_amount'
+        'total_amount',
+        'status'
     ];
 
     public function member()

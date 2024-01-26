@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\ShareAmount;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateMemberRequest extends FormRequest
@@ -21,6 +22,8 @@ class UpdateMemberRequest extends FormRequest
      */
     public function rules(): array
     {
+        $max_share = collect([current_share_amount()->minimum_share, $this->member->total_share])->max();
+        $max_share = (int)$max_share;
         //email:rfc,dns
         return [
             'name' => 'required|string|max:250',
@@ -43,7 +46,8 @@ class UpdateMemberRequest extends FormRequest
             'bank_name' => 'nullable|string',
             'ifsc_code' =>'nullable',
             'branch_address' =>'nullable',
-
+            // 'minimum_share' => 'required|numeric|gt:'.current_share_amount()->minimum_share,
+            'total_share' => 'required|numeric|gte:'. $max_share,
             'profile_picture' => 'max:2048',
             'signature' => 'max:2048',
             'aadhar_card' => 'max:2048',

@@ -4,8 +4,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 use Illuminate\Support\Facades\Session;
-use App\Http\Controllers\LoanController;
-use App\Http\Controllers\User\UserLoginController;
+use App\Http\Controllers\Front\LoanController;
+use App\Http\Controllers\Front\UserLoginController;
 
 /*
 |--------------------------------------------------------------------------

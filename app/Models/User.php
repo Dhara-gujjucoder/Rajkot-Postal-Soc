@@ -8,12 +8,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Query\Builder;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 
 class User extends Authenticatable
 {
+    use HasFactory, SoftDeletes;
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     /**
@@ -61,7 +63,7 @@ class User extends Authenticatable
     {
         return $query->when(!auth()->user()->is_member, function ($q) {
             $q->where('is_member', 0);
-        }); 
+        });
     }
 
     public function scopeUserMember($query)
@@ -75,9 +77,9 @@ class User extends Authenticatable
 
     public function member()
     {
-        return $this->hasOne(Member::class);
+        return $this->hasOne(Member::class)->withTrashed();
     }
-    
+
     public function getFullnameAttribute()
     {
         return $this->name. ' ( '.$this->member->registration_no.' )';

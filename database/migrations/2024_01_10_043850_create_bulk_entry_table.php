@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('bulk_master_id');
             $table->bigInteger('user_id');
+            $table->bigInteger('member_id');
             $table->bigInteger('year_id');
             $table->bigInteger('ledger_group_id');
             $table->string('month');
