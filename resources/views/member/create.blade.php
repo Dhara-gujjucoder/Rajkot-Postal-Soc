@@ -98,7 +98,6 @@
                                         <span class="text-danger">{{ $errors->first('mobile_no') }}</span>
                                     @endif
                                 </div>
-                            </div>
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="whatsapp_no">{{ __('Whatsapp No') }}</label>
