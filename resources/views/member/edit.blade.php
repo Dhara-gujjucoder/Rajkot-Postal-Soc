@@ -106,7 +106,7 @@
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="birthdate">{{ __('Birth Date') }}<span class="text-danger">*</span></label>
-                                    <input type="date" name="birthdate" value="{{ old('birthdate', $user->birthdate) }}" class="form-control flatpickr-no-config @error('birthdate') is-invalid @enderror" style="" placeholder="{{ __('Birth Date') }}">
+                                    <input type="date" name="birthdate" value="{{ old('birthdate', $user->birthdate) }}" class="form-control flatpickr-no-config date @error('birthdate') is-invalid @enderror" style="" placeholder="{{ __('Birth Date') }}">
                                     @if ($errors->has('birthdate'))
                                         <span class="text-danger">{{ $errors->first('birthdate') }}</span>
                                     @endif
@@ -412,7 +412,7 @@
                                 <div class="col-md-6 col-12">
                                     <div class="form-group">
                                         <button type="button" class="btn btn-primary" id="myModal" data-bs-toggle="modal" data-bs-target="#bd-example-modal-lg">
-                                            {{ __('View Your Shares') }}</button>
+                                            {{ __('View Member Shares') }}</button>
                                     </div>
                                 </div>
                             @endif
@@ -502,6 +502,7 @@
 @push('script')
 <script type="text/javascript">
     $('.date').flatpickr({
+        allowInput:true,
         altInput: true,
         altFormat: "d/m/Y",
         dateFormat: "Y-m-d",

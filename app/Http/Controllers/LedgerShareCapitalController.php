@@ -39,7 +39,7 @@ class LedgerShareCapitalController extends Controller
         $member->total_share = $total_share;
 
         $balance = $member->share_total_price - $share->share_amount;
-        if($balance > 0){
+        if($balance >= 0){
             $member->share_total_price = $balance;
         }
 
@@ -91,7 +91,6 @@ class LedgerShareCapitalController extends Controller
 
         return view('ledger_sharecapital.index',$data);
     }
-
 
 
     public function all_share(){

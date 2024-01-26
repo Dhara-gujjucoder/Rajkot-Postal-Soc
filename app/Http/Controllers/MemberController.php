@@ -239,7 +239,6 @@ class MemberController extends Controller
             }
         }
 
-
         return view('member.edit', [
             'shares' => LedgerShareCapital::where('member_id', $member->id)->get(),
             // dd(LedgerShareCapital::where('member_id',$member->id)->get()),
