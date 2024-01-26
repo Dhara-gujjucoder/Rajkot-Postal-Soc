@@ -61,7 +61,7 @@
                                         </label>
                                     </div>
                                     <div class="col-md-5 col-lg-2  form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="female"value="female">
+                                        <input class="form-check-input" type="radio" name="gender" id="female" value="female">
                                         <label class="form-check-label" for="female">
                                             {{ __('Female') }}
                                         </label>
