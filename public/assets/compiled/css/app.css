@@ -3488,6 +3488,7 @@ textarea.form-control.is-invalid {
     border: var(--bs-btn-border-width) solid var(--bs-btn-border-color);
     border-radius: var(--bs-btn-border-radius);
     background-color: var(--bs-btn-bg);
+    width: auto;
     transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out
 }
 
@@ -24180,11 +24181,15 @@ a {
     gap: 25px;
     align-items: flex-start;
 }
+.header_add .btn.btn-outline-success {
+    margin-top: 0 !important;
+}
 
 html[data-bs-theme=light] .btn:hover{ color: var(--bs-btn-hover-color);background-color: var(--bs-btn-hover-bg);border-color: var(--bs-btn-hover-border-color);}
 
 @media (max-width: 575px) {
     .header_add {
         grid-template-columns: 1fr;
+        gap: 0;
     }
 }

@@ -100,13 +100,13 @@
                                                     <th colspan="4">{{ __('Current Loan') }}</th>
                                                 </tr>
                                                 <tr>
-                                                    <td>&nbsp;</td>
+                                                    {{-- <td>&nbsp;</td> --}}
                                                     <td>{{ __('Principal Amount') }}</td>
                                                     <td><span class="badge bg-light-info" id="old_principal_amt">0
                                                         </span></td>
                                                 </tr>
                                                 <tr>
-                                                    <td>&nbsp;</td>
+                                                    {{-- <td>&nbsp;</td> --}}
                                                     <td>{{ __('EMI') }}</td>
                                                     <td><span class="badge bg-light-info" id="old_emi_amt">0
                                                         </span></td>
@@ -115,7 +115,7 @@
                                                     <th colspan="3">{{ __('Total Share') }} </th>
                                                 </tr>
                                                 <tr>
-                                                    <td>&nbsp;</td>
+                                                    {{-- <td>&nbsp;</td> --}}
                                                     {{-- <td>Total Share </td><td><span class="badge bg-light-info"
                                                             id="old_principal_amt">7000
                                                         </span></td> --}}
@@ -124,7 +124,7 @@
                                                         </span></td>
                                                 </tr>
                                                 <tr>
-                                                    <td>&nbsp;</td>
+                                                    {{-- <td>&nbsp;</td> --}}
                                                     <td>{{ __('Share amount') }}</td>
                                                     <td><span class="badge bg-light-info" id="remaining_share_amt">0
                                                         </span></td>
@@ -133,13 +133,13 @@
                                                     <th colspan="3">{{ __('Fixed saving') }} </th>
                                                 </tr>
                                                 <tr>
-                                                    <td>&nbsp;</td>
+                                                    {{-- <td>&nbsp;</td> --}}
                                                     <td>{{ __('Total fixed saving') }}</td>
                                                     <td><span class="badge bg-light-info" id="old_fixed_saving">0
                                                         </span></td>
                                                 </tr>
                                                 <tr>
-                                                    <td>&nbsp;</td>
+                                                    {{-- <td>&nbsp;</td> --}}
                                                     <td>{{ __('Remaining fixed saving') }}</td>
                                                     <td><span class="badge bg-light-info" id="remaining_fixed_saving">0
                                                         </span></td>

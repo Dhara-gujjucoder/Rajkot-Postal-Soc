@@ -6,9 +6,13 @@
 <section class="page-content">
     <div class="card">
         <div class="card-body">
+            <div class="header_add">
+
+                <div class="form"></div>
             @can('create-role')
                 <a href="{{ route('double_entries.create') }}" class="btn btn-outline-success btn-md  float-end my-3"><i class="bi bi-plus-circle"></i> {{ __('Add New Double Entry') }}</a>
             @endcan
+            </div>
             <div class="pt-4 mt-5">
                 <div class="table-responsive">
                     <table class="table table-bordered" id="table1">
