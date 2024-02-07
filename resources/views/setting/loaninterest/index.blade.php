@@ -6,10 +6,15 @@
 <section class="page-content">
     <div class="card">
         <div class="card-body">
+            <div class="header_add">
+
+                <div class="form"></div>
             @can('create-role')
                 <a href="{{ route('loaninterest.create') }}" class="btn btn-outline-success btn-md  float-end my-3"><i class="bi bi-plus-circle"></i> {{__('Add New Loan Interest')}}</a>
             @endcan
+            </div>
             @if (!empty($loan_interest))
+                <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -36,6 +41,7 @@
                                 </tr>
                             @endforeach
                     </table>
+                </div>
             @endif
 
             {{-- <div class="card">

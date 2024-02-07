@@ -41,34 +41,36 @@
                 </div>
             </div>
             <div class="pt-2 mt-2">
-                <table class="table table-bordered" id="table1">
-                    <thead>
-                        <tr>
-                            <th>{{ __('Member') }}</th>
-                            <th>{{ __('Code') }}</th>
-                            <th>{{ __('Amount') }} </th>
-                            <th>{{ __('Date') }} </th>
-                            <th>{{ __('Status') }} </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{-- @foreach ($shares as $key => $share)
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="table1">
+                        <thead>
                             <tr>
-                                <td>{{ $share->member->name }}</td>
-                                <td>{{ $share->share_code }}</td>
-                                <td>{{ $share->share_amount }}</td>
-                                <td>{{ date('d-M-Y', strtotime($share->created_date)) }}</td>
-                                <td>
-                                    @if ($share->status == 1)
-                                        <b>{{ __('Active') }}</b>
-                                    @else
-                                        {{ __('Closed') }}
-                                    @endif
-                                </td>
+                                <th>{{ __('Member') }}</th>
+                                <th>{{ __('Code') }}</th>
+                                <th>{{ __('Amount') }} </th>
+                                <th>{{ __('Date') }} </th>
+                                <th>{{ __('Status') }} </th>
                             </tr>
-                        @endforeach --}}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {{-- @foreach ($shares as $key => $share)
+                                <tr>
+                                    <td>{{ $share->member->name }}</td>
+                                    <td>{{ $share->share_code }}</td>
+                                    <td>{{ $share->share_amount }}</td>
+                                    <td>{{ date('d-M-Y', strtotime($share->created_date)) }}</td>
+                                    <td>
+                                        @if ($share->status == 1)
+                                            <b>{{ __('Active') }}</b>
+                                        @else
+                                            {{ __('Closed') }}
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach --}}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -110,7 +112,7 @@
             ],
         });
 
-        $('#table1_filter').after('<div class="ms-5">Total Active share</div>');
+        // $('#table1_filter').after('<div class="ms-5">Total Active share</div>');
 
         $('#member_id').on('change', function() {
             table

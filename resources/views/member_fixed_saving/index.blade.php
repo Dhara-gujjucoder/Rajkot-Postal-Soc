@@ -43,7 +43,7 @@
 
                 </div>
             </div>
-            <div class="pt-4 mt-5">
+            <div class="pt-2 mt-2">
                 <table class="table table-bordered" id="table1">
                     <thead>
                         <tr>

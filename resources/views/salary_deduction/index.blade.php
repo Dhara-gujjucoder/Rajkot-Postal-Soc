@@ -6,11 +6,15 @@
 <section class="page-content">
     <div class="card">
         <div class="card-body pt-4">
+            <div class="header_add">
+
+                <div class="form"></div>
             @can('create-member')
                 <a href="{{ route('salary_deduction.create') }}" class="btn btn btn-outline-success btn-md  float-end my-3"><i
                         class="bi bi-plus-circle"></i> {{ __('Add New') }}</a>
             @endcan
-            <div class="pt-4 mt-5">
+            </div>
+            <div class="pt-2 mt-2">
                 <div class="form">
                     <div class="row mb-3" id="filter">
                         <div class="col-md-4">

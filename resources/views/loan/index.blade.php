@@ -6,10 +6,14 @@
 <section class="page-content">
     <div class="card">
         <div class="card-body">
+            <div class="header_add">
+
+                <div class="form"></div>
             @can('create-loan')
                 <a href="{{ route('loan.create') }}" class="btn btn-outline-success btn-md  float-end my-3"><i class="bi bi-plus-circle"></i> {{ __('Add New Loan') }}</a>
             @endcan
-            <div class="pt-4 mt-5">
+            </div>
+            <div class="pt-2 mt-2">
                 <div class="table-responsive">
                     <table class="table table-bordered" id="table1">
                         <thead>
@@ -25,7 +29,6 @@
                         </thead>
                         <tbody>
                         </tbody>
-
                     </table>
                 </div>
             </div>

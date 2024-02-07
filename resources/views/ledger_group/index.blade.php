@@ -35,22 +35,23 @@
 
             </div>
 
+            <div class="table-responsive">
+                <table class="table table-bordered" id="table1">
+                    <thead>
+                        <tr>
+                            {{-- <th scope="col">{{ __('No.') }}</th> --}}
+                            <th scope="col">S#</th>
+                            <th scope="col">{{__('Name')}}</th>
+                            <th scope="col">{{__('Parent Ledger Group')}}</th>
 
-            <table class="table table-bordered" id="table1">
-                <thead>
-                    <tr>
-                        {{-- <th scope="col">{{ __('No.') }}</th> --}}
-                        <th scope="col">S#</th>
-                        <th scope="col">{{__('Name')}}</th>
-                        <th scope="col">{{__('Parent Ledger Group')}}</th>
+                            <th scope="col" style="width: 250px;">{{__('Action')}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                        <th scope="col" style="width: 250px;">{{__('Action')}}</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
 
 
 

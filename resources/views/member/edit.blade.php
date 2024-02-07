@@ -464,47 +464,48 @@
 
             <div class="modal-body">
                 {{-- <p id="not_matched_dept"></p> --}}
-
-                <table class="table table-bordered" id="table1">
-                    <thead>
-                        <tr>
-                            {{-- <th>{{ __('SR.') }}</th>
-                            <th>{{ __('Ledger Account Id') }}</th>
-                            <th>{{ __('Member Id') }}</th> --}}
-                            <th>{{ __('Code') }}</th>
-                            <th>{{ __('Amount') }} </th>
-                            <th>{{ __('Date') }} </th>
-                            <th>{{ __('Status') }} </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (!empty($shares))
-                            @foreach ($shares as $key => $share)
-                                <tr>
-                                    {{-- <td>{{ $key + 1 }}</td>
-                                    <td>{{ $share->ledger_account_id }}</td>
-                                    <td>{{ $share->member_id }}</td> --}}
-                                    <td>{{ $share->share_code }}</td>
-                                    <td>{{ $share->share_amount }}</td>
-                                    <td>{{ date('d-M-Y', strtotime($share->purchase_on)) }}</td>
-                                    <td>
-                                        <form action="{{ route('member_share.edit', $share->id) }}" method="post">
-                                            @csrf
-                                            @if ($share->status == 1)
-                                                <button type="button" class="btn btn-outline-warning btn-sm" id="share_acc{{ $share->id }}" onclick="changeStatus('{{ $share->id }}')">{{ __('Sell') }}</button>
-                                                {{-- <a href="{{ route('member_share.edit', $share->id) }}" class="btn btn-outline-warning btn-sm">{{__('Close')}}</a> --}}
-                                            @else
-                                                <b>{{ __('Sold') }}</b>
-                                            @endif
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @else
-                            {{ __('Not Found') }}
-                        @endif
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="table1">
+                        <thead>
+                            <tr>
+                                {{-- <th>{{ __('SR.') }}</th>
+                                <th>{{ __('Ledger Account Id') }}</th>
+                                <th>{{ __('Member Id') }}</th> --}}
+                                <th>{{ __('Code') }}</th>
+                                <th>{{ __('Amount') }} </th>
+                                <th>{{ __('Date') }} </th>
+                                <th>{{ __('Status') }} </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!empty($shares))
+                                @foreach ($shares as $key => $share)
+                                    <tr>
+                                        {{-- <td>{{ $key + 1 }}</td>
+                                        <td>{{ $share->ledger_account_id }}</td>
+                                        <td>{{ $share->member_id }}</td> --}}
+                                        <td>{{ $share->share_code }}</td>
+                                        <td>{{ $share->share_amount }}</td>
+                                        <td>{{ date('d-M-Y', strtotime($share->purchase_on)) }}</td>
+                                        <td>
+                                            <form action="{{ route('member_share.edit', $share->id) }}" method="post">
+                                                @csrf
+                                                @if ($share->status == 1)
+                                                    <button type="button" class="btn btn-outline-warning btn-sm" id="share_acc{{ $share->id }}" onclick="changeStatus('{{ $share->id }}')">{{ __('Sell') }}</button>
+                                                    {{-- <a href="{{ route('member_share.edit', $share->id) }}" class="btn btn-outline-warning btn-sm">{{__('Close')}}</a> --}}
+                                                @else
+                                                    <b>{{ __('Sold') }}</b>
+                                                @endif
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                {{ __('Not Found') }}
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div class="modal-footer">

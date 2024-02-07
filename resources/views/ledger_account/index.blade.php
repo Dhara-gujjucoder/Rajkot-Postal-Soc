@@ -84,23 +84,25 @@
                 @endcan
             </div>
 
-                <div class="pt-4 mt-5">
-                    <table class="table table-bordered" id="table1">
-                        <thead>
-                            <tr>
-                                <th scope="col">{{ __('No.') }}</th>
-                                <th scope="col">{{ __('Name') }}</th>
-                                <th scope="col">{{ __('Ledger Group') }}</th>
-                                <th scope="col">{{ __('Member') }}</th>
-                                <th scope="col">{{ __('Opening Balance') }}</th>
-                                <th scope="col">{{ __('Type') }}</th>
-                                <th scope="col" style="width: 250px;">{{ __('Action') }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                <div class="pt-2 mt-2">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="table1">
+                            <thead>
+                                <tr>
+                                    <th scope="col">{{ __('No.') }}</th>
+                                    <th scope="col">{{ __('Name') }}</th>
+                                    <th scope="col">{{ __('Ledger Group') }}</th>
+                                    <th scope="col">{{ __('Member') }}</th>
+                                    <th scope="col">{{ __('Opening Balance') }}</th>
+                                    <th scope="col">{{ __('Type') }}</th>
+                                    <th scope="col" style="width: 250px;">{{ __('Action') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
 
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
         </div>

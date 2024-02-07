@@ -24182,3 +24182,9 @@ a {
 }
 
 html[data-bs-theme=light] .btn:hover{ color: var(--bs-btn-hover-color);background-color: var(--bs-btn-hover-bg);border-color: var(--bs-btn-hover-border-color);}
+
+@media (max-width: 575px) {
+    .header_add {
+        grid-template-columns: 1fr;
+    }
+}
