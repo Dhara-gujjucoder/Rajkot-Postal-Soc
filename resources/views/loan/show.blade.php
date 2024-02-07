@@ -141,7 +141,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($loan->loan_emis as $key => $emi)
+                                        @foreach ($loan->loan_emis_d as $key => $emi)
                                             <tr>
                                                 <td>{{ $key+1 }}</td>
                                                 <td>{{ date('M-Y',strtotime('01-'.$emi->month)) }}</td>

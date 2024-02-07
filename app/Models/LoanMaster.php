@@ -45,7 +45,7 @@ class LoanMaster extends Model
             get: fn (string $value) => $value == 1 ? __('Active') : ($value ==  2  ? __('Settled') :  __('Completed')),
         );
     }
-    public function loan_emis()
+    public function loan_emis_d()
     {
         return $this->hasMany(LoanEMI::class, 'loan_master_id', 'id');
     }
