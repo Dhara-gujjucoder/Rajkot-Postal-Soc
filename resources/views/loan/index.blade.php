@@ -7,26 +7,27 @@
     <div class="card">
         <div class="card-body">
             @can('create-loan')
-                <a href="{{ route('loan.create') }}" class="btn btn-outline-success btn-md  float-end my-3"><i
-                        class="bi bi-plus-circle"></i> {{ __('Add New Loan') }}</a>
+                <a href="{{ route('loan.create') }}" class="btn btn-outline-success btn-md  float-end my-3"><i class="bi bi-plus-circle"></i> {{ __('Add New Loan') }}</a>
             @endcan
             <div class="pt-4 mt-5">
-                <table class="table table-bordered" id="table1">
-                    <thead>
-                        <tr>
-                            <th>{{ __('No.') }}</th>
-                            <th>{{ __('Loan A/c') }}</th>
-                            <th>{{ __('Name') }}</th>
-                            <th>{{ __('Amount') }}</th>
-                            <th>{{ __('EMI Amount') }}</th>
-                            <th>{{ __('Status') }}</th>
-                            <th>{{ __('Action') }} </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="table1">
+                        <thead>
+                            <tr>
+                                <th>{{ __('No.') }}</th>
+                                <th>{{ __('Loan A/c') }}</th>
+                                <th>{{ __('Name') }}</th>
+                                <th>{{ __('Amount') }}</th>
+                                <th>{{ __('EMI Amount') }}</th>
+                                <th>{{ __('Status') }}</th>
+                                <th>{{ __('Action') }} </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
 
-                </table>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

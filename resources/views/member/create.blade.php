@@ -142,7 +142,6 @@
                                     <b>{{ __('Work Details') }}</b>
                                 </div>
                             </div>
-
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="department">{{ __('Department') }}<span class="text-danger">*</span></label>
@@ -199,6 +198,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="card-header border mb-4 mt-4">
                                 <div class="float-start">
@@ -252,6 +252,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="card-header border mb-4 mt-4">
                                 <div class="float-start">

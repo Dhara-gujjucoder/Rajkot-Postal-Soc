@@ -26,6 +26,7 @@
     <link rel="stylesheet" crossorigin href="{{ asset('assets/compiled/css/table-datatable-jquery.css') }}">
     <link href="{{ asset('assets/extensions/select2/select2.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/extensions/select2/select2totree.css') }}" rel="stylesheet" />
+    <link href="{{ asset('assets/compiled/css/custom.css') }}" rel="stylesheet">
 
     @stack('style')
 </head>
@@ -87,7 +88,7 @@
             </div>
         </div>
     @endauth
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <script src="{{ asset('assets/static/js/components/dark.js') }}"></script>
     <script src="{{ asset('assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>

@@ -4,10 +4,15 @@
 <section class="page-content">
     <div class="card">
         <div class="card-body">
-            @can('create-department')
-                <a href="{{ route('department.create') }}" class="btn btn-outline-success btn-md  float-end my-3"><i class="bi bi-plus-circle"></i> {{__('Add New Department')}}</a>
-            @endcan
-            <div class="pt-4 mt-5">
+            <div class="header_add">
+                <div class="form">
+
+                </div>
+                @can('create-department')
+                <a href="{{ route('department.create') }}" class="btn btn-outline-success btn-md  float-end mb-3"><i class="bi bi-plus-circle"></i> {{__('Add New Department')}}</a>
+                @endcan
+            </div>
+            <div class="pt-2 mt-2">
             <table class="table table-bordered" id="table1">
                 <thead>
                     <tr>

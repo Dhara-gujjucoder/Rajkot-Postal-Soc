@@ -13,7 +13,7 @@ use App\Models\ShareAmount;
 use Illuminate\Http\Request;
 use App\Models\LedgerAccount;
 use Yajra\DataTables\DataTables;
-use App\Models\LedgerShareCapital;
+use App\Models\MemberShare;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -28,9 +28,6 @@ use Illuminate\Validation\Rules\Exists;
 class MemberController extends Controller
 {
     public $dirPath = '/images';
-    /**
-     * Instantiate a new UserController instance.
-     */
 
     public function __construct()
     {
@@ -83,6 +80,11 @@ class MemberController extends Controller
                         $q->where('department_id', $search);
                     });
                 })
+                // ->orderColumn('share_total_price', function ($query, $order) {
+                //     $query->whereHas('member', function ($q) use ($order) {
+                //         $q->orderBy('share_total_price', $order);
+                //     });
+                // })
                 ->orderColumn('registration_no', function ($query, $order) {
                     $query->whereHas('member', function ($q) use ($order) {
                         $q->orderBy('registration_no', $order);
@@ -93,6 +95,9 @@ class MemberController extends Controller
                         $q->orderBy('department_id', $order);
                     });
                 })
+                // ->editColumn('share_total_price', function ($row) {
+                //     return $row->member->share_total_price;
+                // })
                 ->editColumn('registration_no', function ($row) {
                     return $row->member->registration_no;
                 })
@@ -112,10 +117,6 @@ class MemberController extends Controller
         return view('member.index', $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-
     public function create(): View
     {
         return view('member.create', [
@@ -125,10 +126,6 @@ class MemberController extends Controller
             'page_title' => __('Add Member')
         ]);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
 
     public function store(StoreMemberRequest $request): RedirectResponse
     {
@@ -157,12 +154,12 @@ class MemberController extends Controller
 
         for ($i = 1; $i <= 3; $i++) {
             $group = LedgerGroup::where('id', $i)->first();
-            $ledger_entry = LedgerAccount::where('user_id', $user->id)->where('ledger_group_id', $i)->first();
+            $ledger_entry = LedgerAccount::where('member_id', $member->id)->where('ledger_group_id', $i)->first();
             if (!$ledger_entry) {
                 $ledger_entry = new LedgerAccount();
                 $ledger_entry->ledger_group_id = $group->id;
                 $ledger_entry->account_name = $user->name . '-' . $group->ledger_group;
-                $ledger_entry->user_id = $user->id;
+                $ledger_entry->member_id =  $member->id;
                 $ledger_entry->opening_balance = 0;
                 $ledger_entry->type  = 'DR';
                 $ledger_entry->year_id = 1;
@@ -180,40 +177,82 @@ class MemberController extends Controller
 
     public function member_share($member, $no_of_share)
     {
-        // dd($no_of_share);
-        $exist_share = LedgerShareCapital::where('member_id', $member->id)->where('status', 1)->count();
+        $exist_share = MemberShare::where('member_id', $member->id)->where('status', 1)->count();
 
         $new_share = $no_of_share - $exist_share;
         for ($i = 1; $i <= $new_share; $i++) {
 
-            $count = LedgerShareCapital::count() + 1;
+            $count = MemberShare::count() + 1;
             $no = str_pad($count, 6, 0, STR_PAD_LEFT);
             // $no .= $count > 0 ? $count + 1 : 1;
 
-            $share_entry = new LedgerShareCapital();
-            $share_entry->ledger_account_id = $member->LedgerAccount->id ?? 0;
+            $share_entry = new MemberShare();
+            $share_entry->ledger_account_id = $member->share_ledger_account->id ?? 0;
             $share_entry->member_id = $member->id;
             $share_entry->share_code = $no;
             $share_entry->share_amount = current_share_amount()->share_amount;
             $share_entry->year_id = $this->current_year->id;
             $share_entry->status = 1;
-            $share_entry->created_date = date('Y-m-d');
+            $share_entry->purchase_on = date('Y-m-d');
             $share_entry->save();
         }
+        // $share_total_price = MemberShare::where('member_id', $member->id)->where('status', 1)->first();
 
-        // $share_total_price = LedgerShareCapital::where('member_id', $member->id)->where('status', 1)->first();
-
-        $member->share_total_price =  $member->share_total_price + ($new_share * current_share_amount()->share_amount);   //$share_total_price;
-        // dd($member->share_total_price);
+        // $member->share_total_price =  $member->share_total_price + ($new_share * current_share_amount()->share_amount);   //$share_total_price;
         $member->save();
     }
 
-    /**
-     * Display the specified resource.
-    */
 
     public function show(Request $request, Member $member): View
     {
+        // opening balance set purpose
+        // $member1 = Member::where('uid',267)->get()->first();
+        //     // dd($members);
+        //     for ($i = 1; $i <= 3; $i++) {
+        //         $group = LedgerGroup::where('id', $i)->first();
+        //         $ledger_entry = LedgerAccount::where('member_id', $member1->id)->where('ledger_group_id', $i)->first();
+        //         if (!$ledger_entry) {
+        //             $ledger_entry = new LedgerAccount();
+        //             $ledger_entry->ledger_group_id = $group->id;
+        //             $ledger_entry->account_name = $member1->user->name . '-' . $group->ledger_group;
+        //             $ledger_entry->member_id =  $member1->id;
+        //             $ledger_entry->opening_balance = 0;
+        //             $ledger_entry->type  = 'DR';
+        //             $ledger_entry->year_id = 1;
+        //             $ledger_entry->created_by = 1;
+        //             $ledger_entry->status = 1;
+        //             $ledger_entry->save();
+        //         }
+        //     }
+        //     $members = Member::where('uid',267)->get()->all();
+        //     foreach ($members as $key => $member1) {
+        //         if($member1->share_ledger_account){
+
+        //             $member1->share_ledger_account->update([ 'opening_balance' =>$member1->share_total_price ?? '']);
+        //         }else{
+        //             dump($member);
+        //         }
+        //     }
+        // end
+        // $user = new User();
+        // // $user->id = $row[1];
+        // $user->name = 'BABARIYA NANJIBHAI R';
+        // $user->email = 'BABARIYA NANJIBHAI R'.rand(11,99);
+        // $user->password = Hash::make('rajkotpostalsoc12#');
+        // $user->save();
+        // $user->assignRole('User');
+
+        // $member = new Member();
+        // $member->user_id = $user->id;
+        // $member->department_id = 1;
+        // $member->registration_no = '11111111';
+        // $member->uid =  '267';
+        // $member->mobile_no =  11111111;
+        // $member->whatsapp_no = 11111111;
+        // $member->aadhar_card_no =  11111111;
+        // $member->status = 0;
+        // $member->save();
+
         if ($request->ajax()) {
             Member::find($request->input('pk'))->update([$request->input('name') => $request->input('value')]);
             return response()->json(['success' => true]);
@@ -240,8 +279,8 @@ class MemberController extends Controller
         }
 
         return view('member.edit', [
-            'shares' => LedgerShareCapital::where('member_id', $member->id)->get(),
-            // dd(LedgerShareCapital::where('member_id',$member->id)->get()),
+            'shares' => MemberShare::where('member_id', $member->id)->get(),
+            // dd(MemberShare::where('member_id',$member->id)->get()),
             'departments' => Department::get(),
             'minimum_share' => ShareAmount::where('is_active', 1)->pluck('minimum_share')->first(),
 
@@ -311,8 +350,8 @@ class MemberController extends Controller
 
     public function getmember(Member $member)
     {
-        $member = Member::where('id',$member->id)->with(['loans','shares'])->get()->first();
+        $member = Member::where('id', $member->id)->with(['loan', 'shares'])->get()->first();
         $member->member_fixed_saving = $member->member_fixed;
-        return response()->json(['success' => true,'member'=>$member]);
+        return response()->json(['success' => true, 'member' => $member]);
     }
 }

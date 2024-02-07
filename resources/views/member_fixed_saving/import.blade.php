@@ -9,7 +9,7 @@
             <div class="card">
                 <div class="card-header mb-4">
                     <div class="float-end">
-                        <a href="{{ route('ledger_sharecapital.index') }}" class="btn btn-primary btn-sm">&larr;
+                        <a href="{{ route('member_fixed_saving.index') }}" class="btn btn-primary btn-sm">&larr;
                             {{ __('Back') }}</a>
                     </div>
                 </div>
@@ -19,13 +19,13 @@
                         <div class="row">
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
-                                    <label for="all_share">{{ __('Upload File') }}<span
+                                    <label for="excel_file">{{ __('Upload File') }}<span
                                             class="text-danger">*</span></label>
-                                    <input type="file" id="all_share"
-                                        class="form-control @error('all_share') is-invalid @enderror"
-                                         name="all_share"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                                    @if ($errors->has('all_share'))
-                                        <span class="text-danger">{{ $errors->first('all_share') }}</span>
+                                    <input type="file" id="excel_file"
+                                        class="form-control @error('excel_file') is-invalid @enderror"
+                                         name="excel_file"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                                    @if ($errors->has('excel_file'))
+                                        <span class="text-danger">{{ $errors->first('excel_file') }}</span>
                                     @endif
                                 </div>
                             </div>

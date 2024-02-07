@@ -7,7 +7,7 @@
     <div class="card">
         <div class="card-body">
             @can('create-role')
-                <a href="{{ route('ledger_entries.create') }}" class="btn btn-outline-success btn-md  float-end my-3"><i class="bi bi-plus-circle"></i> {{ __('Add New Ledger Entry') }}</a>
+                <a href="{{ route('double_entries.create') }}" class="btn btn-outline-success btn-md  float-end my-3"><i class="bi bi-plus-circle"></i> {{ __('Add New Double Entry') }}</a>
             @endcan
             <div class="pt-4 mt-5">
                 <table class="table table-bordered" id="table1">
@@ -22,7 +22,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($ledger_entries as $key => $entry)
+                        @foreach ($double_entries as $key => $entry)
                         <tr>
                             <td>{{ $entry->id }}</td>
                             <td>{{ $entry->LedgerAcountName->account_name ?? ''}}</td>
@@ -30,18 +30,18 @@
                             <td>{{ $entry->amount }}</td>
                             <td>{{ $entry->date }}</td>
                             <td>
-                                <form action="{{ route('ledger_entries.destroy', $entry->id) }}" method="post">
+                                <form action="{{ route('double_entries.destroy', $entry->id) }}" method="post">
                                     @csrf
                                     @method('DELETE')
 
-                                        @can('edit-ledger_entries')
-                                            <a href="{{ route('ledger_entries.edit', $entry->id) }}" class="btn btn-outline-warning btn-sm"><i
+                                        @can('edit-double_entries')
+                                            <a href="{{ route('double_entries.edit', $entry->id) }}" class="btn btn-outline-warning btn-sm"><i
                                                     class="bi bi-pencil-square"></i> {{__('Edit')}}</a>
                                         @endcan
 
-                                        @can('delete-ledger_entries')
+                                        @can('delete-double_entries')
                                                 <button type="submit" class="btn btn-outline-danger btn-sm"
-                                                    onclick="return confirm(`{{__('Do you want to delete this ledger Entry?')}}`);"><i
+                                                    onclick="return confirm(`{{__('Do you want to delete this Double Entry?')}}`);"><i
                                                         class="bi bi-trash"></i> {{__('Delete')}}</button>
                                         @endcan
 

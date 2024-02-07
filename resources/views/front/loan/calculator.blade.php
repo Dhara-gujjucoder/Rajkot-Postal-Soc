@@ -104,6 +104,7 @@
                                 <div class="dashboard-detail-data">
                                 <label class="col-form-label"><strong>{{ __('Required share') }} :</strong></label>
                                 <div class="col-form-info" id="required_share">&#8377; data placed hear</div>
+
                                 </div>
                             </div>
 

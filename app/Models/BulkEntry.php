@@ -28,7 +28,7 @@ class BulkEntry extends Model
 
     public function member()
     {
-        return $this->hasOne(Member::class, 'user_id', 'user_id');
+        return $this->hasOne(Member::class, 'id', 'member_id');
     }
 
     public function master_entry()

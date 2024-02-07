@@ -64,27 +64,40 @@ class Member extends Model
         return "{$this->user->name}";
     }
 
-    public function LedgerAccount()
+    public function fixed_saving_ledger_account()
     {
-        return $this->hasOne(LedgerAccount::class,  'user_id', 'user_id')->where('ledger_accounts.ledger_group_id', 2);
+        return $this->hasOne(LedgerAccount::class, 'member_id', 'id')->where('ledger_group_id', 1);
+    }
+
+    public function share_ledger_account()
+    {
+        return $this->hasOne(LedgerAccount::class, 'member_id', 'id')->where('ledger_group_id', 2);
+    }
+
+    public function loan_ledger_account()
+    {
+        return $this->hasOne(LedgerAccount::class, 'member_id', 'id')->where('ledger_group_id', 3);
     }
 
     public function shares()
     {
-        return $this->hasMany(LedgerShareCapital::class, 'member_id', 'id')->where('status',1);
+        return $this->hasMany(MemberShare::class, 'member_id', 'id')->where('status', 1);
     }
 
-    public function loans()
+    public function fixed_saving()
     {
-        return $this->hasMany(LoanMaster::class, 'member_id', 'id')->where('status',1);
+        return $this->hasMany(MemberFixedSaving::class, 'member_id', 'id')->where('status', 1);
+    }
+    public function loan()
+    {
+        return $this->hasOne(LoanMaster::class, 'member_id', 'id')->where('status', 1);
     }
 
     public function getMemberFixedAttribute()
     {
-        $fixed_saving['member_fixed_saving'] = BulkEntry::where('member_id', $this->id)->where('status',2)->sum('fixed');
-        $fixed_saving['total_fixed_saving'] = count(getMonthsOfYear(currentYear()->id))*current_fixed_saving()->monthly_saving;
-        $fixed_saving['remaining_fixed_saving'] = $fixed_saving['total_fixed_saving'] - $fixed_saving['member_fixed_saving'] > 0 ? $fixed_saving['total_fixed_saving'] - $fixed_saving['member_fixed_saving'] : 0 ;
+        $fixed_saving['member_fixed_saving'] = BulkEntry::where('member_id', $this->id)->where('status', 2)->sum('fixed');
+        $fixed_saving['total_fixed_saving'] = count(getMonthsOfYear(currentYear()->id)) * current_fixed_saving()->monthly_saving;
+        $fixed_saving['remaining_fixed_saving'] = $fixed_saving['total_fixed_saving'] - $fixed_saving['member_fixed_saving'] > 0 ? $fixed_saving['total_fixed_saving'] - $fixed_saving['member_fixed_saving'] : 0;
         return $fixed_saving;
     }
-    
 }

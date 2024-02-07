@@ -79,10 +79,20 @@ class PermissionSeeder extends Seeder
             // 'edit-bulk_entries',
             // 'export-bulk_entries'
 
-            'create-loan',
-            'edit-loan',
-            'delete-loan',
-            'view-loan',
+            // 'create-loan',
+            // 'edit-loan',
+            // 'delete-loan',
+            // 'view-loan',
+
+            // 'create-member_share',
+            // 'edit-member_share',
+            // 'delete-member_share',
+            // 'view-member_share',
+
+             'create-double_entries',
+            'edit-double_entries',
+            'delete-double_entries',
+            'view-double_entries'
 
         ];
 

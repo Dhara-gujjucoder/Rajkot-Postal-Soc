@@ -9,7 +9,7 @@
             <div class="card">
                 <div class="card-header mb-4">
                     {{-- <div class="float-start">
-                        <b>{{ __('Ledger Entry') }}</b>
+                        <b>{{ __('Double Entry') }}</b>
                     </div> --}}
                     <div class="float-end">
                         <a href="{{ route('bulk_entries.index') }}" class="btn btn-primary btn-sm">&larr;

@@ -30,6 +30,7 @@ class LedgerAccountController extends Controller
      */
     public function index(Request $request)
     {
+        
         $user = Auth::user();
         $data['ledger_accounts'] = LedgerAccount::get();
         $data['members'] = Member::withTrashed()->orderBy('uid', 'ASC')->get();
@@ -52,11 +53,11 @@ class LedgerAccountController extends Controller
                     (Auth::user()->can('delete-ledger_account')) ? $action_btn .= $delete_btn : '';
                     return $action_btn;
                 })
-                ->filterColumn('user_id', function ($query, $search) {
-                    $query->where('user_id', $search);
+                ->filterColumn('member_id', function ($query, $search) {
+                    $query->where('member_id', $search);
                 })
-                ->editColumn('user_id', function ($row) {
-                    return $row->user->fullname;
+                ->editColumn('member_id', function ($row) {
+                    return $row->member->name ?? '';
                 })
                 ->editColumn('ledger_group_id', function ($row) {
                     return $row->LedgerGroupId->ledger_group;
@@ -94,11 +95,17 @@ class LedgerAccountController extends Controller
             'account_name' => 'required|string|max:255|unique:ledger_accounts,account_name',
             'ledger_group_id' => 'required',
             'opening_balance' => 'required',
-            'type' => 'required'
+            'type' => 'required',
+            'form_type' => 'required'
         ]);
         $input = $request->all();
         $input['created_by'] = Auth::user()->id;
         $input['year_id'] = FinancialYear::where('is_current', 1)->pluck('id')->first();
+        if($request->member_id){
+            $input['is_member_account'] = 1;
+        }else{
+            $input['is_member_account'] = 0;
+        }
         LedgerAccount::create($input);
         return redirect()->route('ledger_account.index')
             ->withSuccess(__('New Ledger Account is added successfully.'));
@@ -133,12 +140,16 @@ class LedgerAccountController extends Controller
     {
         $request->validate([
             'ledger_group_id' => 'required',
-            'ledger_group_id' => 'required',
             'opening_balance' => 'required',
             'type' => 'required',
             'account_name' => 'required|string|max:255|unique:ledger_accounts,account_name,' . $ledger_account->id
         ]);
         $input = $request->all();
+        if($request->member_id){
+            $input['is_member_account'] = 1;
+        }else{
+            $input['is_member_account'] = 0;
+        }
         $ledger_account->update($input);
         return redirect()->route('ledger_account.index')
             ->withSuccess(__('Ledger Account is updated successfully.'));

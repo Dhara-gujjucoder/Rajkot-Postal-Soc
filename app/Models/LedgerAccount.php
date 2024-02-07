@@ -14,10 +14,11 @@ class LedgerAccount extends Model
     protected $fillable = [
         'ledger_group_id',
         'account_name',
-        'user_id',
+        'member_id',
         'year_id',
         'opening_balance',
         'type',
+        'is_member_account',
         'created_by',
         'status',
     ];
@@ -33,8 +34,8 @@ class LedgerAccount extends Model
     {
         return $this->belongsTo(LedgerGroup::class, 'ledger_group_id', 'id');
     }
-    public function user()
+    public function member()
     {
-        return $this->hasOne(User::class, 'id', 'user_id')->withTrashed();
+        return $this->hasOne(Member::class, 'id', 'member_id')->withTrashed();
     }
 }

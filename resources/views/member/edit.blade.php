@@ -21,6 +21,22 @@
                         @csrf
                         @method('PUT')
                         <div class="row">
+                            <div class="col-12">
+                                <div class="form-group opening_balance">
+                                    <label for="registration_no">
+                                        <span>{{ __('Fixed Saving Opening Balance') }} :</span>
+                                        <b> {{ $user->fixed_saving_ledger_account->opening_balance }}</b>
+                                    </label>
+                                    <label for="registration_no">
+                                        <span>{{ __('Share Opening Balance') }} :</span>
+                                        <b> {{ $user->share_ledger_account->opening_balance }}</b>
+                                    </label>
+                                    <label for="registration_no">
+                                        <span>{{ __('Loan Opening Balance') }} :</span>
+                                        <b> {{ $user->loan_ledger_account->opening_balance }}</b>
+                                    </label>
+                                </div>
+                            </div>
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="registration_no">{{ __('Registration No') }}<span class="text-danger">*</span></label>
@@ -234,6 +250,7 @@
                                     <b>{{ __('Document Details') }}</b>
                                 </div>
                             </div>
+
                             {{-- <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="age">{{ __('Age') }}<span class="text-danger">*</span></label>
@@ -247,11 +264,10 @@
                                 </div>
                             </div> --}}
 
-
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="aadhar_card_no">{{ __('Aadhar Card No') }}<span class="text-danger">*</span></label>
-                                    <input type="number" id="aadhar_card_no" accept="image/jpg, image/png, image/gif, image/jpeg" class="form-control @error('aadhar_card_no') is-invalid @enderror" placeholder="{{ __('AadharCard No') }}" name="aadhar_card_no" value="{{ old('aadhar_card_no', $user->aadhar_card_no) }}">
+                                    <input type="number" id="aadhar_card_no" accept="image/jpg, image/png, image/gif, image/jpeg" class="form-control @error('aadhar_card_no') is-invalid @enderror" placeholder="{{ __('Aadhar Card No') }}" name="aadhar_card_no" value="{{ old('aadhar_card_no', $user->aadhar_card_no) }}">
                                     @if ($errors->has('aadhar_card_no'))
                                         <span class="text-danger">{{ $errors->first('aadhar_card_no') }}</span>
                                     @endif
@@ -400,7 +416,7 @@
                                 <div class="form-group">
                                     <label for="total_share">{{ __('Total Share') }}</label>
                                     <input type="number" id="total_share" class="form-control @error('total_share') is-invalid @enderror" placeholder="{{ __('Total Share') }}" name="total_share" value="{{ old('total_share', $user->total_share) }}">
-                                    <input type="hidden" name="share_total_price" value="{{ $user->share_total_price }}">
+                                    {{-- <input type="hidden" name="share_total_price" value="{{ $user->share_total_price }}"> --}}
                                     <label style="color: red;">*{{ __('Minimum Share') }}:{{ $minimum_share }}</label>
 
                                     @if ($errors->has('total_share'))
@@ -409,9 +425,9 @@
                                 </div>
                             </div>
                             @if ($user->total_share)
-                                <div class="col-md-6 col-12">
+                                <div class="col-12">
                                     <div class="form-group">
-                                        <button type="button" class="btn btn-primary" id="myModal" data-bs-toggle="modal" data-bs-target="#bd-example-modal-lg">
+                                        <button type="button" class="btn btn-outline-warning btn-sm" id="myModal" data-bs-toggle="modal" data-bs-target="#bd-example-modal-lg">
                                             {{ __('View Member Shares') }}</button>
                                     </div>
                                 </div>
@@ -462,27 +478,31 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($shares as $key => $share)
-                            <tr>
-                                {{-- <td>{{ $key + 1 }}</td>
-                                <td>{{ $share->ledger_account_id }}</td>
-                                <td>{{ $share->member_id }}</td> --}}
-                                <td>{{ $share->share_code }}</td>
-                                <td>{{ $share->share_amount }}</td>
-                                <td>{{ date('d-M-Y', strtotime($share->created_date)) }}</td>
-                                <td>
-                                    <form action="{{ route('ledger_sharecapital.edit', $share->id) }}" method="post">
-                                        @csrf
-                                        @if ($share->status == 1)
-                                            <button type="button" class="btn btn-outline-warning btn-sm" id="share_acc{{ $share->id }}" onclick="changeStatus('{{ $share->id }}')">{{ __('Close') }}</button>
-                                            {{-- <a href="{{ route('ledger_sharecapital.edit', $share->id) }}" class="btn btn-outline-warning btn-sm">{{__('Close')}}</a> --}}
-                                        @else
-                                            <b>{{ __('Closed') }}</b>
-                                        @endif
-                                    </form>
-                                </td>
-                            </tr>
-                        @endforeach
+                        @if (!empty($shares))
+                            @foreach ($shares as $key => $share)
+                                <tr>
+                                    {{-- <td>{{ $key + 1 }}</td>
+                                    <td>{{ $share->ledger_account_id }}</td>
+                                    <td>{{ $share->member_id }}</td> --}}
+                                    <td>{{ $share->share_code }}</td>
+                                    <td>{{ $share->share_amount }}</td>
+                                    <td>{{ date('d-M-Y', strtotime($share->purchase_on)) }}</td>
+                                    <td>
+                                        <form action="{{ route('member_share.edit', $share->id) }}" method="post">
+                                            @csrf
+                                            @if ($share->status == 1)
+                                                <button type="button" class="btn btn-outline-warning btn-sm" id="share_acc{{ $share->id }}" onclick="changeStatus('{{ $share->id }}')">{{ __('Sell') }}</button>
+                                                {{-- <a href="{{ route('member_share.edit', $share->id) }}" class="btn btn-outline-warning btn-sm">{{__('Close')}}</a> --}}
+                                            @else
+                                                <b>{{ __('Sold') }}</b>
+                                            @endif
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @else
+                            {{ __('Not Found') }}
+                        @endif
                     </tbody>
                 </table>
             </div>
@@ -509,10 +529,10 @@
     });
 
     function changeStatus(share_id) {
-        var cc = confirm(`{{ __('Do you really want to close the share?') }}`);
+        var cc = confirm(`{{ __('Do you really want to Sold the share?') }}`);
 
         if (cc) {
-            var url = "{{ route('ledger_sharecapital.update', ':id') }}";
+            var url = "{{ route('member_share.update', ':id') }}";
             url = url.replace(':id', share_id);
             $.ajax({
                 headers: {

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ledger_entries', function (Blueprint $table) {
+        Schema::create('double_entries', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('transaction_id');
             $table->integer('account_id');
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ledger_entries');
+        Schema::dropIfExists('double_entries');
     }
 };

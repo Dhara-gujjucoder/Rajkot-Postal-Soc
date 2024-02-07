@@ -8,23 +8,24 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\LoanController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\BulkEntryController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\DoubleEntryController;
 use App\Http\Controllers\LoanMasterController;
+use App\Http\Controllers\TempReportController;
 use App\Http\Controllers\LedgerEntryController;
 use App\Http\Controllers\LedgerGroupController;
 use App\Http\Controllers\LoanSettingController;
+use App\Http\Controllers\MemberShareController;
 use App\Http\Controllers\ShareAmountController;
 use App\Http\Controllers\FinancialYearController;
 use App\Http\Controllers\LedgerAccountController;
 use App\Http\Controllers\MonthlySavingController;
 use App\Http\Controllers\SalaryDeductionController;
-use App\Http\Controllers\LedgerShareCapitalController;
-use App\Http\Controllers\MemberShareAccountController;
+use App\Http\Controllers\MemberFixedSavingController;
 use App\Http\Controllers\LoanCalculationMatrixController;
 
 
@@ -48,8 +49,15 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
     Route::get('/get/member/{member}', [App\Http\Controllers\MemberController::class, 'getmember'])->name('member.get');
     Route::get('/get/guarantor_count/{member}', [App\Http\Controllers\LoanMasterController::class, 'guarantor_count'])->name('guarantor_count.get');
 
-    Route::get('/import/all-share', [App\Http\Controllers\LedgerShareCapitalController::class, 'all_share'])->name('all_share.import');
-    Route::post('/import/all-share', [App\Http\Controllers\LedgerShareCapitalController::class, 'import_all_share'])->name('all_share.import');
+    Route::get('/import/saving', [App\Http\Controllers\MemberFixedSavingController::class, 'all_share'])->name('all_share.import');            //******//
+    Route::post('/import/saving', [App\Http\Controllers\MemberFixedSavingController::class, 'import_all_share'])->name('all_share.import');    //******//
+
+    Route::get('/import/member-share', [App\Http\Controllers\MemberShareController::class, 'member_share'])->name('member_share.import');
+    Route::post('/import/member-share', [App\Http\Controllers\MemberShareController::class, 'import_member_share'])->name('member_share.import');
+
+    Route::get('/tempreport', [TempReportController::class, 'create'])->name('tempreport.create');
+    Route::get('/fixed-saving-export', [TempReportController::class, 'fixed_saving_export'])->name('fixed_saving_export');
+
     /*all modules*/
     Route::resources([
         'roles' => RoleController::class,
@@ -57,7 +65,7 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
         'members' => MemberController::class,
         'ledger_group' => LedgerGroupController::class,
         'ledger_account' => LedgerAccountController::class,
-        'ledger_entries' => LedgerEntryController::class,
+        'double_entries' => DoubleEntryController::class,
         'bulk_entries' => BulkEntryController::class,
         'loan' => LoanMasterController::class,
         'loan_matrix' => LoanCalculationMatrixController::class,
@@ -67,10 +75,9 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
         'loaninterest'=> LoanSettingController::class,
         'shareamount' => ShareAmountController::class,
         'monthlysaving'=>  MonthlySavingController::class,
-        // 'share_account' => MemberShareAccountController::class,
-        'ledger_sharecapital' => LedgerShareCapitalController::class,
+        'member_fixed_saving' => MemberFixedSavingController::class,
+        'member_share' => MemberShareController::class,
     ]);
-
 
     /*main setting*/
     Route::get('locale/{locale}', function ($lang) {

@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Member;
 use App\Models\LoanMaster;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Auth;
 use App\Models\LoanCalculationMatrix;
+use App\Models\LoanEMI;
 use Illuminate\Http\RedirectResponse;
 
 class LoanMasterController extends Controller
@@ -36,8 +38,8 @@ class LoanMasterController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $show_btn = '<a href="'.route('loan.show', $row->id).'"
-                    class="btn btn-outline-info btn-sm"><i class="bi bi-eye"></i> ' .__('Show').'</a>';
+                    $show_btn = '<a href="' . route('loan.show', $row->id) . '"
+                    class="btn btn-outline-info btn-sm"><i class="bi bi-eye"></i> ' . __('Show') . '</a>';
                     // $edit_btn = '<a href="' . route('loan.edit', $row->id) . '"
                     // class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square"></i>' . __('Edit') . '</a>';
                     // $delete_btn = '<form action="' . route('loan.destroy', $row->id) . '" method="post"><button type="submit" class="btn btn-outline-danger btn-sm"
@@ -52,7 +54,7 @@ class LoanMasterController extends Controller
                 ->filterColumn('member_id', function ($query, $search) {
                     $query->whereHas('member', function ($q) use ($search) {
                         $q->whereHas('user', function ($qr) use ($search) {
-                            $qr->where('name', 'Like','%'.$search.'%');
+                            $qr->where('name', 'Like', '%' . $search . '%');
                         });
                         // $q->where('name', $search);
                     });
@@ -82,7 +84,6 @@ class LoanMasterController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             'loan_id' => 'required',
             'emi_amount' => 'required',
@@ -95,33 +96,38 @@ class LoanMasterController extends Controller
             'bank_name' => 'required_if:payment_type,cheque',
             'cheque_no' => 'required_if:payment_type,cheque',
             'gcheque_no' => 'required|numeric',
-            'gbank_name'=>'string'
+            'gbank_name' => 'string'
         ]);
-        $loan_no = str_pad((LoanMaster::count()) + 1, 2, '0', STR_PAD_LEFT).'/'.$this->current_year->start_year.'-'.$this->current_year->end_year;
-        LoanMaster::create([
-            'loan_no' => $loan_no,
-            'year_id' => $this->current_year->id,
-            'month' => date('m-Y'),
-            'member_id'  => $request->member_id,
-            'start_month' => date('m-Y'),
-            'end_month' => date('m-Y'),
-            'loan_id' => $request->loan_id,
-            'principal_amt' => LoanCalculationMatrix::find($request->loan_id)->first()->amount,
-            'emi_amount' => $request->emi_amount,
-            'loan_settlement_amt' => $request->loan_settlement_amt,
-            'total_share_amt' => $request->total_share_amt,
-            'stamp_duty' => $request->stamp_duty,
-            'fixed_saving' => $request->fixed_saving,
-            'total_amt' => $request->total_amt,
-            'payment_type' => $request->payment_type,
-            'bank_name' => $request->bank_name,
-            'cheque_no' => $request->cheque_no,
-            'g1_member_id' => $request->g1_member_id,
-            'g2_member_id' => $request->g2_member_id,
-            'gcheque_no' => $request->gcheque_no,
-            'gbank_name' => $request->gbank_name,
-            'status' => 1
-        ]);
+        $loan_no = str_pad((LoanMaster::count()) + 1, 2, '0', STR_PAD_LEFT) . '/' . $this->current_year->start_year . '-' . $this->current_year->end_year;
+        $member = Member::find($request->member_id);
+
+        $loan_master = new LoanMaster;
+        $loan_master->fill($request->all());
+        $loan_master->ledger_account_id = $member->loan_ledger_account->id;
+        $loan_master->loan_no = $loan_no;
+        $loan_master->year_id = $this->current_year->id;
+        $loan_master->month = $request->month;
+        $loan_master->start_month = $request->emi_month[0];
+        $loan_master->end_month = Arr::last($request->emi_month);
+        $loan_master->status = 1;
+        $loan_master->principal_amt = LoanCalculationMatrix::find($request->loan_id)->first()->amount;
+        $loan_master->save();
+   
+        foreach ($request->emi_month as $key => $value) {
+            LoanEMI::create([
+                'loan_master_id' => $loan_master->id,
+                'month' => $value,
+                'member_id' => $loan_master->member_id,
+                'ledger_account_id' => $member->loan_ledger_account->id,
+                'principal_amt' => $loan_master->principal_amt,
+                'interest' => current_loan_interest()->loan_interest,
+                'interest_amt' => $request->emi_interest[$key],
+                'emi' => $request->emi_amt[$key],
+                'installment' => $request->installment[$key],
+                'rest_principal' => $request->rest_principal[$key],
+                'status' => 1,
+            ]);
+        }
         return redirect()->route('loan.index')
             ->withSuccess(__('New Loan is added successfully.'));
     }

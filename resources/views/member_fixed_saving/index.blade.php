@@ -40,7 +40,7 @@
                             {{ __('Total Active share') }}: {{ $active_share_count }} ({{ $share_amount }})
                         </div>
                     </div>
-                  
+
                 </div>
             </div>
             <div class="pt-4 mt-5">
@@ -79,8 +79,10 @@
 @endsection
 @push('script')
 <script>
+
     $(function() {
         var table = $('#table1').DataTable({
+
             processing: true,
             serverSide: true,
             ajax: "{{ route('ledger_sharecapital.index') }}",

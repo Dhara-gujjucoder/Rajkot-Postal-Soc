@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class LedgerEntry extends Model
+class DoubleEntry extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $table = 'ledger_entries';
+    protected $table = 'double_entries';
     protected $fillable = [
         'ledger_ac_id',
         'transaction_id',

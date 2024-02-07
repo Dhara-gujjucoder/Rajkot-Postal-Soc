@@ -11,6 +11,7 @@ class LoanMaster extends Model
     use HasFactory;
     protected $table = 'loan_master';
     protected $fillable = [
+        'ledger_account_id',
         'loan_no',
         'year_id',
         'month',
@@ -43,4 +44,10 @@ class LoanMaster extends Model
             get: fn (string $value) => $value == 1 ? __('Active') : ($value ==  2  ? __('Settled') :  __('Completed')),
         );
     }
+    public function loan_emis()
+    {
+        return $this->hasMany(LoanEMI::class, 'loan_master_id', 'id');
+    }
+
+    
 }

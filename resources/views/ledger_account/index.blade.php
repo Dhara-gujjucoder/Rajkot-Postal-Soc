@@ -6,25 +6,23 @@
 <section class="page-content">
     <div class="card">
         <div class="card-body">
-            @can('create-role')
-                <a href="{{ route('ledger_account.create') }}" class="btn btn-outline-success btn-md  float-end my-3"><i
-                        class="bi bi-plus-circle"></i> {{ __('Add New Ledger Account') }}</a>
-            @endcan
-            <div class="pt-4 mt-5">
+
+
+            <div class="header_add">
                 <div class="form">
                     <div class="row mb-3" id="filter">
 
                         <div class="col-md-4">
-                            <label for="account_name" class="col-md-2 col-form-label">{{ __('Member') }}</label>
+                            <label for="account_name" class="col-form-label">{{ __('Member') }}</label>
                             <div class="col-md-12">
                                 <select class="choices filter-input form-select @error('user_id') is-invalid @enderror"
                                     aria-label="Permissions" id="user_id" data-column="3" name="user_id"
                                     style="height: 210px;">
                                     <option value="">{{ __('Member') }}</option>
                                     @forelse ($members as $key => $member)
-                                        <option value="{{ $member->user_id }}"
-                                            {{ $member->user_id == old('user_id') ? 'selected' : '' }}>
-                                            {{ $member->fullname }}
+                                        <option value="{{ $member->id }}"
+                                            {{ $member->id == old('user_id') ? 'selected' : '' }}>
+                                            {{ $member->name }}
                                         </option>
                                     @empty
                                     @endforelse
@@ -37,7 +35,7 @@
 
                         <div class="col-md-4">
                             <label for="ledger_ac_id"
-                                class="col-md-4 col-form-label text-md-end">{{ __('Ledger Group') }}</label>
+                                class="col-form-label text-md-end">{{ __('Ledger Group') }}</label>
                             <div class="col-md-12">
                                 <select class="choices filter-input form-select @error('ledger_ac_id') is-invalid @enderror"
                                     aria-label="Permissions" id="ledger_ac_id" name="ledger_ac_id" data-column="2"
@@ -58,7 +56,7 @@
 
                         <div class="col-md-4">
                             <label for="type"
-                                class="col-md-4 col-form-label text-md-end">{{ __('Type') }}</label>
+                                class="col-form-label text-md-end">{{ __('Type') }}</label>
                             <div class="col-md-12">
                                 <select class="choices filter-input form-select @error('type') is-invalid @enderror"
                                     aria-label="Permissions" id="type" name="type"  data-column="5"
@@ -79,6 +77,13 @@
 
                     </div>
                 </div>
+
+                @can('create-role')
+                    <a href="{{ route('ledger_account.create') }}" class="btn btn-outline-success btn-md  float-end my-3"><i
+                            class="bi bi-plus-circle"></i> {{ __('Add New Ledger Account') }}</a>
+                @endcan
+            </div>
+
                 <div class="pt-4 mt-5">
                     <table class="table table-bordered" id="table1">
                         <thead>
@@ -98,13 +103,14 @@
                     </table>
                 </div>
 
-            </div>
         </div>
+    </div>
 </section>
 @endsection
 @push('script')
 
 <script>
+
     $(function() {
 
         var table = $('#table1').DataTable({
@@ -129,8 +135,8 @@
                     searchable: true
                 },
                 {
-                    data: 'user_id',
-                    name: 'user_id',
+                    data: 'member_id',
+                    name: 'member_id',
                     searchable: true
                 },
                 {

@@ -1,4 +1,12 @@
 @extends('layouts.app')
+@push('style')
+    <style>
+        .custom-tooltip {
+            --bs-tooltip-min-width: 1000px !important;
+            --bs-tooltip-max-width: 90000px !important;
+        }
+    </style>
+@endpush
 @section('content')
 @section('title')
     {{ $page_title }}
@@ -7,23 +15,15 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header mb-4">
+                <div class="card-header clearfix mb-1">
                     {{-- <div class="float-start">
-                        <b>{{ __('Ledger Entry') }}</b>
+                        <b>{{ __('Double Entry') }}</b>
                     </div> --}}
-                    <div class="float-end">
-                        <a href="{{ route('bulk_entries.index') }}" class="btn btn-primary btn-sm">&larr;
-                            {{ __('Back') }}</a>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <form action="{{ route('bulk_entries.store') }}" method="post" enctype="multipart/form-data" id="bulkform">
-                        @csrf
-                        {{-- for members of each department --}}
-                        <div class="row mb-3">
+                    <div class="w-50 float-start">
+                        <div class="row mb-1">
                             <label for="month"
-                                class="col-md-4 col-form-label text-md-end">{{ __('Month') }}</label>
-                            {{-- <label for="account_name"  class="col-md-4 col-form-label text-md-end">{{__('Department')}}</label> --}}
+                                class="col-md-2 col-form-label text-md-end">{{ __('Month') }}</label>
+                            {{-- <label for="account_name" class="col-md-4 col-form-label text-md-end">{{__('Department')}}</label> --}}
                             <div class="col-md-6">
                                 {{-- {{dd($months)}} --}}
                                 <select class="choices form-select @error('month') is-invalid @enderror"
@@ -41,6 +41,22 @@
                                 @endif
                             </div>
                         </div>
+                    </div>
+
+                    <div class="float-end">
+                        <a href="{{ route('bulk_entries.index') }}" class="btn btn-primary btn-sm">&larr;
+                            {{ __('Back') }}</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('bulk_entries.store') }}" method="post" enctype="multipart/form-data"
+                        id="bulkform">
+                        @csrf
+
+                        {{-- for members of each department --}}
+
+
+
                         @foreach ($departments as $mainkey => $department)
                             <div class="row">
                                 <div class="card-header border mb-4">
@@ -93,10 +109,47 @@
                                 <div class="row">
                                     <div class="col-md-3 col-3 col-lg-2">
                                         <div class="form-group">
-                                            <label for="first-particular-column">{{ $member->user->name }}<span
-                                                    class="text-danger" data-bs-html="true" data-bs-toggle="tooltip"
-                                                    data-bs-original-title="<em>Loan Details</em> <p>Member Name : Test User</p><p>Amount : 200</p>">&nbsp;<i
-                                                        class="bi bi-info-circle-fill"></i></span></label>
+                                            <label for="first-particular-column">{{ $member->name }}@if ($member->loan)
+                                                    <div class="ctooltip text-danger">&nbsp;<i
+                                                            class="bi bi-info-circle-fill"></i>
+                                                        <span class="tooltiptext text-start p-3">
+                                                            <p class="text-info text-xl">{{ __('Loan Detail') }}</p>
+                                                            <div class="row">
+                                                                <div class="col-md-4">{{ __('Member') }}</div>
+                                                                <div class="col-md-8">{{ $member->name }}</div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-4">{{ __('Loan ID') }}</div>
+                                                                <div class="col-md-8">
+                                                                    {{ $member->loan->loan_no ?? '' }}</div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-4">{{ __('Principal Amount') }}
+                                                                </div>
+                                                                <div class="col-md-8">
+                                                                    {{ $member->loan->principal_amt ?? 0 }}</div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-4">{{ __('EMI Amount') }}</div>
+                                                                <div class="col-md-8">
+                                                                    {{ $member->loan->emi_amount ?? 0 }}</div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-4">{{ __('Pending EMI') }}</div>
+                                                                <div class="col-md-8">
+                                                                    {{ $member->loan->loan_emis()->pending()->get()->count() ?? 0 }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-4">{{ __('Paid EMI') }}</div>
+                                                                <div class="col-md-8">
+                                                                    {{ $member->loan->loan_emis()->paid()->get()->count() }}
+                                                                </div>
+                                                            </div>
+                                                        </span>
+                                                    </div>
+                                                @endif
+                                            </label>
                                             <input type="hidden" class="form-control" id="particular" name="user_id[]"
                                                 value="{{ $member->user_id }}" placeholder="{{ __('particular') }}">
                                         </div>
@@ -259,13 +312,14 @@
                                         class="form-control @error('amount') is-invalid @enderror"
                                         id="exact_amount_{{ $department->id }}"
                                         name="exact_amount_{{ $department->id }}"
-                                        value="{{ old('exact_amount_' . $department->id,0) }}"
+                                        value="{{ old('exact_amount_' . $department->id, 0) }}"
                                         placeholder="{{ __('Exact amount') }}">
                                 </div>
                                 <div class="col-md-2 col-2">
                                     <input type="number" step="any"
                                         class="form-control @error('cheque_no') is-invalid @enderror"
-                                        id="cheque_no_{{ $department->id }}" name="cheque_no_{{ $department->id }}"
+                                        id="cheque_no_{{ $department->id }}"
+                                        name="cheque_no_{{ $department->id }}"
                                         value="{{ old('cheque_no_' . $department->id) }}"
                                         placeholder="{{ __('Cheque No.') }}">
                                 </div>
@@ -422,12 +476,14 @@
         var status = $("#status").val();
         if (status == 2) {
             var not_matched_dept =
-                `<div>{{ __('Exact amount of following deparments') }}<br><br><table class="table table-bordered"><tr><th>{{__('Department')}}</th><th>{{__('Total')}}</th><th>{{__('Exact Amount')}}</th></tr>`;
+                `<div>{{ __('Exact amount of following deparments') }}<br><br><table class="table table-bordered"><tr><th>{{ __('Department') }}</th><th>{{ __('Total') }}</th><th>{{ __('Exact Amount') }}</th></tr>`;
             departments.forEach(department => {
                 var dept_total = $('#summary_total_amount_total_' + department.id).val();
                 var exact_amt = $('#exact_amount_' + department.id).val();
                 if (dept_total > exact_amt) {
-                    not_matched_dept+=`<tr><td><span >`+department.department_name+`&nbsp;</span></td><td>`+dept_total+`</td><td><span class="text-danger">`+exact_amt+`</span></td></tr>`;
+                    not_matched_dept += `<tr><td><span >` + department.department_name +
+                        `&nbsp;</span></td><td>` + dept_total + `</td><td><span class="text-danger">` +
+                        exact_amt + `</span></td></tr>`;
                 }
             });
             not_matched_dept += `</table><br>` +

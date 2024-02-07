@@ -11,6 +11,8 @@ use App\Models\BulkEntryMaster;
 use App\Models\SalaryDeduction;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\BulkEntry as ExportsBulkEntry;
+use App\Models\LoanEMI;
+use App\Models\MemberFixedSaving;
 
 class BulkEntryController extends Controller
 {
@@ -20,10 +22,10 @@ class BulkEntryController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('permission:create-ledger_entries|edit-ledger_entries|delete-ledger_entries|view-ledger_entries', ['only' => ['index', 'show']]);
-        $this->middleware('permission:create-ledger_entries', ['only' => ['create', 'store']]);
-        $this->middleware('permission:edit-ledger_entries', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:delete-ledger_entries', ['only' => ['destroy']]);
+        $this->middleware('permission:create-bulk_entries|edit-bulk_entries|delete-bulk_entries|view-bulk_entries', ['only' => ['index', 'show']]);
+        $this->middleware('permission:create-bulk_entries', ['only' => ['create', 'store']]);
+        $this->middleware('permission:edit-bulk_entries', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:delete-bulk_entries', ['only' => ['destroy']]);
         parent::__construct();
     }
 
@@ -54,7 +56,8 @@ class BulkEntryController extends Controller
         $data['total']['total_amount'] = 0;
 
         $data['months'] = getMonthsOfYear($this->current_year->id);
-        $data['previous_month'] = BulkEntryMaster::get()->last()->month ?? '';
+        $data['previous_month'] = BulkEntryMaster::get()->last()->month ?? (currentYear()->start_month-1).'-'.currentYear()->start_year;
+        // dd($data['previous_month']);
         $data['next_month'] = date('m-Y', strtotime(date('01-' . $data['previous_month']) . " +1 month"));
         foreach ($data['months'] as $key => $month) {
             $entry = BulkMaster::where('month', $month['value'])->first();
@@ -66,16 +69,26 @@ class BulkEntryController extends Controller
             //   dd($data['previous_month']);
             $members->map(function ($item, $subkey) use ($data, $department) {
                 $prefill = BulkEntry::where('user_id', $item->user_id)->where('department_id', $department->id)->where('month', $data['previous_month'])->first();
-                foreach ($data['ledger_type'] as $key => $value) {
-                    // for prefill previous month value 
-                    $item->{$value} = $prefill->{$value} ?? 0;
+                // dump($item->id);
 
-                    // for get department wise total 
+                $loan_emi = LoanEMI::where('member_id',$item->id)->where('month',$data['next_month'])->where('status',1)->first();
+                $item->principal = $loan_emi->emi ?? 0;
+                $item->interest = $loan_emi->interest_amt ?? 0;
+                $item->fixed = MemberFixedSaving::where('member_id',$item->id)->where('month',$data['next_month'])->where('status',1)->first()->fixed_amount ?? 0;
+                $item->ms =  0;
+                $item->total_amount += $item->principal+$item->interest+$item->fixed+$item->ms;
+                // $department->{$value . '_total'} += $item->{$value};
+                foreach ($data['ledger_type'] as $key => $value) {
+                    // for get department wise total
                     $department->{$value . '_total'} += $item->{$value};
+                    // for prefill previous month value
+                    // $item->{$value} = $prefill->{$value} ?? 0;
+                    // if($loan_emi ){
+                    // }
                 }
             });
             $department->members = $members;
-            // for get all field total 
+            // for get all field total
             $data['total']['principal'] += $department->principal_total;
             $data['total']['interest'] += $department->interest_total;
             $data['total']['fixed'] += $department->fixed_total;
@@ -114,9 +127,9 @@ class BulkEntryController extends Controller
                 'total' =>  $month_total,
                 'status' => $request->status,
             ]);
-    
+
             foreach ($data['departments'] as $key => $department) {
-    
+
                 $receipt_no  = $bulk_master->id . $department->id . '0' . (Receipt::latest()->first() ? Receipt::latest()->first()->id + 1 : 1);
                 $receipt = Receipt::create([
                     'year_id' => $this->current_year->id,
@@ -139,7 +152,7 @@ class BulkEntryController extends Controller
                     'department_total'    =>     $request->{'summary_total_amount_total_' . $department->id},
                     'created_by' => Auth::user()->id
                 ]);
-    
+
                 foreach ($department->members as $key => $member) {
                     BulkEntry::create([
                         'user_id' => $member->user_id,
@@ -159,12 +172,12 @@ class BulkEntryController extends Controller
                     ]);
                 }
             }
-    
+
         } catch (\Throwable $th) {
             return redirect()->route('bulk_entries.index')
             ->withError(__('Something went wrong'));
         }
-      
+
         return redirect()->route('bulk_entries.index')
             ->withSuccess(__('Bulk Entry added successfully.'));
     }
@@ -206,17 +219,17 @@ class BulkEntryController extends Controller
             $members->map(function ($item, $subkey) use ($data, $department) {
                 $prefill = BulkEntry::where('user_id', $item->user_id)->where('department_id', $department->id)->where('month', $data['previous_month'])->first();
                 foreach ($data['ledger_type'] as $skey => $value) {
-                    // for prefill previous month value 
+                    // for prefill previous month value
                     $item->{$value} = $prefill->{$value} ?? 0;
 
-                    // for get department wise total 
+                    // for get department wise total
                     $department->{$value . '_total'} += $item->{$value};
                 }
             });
             $department->members = $members;
             $department->exact_amount = $data['bulk_entry_master'][$key]->exact_amount ?? 0;
             $department->cheque_no = $data['bulk_entry_master'][$key]->cheque_no ?? '';
-            // for get all field total 
+            // for get all field total
             $data['total']['principal'] += $department->principal_total;
             $data['total']['interest'] += $department->interest_total;
             $data['total']['fixed'] += $department->fixed_total;

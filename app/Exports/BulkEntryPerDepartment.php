@@ -58,7 +58,6 @@ class BulkEntryPerDepartment implements FromCollection, WithTitle, WithMapping, 
                 $bulk_entry['total_amount'],
             ];
         }else{
-
             return [
                 $bulk_entry->member->uid,
                 $bulk_entry->member->user->name,

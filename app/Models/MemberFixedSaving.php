@@ -5,18 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LedgerShareCapital extends Model
+class MemberFixedSaving extends Model
 {
     use HasFactory;
-    protected $table = 'ledger_sharecapital';
+    protected $table = 'member_fixed_saving';
     protected $fillable = [
         'ledger_account_id',
         'member_id',
-        'share_code',
-        'share_amount',
+        'month',
+        'fixed_amount',
         'year_id',
-        'status',
-        'created_date',
+        'status'
     ];
 
     public function member()
