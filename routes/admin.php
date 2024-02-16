@@ -13,9 +13,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\BulkEntryController;
 use App\Http\Controllers\DepartmentController;
-use App\Http\Controllers\DoubleEntryController;
 use App\Http\Controllers\LoanMasterController;
 use App\Http\Controllers\TempReportController;
+use App\Http\Controllers\DoubleEntryController;
 use App\Http\Controllers\LedgerEntryController;
 use App\Http\Controllers\LedgerGroupController;
 use App\Http\Controllers\LoanSettingController;
@@ -25,6 +25,7 @@ use App\Http\Controllers\FinancialYearController;
 use App\Http\Controllers\LedgerAccountController;
 use App\Http\Controllers\MonthlySavingController;
 use App\Http\Controllers\SalaryDeductionController;
+use App\Http\Controllers\LedgerFixedSavingController;
 use App\Http\Controllers\MemberFixedSavingController;
 use App\Http\Controllers\LoanCalculationMatrixController;
 
@@ -49,6 +50,7 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
     Route::get('/get/member/{member}', [App\Http\Controllers\MemberController::class, 'getmember'])->name('member.get');
     Route::get('/get/guarantor_count/{member}', [App\Http\Controllers\LoanMasterController::class, 'guarantor_count'])->name('guarantor_count.get');
 
+    //***** Excel *****
     Route::get('/import/saving', [App\Http\Controllers\MemberFixedSavingController::class, 'all_share'])->name('all_share.import');            //******//
     Route::post('/import/saving', [App\Http\Controllers\MemberFixedSavingController::class, 'import_all_share'])->name('all_share.import');    //******//
 
@@ -57,6 +59,12 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
 
     Route::get('/tempreport', [TempReportController::class, 'create'])->name('tempreport.create');
     Route::get('/fixed-saving-export', [TempReportController::class, 'fixed_saving_export'])->name('fixed_saving_export');
+
+    Route::get('/ledger-fixed-saving', [LedgerFixedSavingController::class, 'index'])->name('ledger_reports.fixed_saving.index');
+    Route::get('/ledger-fixed-saving-export/{id}',[LedgerFixedSavingController::class,'fixed_saving_export'])->name('ledger_fixed_saving_export');
+
+    Route::get('/member_share_export', [TempReportController::class, 'member_share'])->name('tempreport.member_share');
+    Route::get('/member_share-export', [TempReportController::class, 'member_share_export'])->name('share_export');
 
     /*all modules*/
     Route::resources([

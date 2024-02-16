@@ -13,11 +13,11 @@
     <link href="{{ asset('front/css/bootstrap.css') }}" rel="stylesheet">
     <link href="{{ asset('front/css/animate.css') }}" rel="stylesheet">
     <link href="{{ asset('front/css/fontawesome.css') }}" rel="stylesheet">
+    <link href="{{ asset('front/css/rSlider.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/extensions/toastify-js/src/toastify.css') }}">
     <link href="{{ asset('front/css/cssmenu-styles.css') }}" rel="stylesheet">
     <link href="{{ asset('front/css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('front/css/responsive.css') }}" rel="stylesheet">
-    <link href="{{ asset('front/css/rSlider.min.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('assets/extensions/toastify-js/src/toastify.css') }}">
 </head>
 
 <body>

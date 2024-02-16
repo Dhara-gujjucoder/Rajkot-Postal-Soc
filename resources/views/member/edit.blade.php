@@ -427,7 +427,7 @@
                             @if ($user->total_share)
                                 <div class="col-12">
                                     <div class="form-group">
-                                        <button type="button" class="btn btn-outline-warning btn-sm" id="myModal" data-bs-toggle="modal" data-bs-target="#bd-example-modal-lg">
+                                        <button type="button" class="btn btn-outline-success btn-sm" id="myModal" data-bs-toggle="modal" data-bs-target="#bd-example-modal-lg">
                                             {{ __('View Member Shares') }}</button>
                                     </div>
                                 </div>

@@ -31,9 +31,6 @@ class UpdateSettingRequest extends FormRequest
             'address' => 'nullable|string',
             'name' => 'nullable|string|max:250',
             'email' => 'nullable|string|email|max:250',
-            'loan_interest' => 'required|integer',
-            'share_amount' => 'required|integer',
-            'monthly_saving' => 'required|integer',
         ];
     }
 }

@@ -17,7 +17,7 @@
                     <ul>
                         <li><a href="{{ route('user.home') }}">{{__('Dashboard')}}</a></li>
                         <li><a href="{{ route('user.profile') }}">{{__('My Profile')}}</a></li>
-                        <li><a href="my-account.html">{{__('My Account')}}</a></li>
+                        <li><a href="{{route('user.share.show')}}">{{__('Share Account')}}</a></li>
                         <li><a href="{{ route('user.loan.apply') }}">{{__('Loan Account')}}</a></li>
                         <li><a href="{{ route('user.loan.calculator') }}">{{__('Loan Calculator')}}</a></li>
                         <li>

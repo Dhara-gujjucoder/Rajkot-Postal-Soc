@@ -4,12 +4,13 @@ namespace App\Exports;
 
 use App\Models\Member;
 use App\Models\MemberFixedSaving;
-use Illuminate\Database\Schema\ForeignKeyDefinition;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Illuminate\Database\Schema\ForeignKeyDefinition;
+use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 
-class FixedSavingExport implements FromCollection,WithHeadings,WithMapping
+class FixedSavingExport implements FromCollection,WithHeadings,WithMapping,WithStrictNullComparison
 {
     public function collection()
     {
@@ -32,25 +33,25 @@ class FixedSavingExport implements FromCollection,WithHeadings,WithMapping
     public function map($member): array
     {
         // dd($member);
-
-        $entry =  [
+        $entry = [
             $member->uid,
             $member->name,
-            $member->fixed_saving_ledger_account->opening_balance ?? 0,
+            $member->fixed_saving_ledger_account->opening_balance ?? '0',
         ];
 
-
-        foreach ($member->fixed_saving as $key => $value) {
-            $entry[] = $value->fixed_amount;
-            // dd($value);
+        for ($i=0; $i<12; $i++) {
+            $entry[] = isset($member->fixed_saving[$i]) ? $member->fixed_saving[$i]->fixed_amount : '0' ;
         }
+
+        // foreach ($member->fixed_saving as $key => $value) {
+        //     $entry[] = $value->fixed_amount ?? '-';
+        //     // dd($value);
+        // }
         $entry[] = $member->fixed_saving()->sum('fixed_amount');
 
         return $entry;
     }
 }
-
-
 
 
 // <?php

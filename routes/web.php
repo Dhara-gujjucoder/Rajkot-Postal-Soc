@@ -2,9 +2,11 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\LoanController;
+use App\Http\Controllers\Front\ShareController;
 use App\Http\Controllers\Front\UserLoginController;
 
 /*
@@ -30,10 +32,15 @@ Route::prefix('user')->name('user.')->middleware(['guest:users','blockIP'])->gro
 Route::prefix('user')->name('user.')->middleware(['auth:users','blockIP'])->group(function () {
     Route::get('/home', [UserLoginController::class, 'index'])->name('home');
     Route::get('/profile', [UserLoginController::class, 'profile'])->name('profile');
+    Route::post('/logout', [UserLoginController::class, 'logout'])->name('logout');
+
     Route::get('/loan/account', [LoanController::class, 'apply'])->name('loan.apply');
+    Route::get('/old-loan/{loan_id}', [LoanController::class, 'old_loan'])->name('loan.old_loan');
     Route::get('/loan/calculator', [LoanController::class, 'calculator'])->name('loan.calculator');
     Route::post('/loan-mailed', [LoanController::class, 'LoanMailSend'])->name('loan.sendmail');
-    Route::post('/logout', [UserLoginController::class, 'logout'])->name('logout');
+
+    Route::get('/all-share', [ShareController::class, 'show'])->name('share.show');
+
 
     Route::get('locale/{locale}', function ($lang) {
         Session::put('locale', $lang);
@@ -42,6 +49,15 @@ Route::prefix('user')->name('user.')->middleware(['auth:users','blockIP'])->grou
         // dump(app()->getLocale($lang));
         // return redirect()->route('user.home')->withSuccess(__('Language changes successfully.'));
     })->name('change.locale');
+});
+
+
+Route::get('/clear', function () {
+    Artisan::call('cache:clear');
+    Artisan::call('config:clear');
+    Artisan::call('config:cache');
+    Artisan::call('view:clear');
+    return "Cleared!";
 });
 
 

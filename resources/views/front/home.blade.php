@@ -10,8 +10,8 @@
             </a>
         </div>
         <div class="desh-listbox greenbg-box wow fadeInLeft" data-wow-delay="0.4s">
-            <a href="#">
-                <div class="dash-box-title">{{ __('My Account') }}</div>
+            <a href="{{route('user.share.show')}}">
+                <div class="dash-box-title">{{ __('Share Account') }}</div>
                 <div class="dash-icon"><img src="{{ asset('front/images/my-account.svg') }}" alt=""></div>
             </a>
         </div>

@@ -7,20 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class DoubleEntry extends Model
+class MetaDoubleEntry extends Model
 {
-    use HasFactory, SoftDeletes;
-    protected $table = 'double_entries';
+    // use HasFactory, SoftDeletes;
+    protected $table = 'meta_double_entry';
     protected $fillable = [
+        'mde_id',
         'ledger_ac_id',
-        'transaction_id',
+        'share',
         'particular',
         'amount',
-        'date',
-        'entry_type',
-        'opening_balance',
-        'year_id'
-
+        'member_id',
+        'type',
     ];
 
     public function LedgerAcountName()

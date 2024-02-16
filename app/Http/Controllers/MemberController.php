@@ -9,26 +9,27 @@ use Illuminate\View\View;
 use App\Models\Department;
 use App\Models\AccountType;
 use App\Models\LedgerGroup;
+use App\Models\MemberShare;
 use App\Models\ShareAmount;
 use Illuminate\Http\Request;
 use App\Models\LedgerAccount;
+use Illuminate\Http\Response;
 use Yajra\DataTables\DataTables;
-use App\Models\MemberShare;
+use App\Traits\UpdateMemberShare;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreUserRequest;
+use Illuminate\Validation\Rules\Exists;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\StoreMemberRequest;
 use App\Http\Requests\UpdateMemberRequest;
-use Illuminate\Http\Response;
-use Illuminate\Validation\Rules\Exists;
 
 class MemberController extends Controller
 {
     public $dirPath = '/images';
-
+    use UpdateMemberShare;
     public function __construct()
     {
         $this->middleware('auth');
@@ -175,32 +176,32 @@ class MemberController extends Controller
             ->withSuccess(__('New member is added successfully.'));
     }
 
-    public function member_share($member, $no_of_share)
-    {
-        $exist_share = MemberShare::where('member_id', $member->id)->where('status', 1)->count();
+    // public function member_share($member, $no_of_share)
+    // {
+    //     $exist_share = MemberShare::where('member_id', $member->id)->where('status', 1)->count();
 
-        $new_share = $no_of_share - $exist_share;
-        for ($i = 1; $i <= $new_share; $i++) {
+    //     $new_share = $no_of_share - $exist_share;
+    //     for ($i = 1; $i <= $new_share; $i++) {
 
-            $count = MemberShare::count() + 1;
-            $no = str_pad($count, 6, 0, STR_PAD_LEFT);
-            // $no .= $count > 0 ? $count + 1 : 1;
+    //         $count = MemberShare::count() + 1;
+    //         $no = str_pad($count, 6, 0, STR_PAD_LEFT);
+    //         // $no .= $count > 0 ? $count + 1 : 1;
 
-            $share_entry = new MemberShare();
-            $share_entry->ledger_account_id = $member->share_ledger_account->id ?? 0;
-            $share_entry->member_id = $member->id;
-            $share_entry->share_code = $no;
-            $share_entry->share_amount = current_share_amount()->share_amount;
-            $share_entry->year_id = $this->current_year->id;
-            $share_entry->status = 1;
-            $share_entry->purchase_on = date('Y-m-d');
-            $share_entry->save();
-        }
-        // $share_total_price = MemberShare::where('member_id', $member->id)->where('status', 1)->first();
+    //         $share_entry = new MemberShare();
+    //         $share_entry->ledger_account_id = $member->share_ledger_account->id ?? 0;
+    //         $share_entry->member_id = $member->id;
+    //         $share_entry->share_code = $no;
+    //         $share_entry->share_amount = current_share_amount()->share_amount;
+    //         $share_entry->year_id = $this->current_year->id;
+    //         $share_entry->status = 1;
+    //         $share_entry->purchase_on = date('Y-m-d');
+    //         $share_entry->save();
+    //     }
+    //     // $share_total_price = MemberShare::where('member_id', $member->id)->where('status', 1)->first();
 
-        // $member->share_total_price =  $member->share_total_price + ($new_share * current_share_amount()->share_amount);   //$share_total_price;
-        $member->save();
-    }
+    //     // $member->share_total_price =  $member->share_total_price + ($new_share * current_share_amount()->share_amount);   //$share_total_price;
+    //     $member->save();
+    // }
 
 
     public function show(Request $request, Member $member): View

@@ -6,40 +6,50 @@
 <section class="page-content">
     <div class="card">
         <div class="card-body">
-            <div class="form">
-                <div class="row mb-3" id="filter">
-                    <div class="col-md-4">
-                        <label for="member_id" class="col-md-2 col-form-label">{{ __('Member') }}</label>
-                        <div class="col-md-12">
-                            <select class="choices filter-input form-select" aria-label="Permissions" id="member_id" data-column="0" name="member_id" style="height: 210px;">
-                                <option value="">{{ __('Member') }}</option>
-                                @forelse ($members as $key => $member)
-                                    <option value="{{ $member->id }}" {{ $member->id == old('id') ? 'selected' : '' }}>
-                                        {{ $member->fullname }}
-                                    </option>
-                                    @empty
-                                    @endforelse
-                                </select>
-                            </div>
-                        </div>
-                    <div class="col-md-4">
-                        <label for="account_name" class="col-md-2 col-form-label">{{ __('Status') }}</label>
-                        <div class="col-md-12">
-                            <select class="choices filter-input form-select" aria-label="Permissions" id="status" data-column="4" name="status" style="height: 210px;">
-                                <option value="">{{ __('Select Status') }}</option>
-                                <option value="1">{{ __('Sell') }}</option>
-                                <option value="0">{{ __('Sold') }}</option>
-                            </select>
-                        </div>
-                    </div>
+
+            <div class="header_add">
+                <div class="form">
+
                     <div class="col-md-4">
                         <label for="account_name" class="col-md-6 col-form-label"></label>
                         <div class="col-md-12">
                             {{ __('Total Active share') }}: {{ $active_share_count }} ({{ $share_amount }})
                         </div>
                     </div>
+
+                    <div class="row mb-3" id="filter">
+                        <div class="col-md-5">
+                            <label for="member_id" class="col-md-2 col-form-label">{{ __('Member') }}</label>
+                            <div class="col-md-12">
+                                <select class="choices filter-input form-select" aria-label="Permissions" id="member_id" data-column="0" name="member_id" style="height: 210px;">
+                                    <option value="">{{ __('Member') }}</option>
+                                    @forelse ($members as $key => $member)
+                                        <option value="{{ $member->id }}" {{ $member->id == old('id') ? 'selected' : '' }}>
+                                            {{ $member->fullname }}
+                                        </option>
+                                        @empty
+                                        @endforelse
+                                    </select>
+                                </div>
+                            </div>
+                        <div class="col-md-4">
+                            <label for="account_name" class="col-md-2 col-form-label">{{ __('Status') }}</label>
+                            <div class="col-md-12">
+                                <select class="choices filter-input form-select" aria-label="Permissions" id="status" data-column="4" name="status" style="height: 210px;">
+                                    <option value="">{{ __('Select Status') }}</option>
+                                    <option value="1">{{ __('Sell') }}</option>
+                                    <option value="0">{{ __('Sold') }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
+
+                {{-- <a href="{{ route('member_share.create') }}" class="btn btn btn-outline-success btn-md mb-3"><i
+                    class="bi bi-plus-circle"></i> {{ __('Add New Share') }}</a> --}}
             </div>
+
             <div class="pt-2 mt-2">
                 <div class="table-responsive">
                     <table class="table table-bordered" id="table1">

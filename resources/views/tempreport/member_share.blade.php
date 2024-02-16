@@ -8,10 +8,10 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body mt-3">
-                    <label class="col-4 col-form-label">{{ __('Export Member Fixed Saving') }}</label>
+                    <label class="col-4 col-form-label">{{ __('Export Member Share') }}</label>
                     <div class="col-5">
-                        <a href="{{ route('fixed_saving_export') }}" class="btn btn-primary"><b>
-                            {{ __('Fixed Saving Export') }}</b>
+                        <a href="{{ route('share_export') }}" class="btn btn-primary"><b>
+                            {{ __('Share Export') }}</b>
                         </a>
                     </div>
                 </div>

@@ -103,7 +103,7 @@
                             <div class="col-md-6">
                                 <div class="dashboard-detail-data">
                                 <label class="col-form-label"><strong>{{ __('Required share') }} :</strong></label>
-                                <div class="col-form-info" id="required_share">&#8377; data placed hear</div>
+                                <div class="col-form-info" id="required_share"> data placed hear</div>
 
                                 </div>
                             </div>
@@ -208,7 +208,7 @@
             console.log('min_value__' + min_value);
 
             $('#emi_amount').val(min_value);                                             // EMI Amount
-            $('#required_share').html('<span>&#8377;' + required_share + '</span>*');    // required_share
+            $('#required_share').html('<span>' + required_share + '</span>*');    // required_share
             $('#myButton').attr('disabled', false);
 
             $('#comissionLabel').html('<span>&#8377;' + amount + '</span>*');            // Loan Amount

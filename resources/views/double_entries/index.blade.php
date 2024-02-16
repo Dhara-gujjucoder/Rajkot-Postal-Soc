@@ -13,15 +13,14 @@
                 <a href="{{ route('double_entries.create') }}" class="btn btn-outline-success btn-md  float-end my-3"><i class="bi bi-plus-circle"></i> {{ __('Add New Double Entry') }}</a>
             @endcan
             </div>
-            <div class="pt-4 mt-5">
+            <div class="pt-2 mt-2">
                 <div class="table-responsive">
                     <table class="table table-bordered" id="table1">
                         <thead>
                             <tr>
-                                <th>{{ __('No.') }}</th>
-                                <th>{{ __('Ledger') }}</th>
-                                <th>{{ __('Particular') }}</th>
-                                <th>{{ __('Amount') }}</th>
+                                <th>{{ __('Entry ID') }}</th>
+                                <th>{{ __('Credit Amount') }}</th>
+                                <th>{{ __('Debit Amount') }}</th>
                                 <th>{{ __('Date') }}</th>
                                 <th>{{ __('Action') }} </th>
                             </tr>
@@ -29,11 +28,11 @@
                         <tbody>
                             @foreach ($double_entries as $key => $entry)
                             <tr>
-                                <td>{{ $entry->id }}</td>
-                                <td>{{ $entry->LedgerAcountName->account_name ?? ''}}</td>
-                                <td>{{ $entry->particular }}</td>
-                                <td>{{ $entry->amount }}</td>
-                                <td>{{ $entry->date }}</td>
+                                <td>{{ $entry->entry_id}}</td>
+                                <td>{{ $entry->credit_amount }}</td>
+                                <td>{{ $entry->debit_amount }}</td>
+                                {{-- <td>{{ $entry->date }}</td> --}}
+                               <td>{{ date('d-M-Y', strtotime($entry->date)); }}</td>
                                 <td>
                                     <form action="{{ route('double_entries.destroy', $entry->id) }}" method="post">
                                         @csrf

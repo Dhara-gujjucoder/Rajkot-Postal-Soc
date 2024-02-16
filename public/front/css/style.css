@@ -308,7 +308,8 @@ textarea {resize: none;}
 .user-image {width: 35px; height: 35px; border-radius: 100%; overflow: hidden; border: 1px solid #ccc;}
 .user-image img {width: 100%; height: 100%; object-fit: cover; }
 .topbar-right-sec {display: flex; align-items: center; flex: 1; justify-content: flex-end; }
-.header-bottom-borader {border-bottom: 1px solid #ccc; box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.10); }
+.header-bottom-borader {border-bottom: 1px solid #ccc; box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.10);  background-color: #fff;}
+.htmloverflowhidden .header-bottom-borader {background-color: transparent; }
 .tab-logo img {width: 42px;}
 .switch.ios, .switch-on.ios, .switch-off.ios { border-radius: 20rem; }
 .switch.ios .switch-handle { border-radius: 20rem; }
@@ -437,3 +438,23 @@ input[type=range]::-moz-range-thumb {
 
 .dashboard-detail-page .form-select,
 .dashboard-detail-page .form-control { box-shadow: none; width: 100%; padding: 7px 12px; }
+
+.loan-table .table th, .loan-table .table thead th {background-color: rgba(8, 146, 1, 0.1);}
+.loan-table table{ border: 1px solid #ccc;border-collapse: collapse;margin: 0;padding: 0;width: 100%;table-layout: fixed; font-size: 14px; border-spacing: 0px;
+  border-collapse: separate;
+  border-radius: 10px;
+  overflow: hidden;}
+.loan-table table caption{ margin: .5em 0 .75em;}
+.loan-table table tr{ background-color: #f8f8f8;border: 1px solid #ddd; padding: .35em;}
+.loan-table table td,table th{ padding: .625em;text-align: center; color: #000;}
+.loan-table table td {border-top: 1px solid #ddd;}
+.loan-table  table th{ }
+
+@media screen and (max-width:767px){ table{  border: 0; }
+.loan-table table caption{ }
+.loan-table table {border: none;}
+.loan-table table thead{  border: none;clip: rect(0 0 0 0);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px; }
+.loan-table table tr{ border-bottom: 2px solid #ddd;display: block;margin-bottom: .625em; background-color: #fff; border-radius: 10px; padding-left: 0px; padding-right: 0px  ;}
+.loan-table table td{  border-bottom: 1px solid #ddd;display: block; text-align: right; font-size: 15px; border-left: none; border-right: none; border-top: none;}
+.loan-table table td::before{  content: attr(data-label);float: left;font-weight: 700; font-size: 14px;}
+.loan-table table td:last-child{  border-bottom: 0; }}

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Member;
 use App\Models\MemberShare;
+use App\Models\ShareAmount;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Imports\MemberShareImport;
@@ -23,7 +24,25 @@ class MemberShareController extends Controller
         parent::__construct();
     }
 
-    
+    public function create()
+    {
+        return view('member_share.create', [
+            'page_title' => __('Add New Share'),
+            'members' => Member::get(),
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'share' => 'required',
+            'type' => 'required',
+            'form_type' => 'required'
+        ]);
+
+        return redirect()->route('member_share.index')
+            ->withSuccess(__('Share added successfully.'));
+    }
 
     public function update(Request $request,$id)
     {
@@ -90,7 +109,7 @@ class MemberShareController extends Controller
                 ->make(true);
         }
 
-        return view('member_share.index',$data);
+        return view('member_share.index', $data);
     }
 
     //*************** E X C E L  S H E E T S [1]***************

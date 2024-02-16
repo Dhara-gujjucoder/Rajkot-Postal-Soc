@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\MemberFixedSaving;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class LedgerAccount extends Model
 {
@@ -38,4 +39,5 @@ class LedgerAccount extends Model
     {
         return $this->hasOne(Member::class, 'id', 'member_id')->withTrashed();
     }
+
 }

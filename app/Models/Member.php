@@ -93,6 +93,11 @@ class Member extends Model
         return $this->hasOne(LoanMaster::class, 'member_id', 'id')->where('status', 1);
     }
 
+    public function old_loan()
+    {
+        return $this->hasMany(LoanMaster::class, 'member_id', 'id')->where('status', 1);
+    }
+
     public function getMemberFixedAttribute()
     {
         $fixed_saving['member_fixed_saving'] = BulkEntry::where('member_id', $this->id)->where('status', 2)->sum('fixed');

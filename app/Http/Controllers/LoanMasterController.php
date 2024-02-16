@@ -17,7 +17,6 @@ class LoanMasterController extends Controller
     /*check permission*/
     public function __construct()
     {
-
         $this->middleware('auth');
         $this->middleware('permission:create-loan_matrix|edit-loan_matrix|delete-loan_matrix|view-loan_matrix', ['only' => ['index', 'show']]);
         $this->middleware('permission:create-loan_matrix', ['only' => ['create', 'store']]);
