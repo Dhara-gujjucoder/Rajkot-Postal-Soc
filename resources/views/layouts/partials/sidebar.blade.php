@@ -162,23 +162,7 @@
                     </li>
                 @endcanany
 
-                {{-- @canany(['edit-general-setting', 'loaninterest-setting', 'share-amount-setting', 'monthly-saving-setting']) --}}
-                    <li class="sidebar-item has-sub {{ request()->is('admin/ledger-fixed-saving*') ? 'active' : '' }}">
-                        <a href="#" class="sidebar-link">
-                            <i class="bi bi-window-split"></i>
-                            <span>{{ __('Ledger Reports') }}</span>
-                        </a>
-                        <ul class="submenu {{ request()->is('admin/ledger-fixed-saving') ? 'active submenu-open' : '' }}">
-                            @canany(['edit-general-setting'])
-                                <li class="submenu-item {{ request()->is('admin/ledger-fixed-saving') ? 'active' : '' }}">
-                                    <a href="{{ route('ledger_reports.fixed_saving.index') }}" class='submenu-link'>
-                                        <span>{{ __('Fixed Saving') }}</span>
-                                    </a>
-                                </li>
-                            @endcan
-                        </ul>
-                    </li>
-                {{-- @endcan --}}
+
 
                 @canany(['create-loan_matrix', 'edit-loan_matrix', 'delete-loan_matrix', 'view-loan_matrix', 'create-loaninterest', 'edit-loaninterest', 'delete-loaninterest', 'view-loaninterest', 'loan-create', 'loan-edit', 'loan-delete', 'loan-view'])
                     <li class="sidebar-item  has-sub {{ request()->is('admin/loan_matrix*') || request()->is('admin/loaninterest*') || request()->is('admin/loan*') ? 'active' : '' }}">
@@ -211,6 +195,24 @@
                         </ul>
                     </li>
                 @endcan
+
+                {{-- @canany(['edit-general-setting', 'loaninterest-setting', 'share-amount-setting', 'monthly-saving-setting']) --}}
+                <li class="sidebar-item has-sub {{ request()->is('admin/ledger-fixed-saving*') ? 'active' : '' }}">
+                    <a href="#" class="sidebar-link">
+                        <i class="bi bi-window-split"></i>
+                        <span>{{ __('Ledger Reports') }}</span>
+                    </a>
+                    <ul class="submenu {{ request()->is('admin/ledger-fixed-saving') ? 'active submenu-open' : '' }}">
+                        @canany(['edit-general-setting'])
+                            <li class="submenu-item {{ request()->is('admin/ledger-fixed-saving') ? 'active' : '' }}">
+                                <a href="{{ route('ledger_reports.fixed_saving.index') }}" class='submenu-link'>
+                                    <span>{{ __('Fixed Saving') }}</span>
+                                </a>
+                            </li>
+                        @endcan
+                    </ul>
+                </li>
+                {{-- @endcan --}}
 
                 @canany(['edit-general-setting', 'loaninterest-setting', 'share-amount-setting', 'monthly-saving-setting'])
                     <li class="sidebar-item has-sub {{ request()->is('admin/general/setting/*') || request()->is('admin/shareamount*') || request()->is('admin/monthlysaving*') ? 'active' : '' }}">
