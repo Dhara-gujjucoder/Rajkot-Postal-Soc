@@ -260,7 +260,7 @@ class BulkEntryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // dd($request->user_id);
+        dd($request->all());
 
 
 
