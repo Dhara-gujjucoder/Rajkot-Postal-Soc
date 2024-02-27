@@ -274,6 +274,8 @@
                 if (!$('.required_share' + row).val()) {
                     valid = 1;
                 };
+            }else{
+                $('.required_share' + row).val('');
             }
         });
 
