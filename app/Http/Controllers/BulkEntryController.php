@@ -260,10 +260,9 @@ class BulkEntryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        dd($request->all());
-
-
-
+        $request->validate([
+            'status' => 'required'
+        ]);
 
         $bulk_master = BulkMaster::where('id', $id)->first();
         $bulk_entry_master = BulkEntryMaster::with('members')->where('month', $bulk_master->month)->where('bulk_master_id', $bulk_master->id)->get();

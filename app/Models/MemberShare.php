@@ -25,5 +25,8 @@ class MemberShare extends Model
         return $this->hasOne(Member::class, 'id', 'member_id')->withTrashed();
     }
 
-
+    public function share_detail()
+    {
+        return $this->hasMany(MemberShareDetail::class, 'member_share_id', 'id');
+    }
 }

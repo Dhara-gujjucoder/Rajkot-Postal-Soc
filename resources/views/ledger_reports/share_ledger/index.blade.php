@@ -23,36 +23,19 @@
                                 <th>{{ __('Total Purchase') }} </th>
                                 <th>{{ __('Total Sold') }} </th>
                                 <th>{{ __('Net Balance') }}</th>
-                                <th>{{ __('Status') }} </th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($members as $key => $share)
+                            @foreach ($members as $key => $member)
+
                                 <tr>
-                                    <td>{{ $share->name }}</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>{{ $member->name }}</td>
+                                    <td>{{ $member->share_ledger_account->opening_balance}}</td>
+                                    <td>{{ $member->purchased_share->sum('share_sum_share_amount') }}</td>
+                                    <td>{{ $member->sold_share->sum('share_sum_share_amount') }}</td>
+                                    <td>{{ $member->share_ledger_account->opening_balance+$member->purchased_share->sum('share_sum_share_amount')-$member->sold_share->sum('share_sum_share_amount')  }}</td>
                                 </tr>
                             @endforeach
-
-                            {{-- @foreach ($members as $key => $share)
-                                <tr>
-                                    <td>{{ $share->member->name }}</td>
-                                    <td>{{ $share->share_code }}</td>
-                                    <td>{{ $share->share_amount }}</td>
-                                    <td>{{ date('d-M-Y', strtotime($share->created_date)) }}</td>
-                                    <td>
-                                        @if ($share->status == 1)
-                                            <b>{{ __('Active') }}</b>
-                                        @else
-                                            {{ __('Closed') }}
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach --}}
                         </tbody>
                     </table>
                 </div>

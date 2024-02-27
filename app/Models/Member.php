@@ -81,12 +81,12 @@ class Member extends Model
         return loan_remaining_amount($this->id);
     }
 
-      /* Attribute for get loan remaining amount */
-      public function getRemainingFixedSavingAttribute()
-      {
-          return remaining_fixed_saving($this->id);
-      }
-  
+    /* Attribute for get loan remaining amount */
+    public function getRemainingFixedSavingAttribute()
+    {
+        return remaining_fixed_saving($this->id);
+    }
+
     // Remaining fixed saving
 
     /* Relationship of member to fixed_saving_ledger_account */
@@ -113,6 +113,18 @@ class Member extends Model
         return $this->hasMany(MemberShare::class, 'member_id', 'id')->where('status', 1);
     }
 
+    /* Attribute for get purchased_share sum of amount */
+    public function getPurchasedShareAttribute()
+    {
+        return MemberShareDetail::where('member_id', $this->id)->where('is_purchase',1)->withSum('share','share_amount')->get();
+    }
+
+    /* Attribute for get sold_share sum of amount */
+    public function getSoldShareAttribute()
+    {
+        return MemberShareDetail::where('member_id', $this->id)->where('is_sold',1)->withSum('share','share_amount')->get();
+    }
+
     /* Relationship for get member all fixed_saving */
     public function fixed_saving()
     {
@@ -136,7 +148,7 @@ class Member extends Model
     public function getMemberFixedAttribute()
     {
         $member = Member::find($this->id);
-        $fixed_saving['member_fixed_saving'] = $member->fixed_saving_ledger_account->opening_balance+$member->fixed_saving_ledger_account->current_balance;
+        $fixed_saving['member_fixed_saving'] = $member->fixed_saving_ledger_account->opening_balance + $member->fixed_saving_ledger_account->current_balance;
         $fixed_saving['remaining_fixed_saving'] = $member->remaining_fixed_saving;
         return $fixed_saving;
     }

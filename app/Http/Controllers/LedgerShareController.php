@@ -13,6 +13,7 @@ class LedgerShareController extends Controller
         $data['page_title'] = __('Share Ledger');
         // $data['share'] = MemberShare::where()->get();
         $data['members'] = Member::withTrashed()->get();
+        // $data['purchase_share'] =
         return view('ledger_reports.share_ledger.index',$data);
     }
 
