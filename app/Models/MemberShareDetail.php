@@ -22,7 +22,7 @@ class MemberShareDetail extends Model
 
     public function share_amount()
     {
-        return $this->hasOne(MemberShare::class, 'member_share_id', 'member_share_id')->withTrashed();
+        return $this->hasOne(MemberShare::class, 'member_id', 'member_share_id')->withTrashed();
     }
 
 }

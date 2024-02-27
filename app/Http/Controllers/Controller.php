@@ -17,6 +17,7 @@ class Controller extends BaseController
 
     public function __construct() 
     {
+        ini_set('max_input_vars','500000');
         // Fetch the Site Settings object
         $this->financial_year = FinancialYear::active()->get();
         // $current_year = $this->financial_year->where('is_current',1)->first();
