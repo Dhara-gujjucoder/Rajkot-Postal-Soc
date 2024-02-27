@@ -17,10 +17,12 @@ class MemberShareDetail extends Model
         'is_sold',
     ];
 
-    public function member()
-    {
-        return $this->hasOne(Member::class, 'id', 'member_id')->withTrashed();
-    }
 
+
+
+    public function share_amount()
+    {
+        return $this->hasOne(MemberShare::class, 'member_share_id', 'member_share_id')->withTrashed();
+    }
 
 }
