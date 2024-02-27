@@ -60,5 +60,9 @@ Route::get('/clear', function () {
     return "Cleared!";
 });
 
+Route::get('/php', function () {
+
+    return phpinfo();
+});
 
 include('admin.php');
