@@ -24,7 +24,8 @@
                                 <th>{{ __('Start Month') }}</th>
                                 <th>{{ __('End Year') }}</th>
                                 <th>{{ __('End Month') }}</th>
-                                <th>{{ __('Is current?') }} </th>
+                                <th>{{ __('Is active?') }} </th>
+                                {{-- <th>{{ __('Is current?') }} </th> --}}
                                 <th>{{ __('Status') }} </th>
                                 <th>{{ __('Action') }} </th>
                             </tr>
@@ -38,9 +39,11 @@
                                     <td>{{  __(date('F', mktime(0, 0, 0, $finance->start_month, 10)));  }}</td>
                                     <td>{{ $finance->end_year }}</td>
                                     <td>{{ __(date('F', mktime(0, 0, 0, $finance->end_month, 10))) }}</td>
-                                    <td>{{ $finance->is_current == 1 ? __('Yes') : __('No') }} </td>
+                                    
+                                    <td>{{ $finance->is_active == 1 ? __('Yes') : __('No') }} </td>
+                                    {{-- <td>{{ $finance->is_current == 1 ? __('Yes') : __('No') }} </td> --}}
                                     <td>{{ $finance->status == 1 ? __('Active') : __('Deactive') }} </td>
-                                    <td> <a href="{{ route('financial_year.edit', $finance->id) }}" class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square"></i> {{ __('Edit') }}</a></td>
+                                    <td>@can('edit-general-setting')<a href="{{ route('financial_year.edit', $finance->id) }}" class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square"></i> {{ __('Edit') }}</a>@endcan</td>
                                 </tr>
                             @endforeach
                     </table>

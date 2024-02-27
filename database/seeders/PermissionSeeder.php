@@ -89,10 +89,13 @@ class PermissionSeeder extends Seeder
             // 'delete-member_share',
             // 'view-member_share',
 
-             'create-double_entries',
-            'edit-double_entries',
-            'delete-double_entries',
-            'view-double_entries'
+            //  'create-double_entries',
+            // 'edit-double_entries',
+            // 'delete-double_entries',
+            // 'view-double_entries',
+
+            'ledger-share-report',
+             'ledger-fixed-saving-report'
 
         ];
 

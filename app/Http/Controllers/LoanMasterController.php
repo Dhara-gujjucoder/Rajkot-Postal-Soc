@@ -3,17 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Member;
+use App\Models\LoanEMI;
 use App\Models\LoanMaster;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use App\Models\MemberFixedSaving;
+use App\Traits\UpdateMemberShare;
 use Illuminate\Support\Facades\Auth;
 use App\Models\LoanCalculationMatrix;
-use App\Models\LoanEMI;
 use Illuminate\Http\RedirectResponse;
+use App\Traits\UpdateMemberFixedSaving;
 
 class LoanMasterController extends Controller
 {
+    use UpdateMemberShare,UpdateMemberFixedSaving;
     /*check permission*/
     public function __construct()
     {
@@ -40,13 +44,12 @@ class LoanMasterController extends Controller
                     $show_btn = '<a href="' . route('loan.show', $row->id) . '"
                     class="btn btn-outline-info btn-sm"><i class="bi bi-eye"></i> ' . __('Show') . '</a>';
                     // $edit_btn = '<a href="' . route('loan.edit', $row->id) . '"
-                    // class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square"></i>' . __('Edit') . '</a>';
-                    // $delete_btn = '<form action="' . route('loan.destroy', $row->id) . '" method="post"><button type="submit" class="btn btn-outline-danger btn-sm"
-                    // onclick="return confirm(' . __('Do you want to delete this salary deduction?') . ';"><i class="bi bi-trash"></i>' . __('Delete') . '</button></form>';
+                    // class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square"></i>' . __('Edit') . '</a>';onclick="return confirm(`'.__('Do you want to delete this user?').'`);"
+                    $delete_btn = ($row->getRawOriginal('status') == 1 ? '<button type="button"  class="btn btn-outline-danger btn-sm" onclick="load_member_details('.$row->member_id.')" data-bs-toggle="modal" data-bs-target="#loan_settle"><i class="bi bi-trash"></i>' . __('Close') . '</button>&nbsp;' : '');
                     $action_btn = '';
                     // (Auth::user()->can('view-ledger_account')) ? $action_btn.= $show_btn : '';
                     // (Auth::user()->can('edit-loan')) ? $action_btn .= $edit_btn : '';
-                    // (Auth::user()->can('delete-loan')) ? $action_btn .= $delete_btn : '';
+                    (Auth::user()->can('delete-loan')) ? $action_btn .= $delete_btn : '';
                     (Auth::user()->can('view-loan')) ? $action_btn .= $show_btn : '';
                     return $action_btn;
                 })
@@ -75,14 +78,20 @@ class LoanMasterController extends Controller
 
     public function create()
     {
-        $data['loans'] = LoanCalculationMatrix::get();
+
         $data['members'] = Member::with('shares')->get();
+        // foreach ($data['members'] as $key => $value) {
+        //     $value->fixed_saving_ledger_account()->update(['current_balance' => $value->fixed_saving()->sum('fixed_amount') ?? 0]);
+        //     $value->share_ledger_account()->update(['current_balance' => $value->share_total_price ?? 0]);
+        // }
+        $data['loans'] = LoanCalculationMatrix::get();
         $data['page_title'] = __('Add New Loan');
         return view('loan.create', $data);
     }
 
     public function store(Request $request)
     {
+        // dd($request->remaining_loan_amount);
         $request->validate([
             'loan_id' => 'required',
             'emi_amount' => 'required',
@@ -111,7 +120,26 @@ class LoanMasterController extends Controller
         $loan_master->status = 1;
         $loan_master->principal_amt = LoanCalculationMatrix::find($request->loan_id)->first()->amount;
         $loan_master->save();
-   
+
+        //settle old loan
+        if ($request->remaining_loan_amount > 0) {
+            $loan_master->is_old_loan_settled = 1;
+            $loan_master->save();
+            $this->settle_old_loan($member->id);
+        }
+
+        //update share
+        if ($request->remaining_share > 0) {
+            $no_of_share = $member->total_share + $request->remaining_share;
+            $this->update_member_share($member, $no_of_share);
+        }
+
+        //update fixed saving
+        if ($request->remaining_fixed_saving > 0) {
+            $this->update_fixed_Saving($member, $request->remaining_fixed_saving);
+        }
+
+
         foreach ($request->emi_month as $key => $value) {
             LoanEMI::create([
                 'loan_master_id' => $loan_master->id,
@@ -129,6 +157,13 @@ class LoanMasterController extends Controller
         }
         return redirect()->route('loan.index')
             ->withSuccess(__('New Loan is added successfully.'));
+    }
+
+    public function settle_old_loan($member_id)
+    {
+        $old_loan = LoanMaster::where('member_id', $member_id)->active()->first();
+        $old_loan->update(['status' => 3]);
+        $old_loan->loan_emis()->where('status',1)->update(['status' => 3]);
     }
 
 
@@ -155,20 +190,43 @@ class LoanMasterController extends Controller
      */
     public function update(Request $request, LoanMaster $loan_matrix): RedirectResponse
     {
-        $request->validate(['amount' => 'required', 'minimum_emi' => 'required', 'required_share' => 'required']);
-        $input = $request->only('amount', 'minimum_emi', 'required_share', 'status');
-        $loan_matrix->update($input);
+        // $request->validate(['amount' => 'required', 'minimum_emi' => 'required', 'required_share' => 'required']);
+        // $input = $request->only('amount', 'minimum_emi', 'required_share', 'status');
+        // $loan_matrix->update($input);
 
-        return redirect()->route('loan.index')
-            ->withSuccess(__('Loan is updated successfully.'));
+        // return redirect()->route('loan.index')
+        //     ->withSuccess(__('Loan is updated successfully.'));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(LoanMaster $loan_matrix): RedirectResponse
+    public function destroy(Request $request,LoanMaster $loan)
     {
-        $loan_matrix->delete();
+        $request->validate([
+            'amount' => 'required',
+            'payment_type'=>'required',
+            'bank_name' => 'required_if:payment_type,cheque',
+            'cheque_no' => 'required_if:payment_type,cheque'
+        ]);
+        if($request->amount < 200){
+            return response()->json([
+                'errors' => ['amount' => __('The :attribute must be greater than :value.',['attribute' =>'amount','value' => $loan->member->loan_remaining_amount])],
+                'message' => 'The given data was invalid.',
+            ], 422);
+        }
+        if ($request->amount > 0) {
+            $loan->is_old_loan_settled = 1;
+            $loan->loan_settlement_amt = $request->amount;
+            $loan->bank_name = $request->bank_name;
+            $loan->cheque_no = $request->cheque_no;
+            $loan->payment_type = $request->payment_type;
+            $loan->save();
+            $this->settle_old_loan($loan->member_id);
+        }
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'msg' => __('Loan Closed SucccessFully')]);
+        }
         return redirect()->route('loan.index')
             ->withSuccess(__('Loan is deleted successfully.'));
     }

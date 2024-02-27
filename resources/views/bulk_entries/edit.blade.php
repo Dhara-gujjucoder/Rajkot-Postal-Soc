@@ -96,6 +96,9 @@
                                                 <input type="hidden" class="form-control" id="particular"
                                                     name="user_id[]" value="{{ $member->user_id }}"
                                                     placeholder="{{ __('particular') }}">
+                                                    <input type="hidden" class="form-control" id="particular"
+                                                    name="department_id[]" value="{{ $department->id }}"
+                                                    placeholder="{{ __('department_id') }}">
                                             </div>
                                         </div>
                                         <div class="col-md-1 col-1">

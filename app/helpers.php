@@ -1,11 +1,17 @@
 <?php
 
+use Carbon\Carbon;
+use App\Models\Member;
+use App\Models\LoanEMI;
 use App\Models\Setting;
 use App\Models\LedgerGroup;
 use App\Models\ShareAmount;
-use App\Models\FinancialYear;
 use App\Models\LoanInterest;
+use App\Models\FinancialYear;
 use App\Models\MonthlySaving;
+use App\Models\MemberFixedSaving;
+use Illuminate\Support\Collection;
+
 
 if (!function_exists('Setting')) {
 
@@ -89,7 +95,7 @@ if (!function_exists('getMonthsOfYear')) {
 if (!function_exists('getNextNoOfMonths')) {
     function getNextNoOfMonths($no)
     {
-        dd($no);
+        // dd($no);
         $response = [];
         $month = date('m');
         $year = date('Y');
@@ -123,5 +129,44 @@ if (!function_exists('getLedgerGroupDropDown')) {
             }
         }
         return $html;
+    }
+
+    if (!function_exists('loan_remaining_amount')) {
+        function loan_remaining_amount($member_id)
+        {
+            return LoanEMI::where('member_id', $member_id)->pending()->sum('emi');
+        }
+    }
+
+
+    if (!function_exists('remaining_fixed_saving')) {
+        function remaining_fixed_saving($member_id)
+        {
+            $fixed_saving = MemberFixedSaving::where('member_id', $member_id)->pluck('fixed_amount')->all();
+            $all_year = FinancialYear::where('end_year', '<=', date('Y'))->pluck('id')->all();
+            $merged_collection = new Collection();
+            foreach ($all_year as $key => $yearvalue) {
+                $months = collect(getMonthsOfYear($yearvalue));
+                $merged_collection = $merged_collection->merge($months);
+            }
+            $joining_date = Member::find($member_id)->pluck('created_at');            
+            foreach ($merged_collection->pluck('value') as $key => $value) {
+                $date = Carbon::parse('01-'.$value);
+
+                if($date->lessThan(date('d-m-Y'))){
+                    $final[] = $date->format('m-Y');
+                }
+            }
+            // dd($merged_collection->whereIn('value',$final));
+            // $required_amount = count($final)*current_fixed_saving()->monthly_saving;
+            // dd($final);
+            $member_fixed_Saving = MemberFixedSaving::where('member_id', $member_id)->whereIn('month',$final);
+            // $nil_entries =  $member_fixed_Saving->where('fixed_amount',0)->count();
+            $saving_amount = $member_fixed_Saving->sum('fixed_amount');
+            // $member = Member::find($member_id);
+            // $count = count(getMonthsOfYear(currentYear()->id));
+            $required_amount = $member_fixed_Saving->count()*current_fixed_saving()->monthly_saving;
+            return  $required_amount-$saving_amount;
+        }
     }
 }

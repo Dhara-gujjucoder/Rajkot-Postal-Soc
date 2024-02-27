@@ -31,11 +31,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        getMonthsOfYear(1);
         $user = Auth::user();
+        // dd($user->hasRole('Super Admin'));
         $user->syncPermissions();
         // dd(Hash::make('rajkotpostalsoc12#'));
-        //   dd($user->can('create-account_type'));
+        // dump($user->can('edit-user'));
+        //   dd($user->can('view-user'));
         $data['page_title'] = __('Dashboard');
         $data['total_members'] = Member::count();
         $data['total_users'] = User::admin()->count();

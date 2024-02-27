@@ -96,7 +96,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
+                                                <tr class="bg-body-secondary"   >
                                                     <th colspan="4">{{ __('Current Loan') }}</th>
                                                 </tr>
                                                 <tr>
@@ -107,11 +107,17 @@
                                                 </tr>
                                                 <tr>
                                                     {{-- <td>&nbsp;</td> --}}
-                                                    <td>{{ __('EMI') }}</td>
+                                                    <td>{{ __('EMI') }} (&#8377;)</td>
                                                     <td><span class="badge bg-light-info" id="old_emi_amt">0
                                                         </span></td>
                                                 </tr>
                                                 <tr>
+                                                    {{-- <td>&nbsp;</td> --}}
+                                                    <td>{{ __('Remaining Loan') }} (&#8377;)</td>
+                                                    <td><span class="badge bg-light-info" id="remaining_emi_amt">0
+                                                        </span></td>
+                                                </tr>
+                                                <tr class="bg-body-secondary">
                                                     <th colspan="3">{{ __('Total Share') }} </th>
                                                 </tr>
                                                 <tr>
@@ -120,16 +126,16 @@
                                                             id="old_principal_amt">7000
                                                         </span></td> --}}
                                                     <td>{{ __('Required Share') }}</td>
-                                                    <td><span class="badge bg-light-info" id="remaining_share">0
+                                                    <td><span class="badge bg-light-info" id="remaining_share_label">0
                                                         </span></td>
                                                 </tr>
                                                 <tr>
                                                     {{-- <td>&nbsp;</td> --}}
                                                     <td>{{ __('Share amount') }}</td>
-                                                    <td><span class="badge bg-light-info" id="remaining_share_amt">0
+                                                    <td><span class="badge bg-light-info" id="remaining_share_amt_label">0
                                                         </span></td>
                                                 </tr>
-                                                <tr>
+                                                <tr class="bg-body-secondary">
                                                     <th colspan="3">{{ __('Fixed saving') }} </th>
                                                 </tr>
                                                 <tr>
@@ -141,7 +147,7 @@
                                                 <tr>
                                                     {{-- <td>&nbsp;</td> --}}
                                                     <td>{{ __('Remaining fixed saving') }}</td>
-                                                    <td><span class="badge bg-light-info" id="remaining_fixed_saving">0
+                                                    <td><span class="badge bg-light-info" id="remaining_fixed_saving_label">0
                                                         </span></td>
                                                 </tr>
                                             </tbody>
@@ -149,88 +155,28 @@
                                     </div>
                                 </div>
                             </div>
-
-
-
-                            {{-- <div class="mb-4 mt-5">
-                                <h5 id="header_75" class="form-header" data-component="header">
-                                    {{ __('Amount Information') }}
-                                </h5>
-                            </div> --}}
-                            {{-- <div class="mb-3 row">
-
-                                 <label for="amount"
-                                    class="col-md-2 col-form-label text-md-end text-start">{{ __('Share') }}</label> --}}
-                            {{-- <div class="col-md-4">
-                                    <input type="number"
-                                        class="form-control @error('required_share') is-invalid @enderror"
-                                        id="required_share" name="required_share" value="{{ old('required_share') }}"
-                                        placeholder="{{ __('Required Share') }}">
-                                    @if ($errors->has('required_share'))
-                                        <span class="text-danger">{{ $errors->first('amount') }}</span>
-                                    @endif
-                                </div>
-                                <div class="col-md-5">
-                                    <input type="number"
-                                        class="form-control @error('total_share') is-invalid @enderror" id="total_share"
-                                        name="total_share" value="{{ old('total_share') }}"
-                                        placeholder="{{ __('Total Share') }}">
-                                    @if ($errors->has('total_share'))
-                                        <span class="text-danger">{{ $errors->first('total_share') }}</span>
-                                    @endif
-                                </div>
-
-                            </div> --}}
-                            {{-- <div class="mb-3 row">
-                                <label for="amount"
-                                    class="col-md-2 col-form-label text-md-end text-start">{{ __('Loan Settlement Amount') }}</label>
-                                <div class="col-md-9">
-                                    <input type="number"
-                                        class="form-control @error('loan_settlement_amt') is-invalid @enderror"
-                                        id="loan_settlement_amt" name="loan_settlement_amt"
-                                        value="{{ old('loan_settlement_amt') }}"
-                                        placeholder="{{ __('Loan Settlement amount') }}" readonly>
-                                    @if ($errors->has('loan_settlement_amt'))
-                                        <span class="text-danger">{{ $errors->first('loan_settlement_amt') }}</span>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="mb-3 row">
-                                <label for="amount"
-                                    class="col-md-2 col-form-label text-md-end text-start">{{ __('Total Share amount') }}</label>
-                                <div class="col-md-9">
-                                    <input type="number"
-                                        class="form-control @error('total_share_amt') is-invalid @enderror"
-                                        id="total_share_amt" name="total_share_amt"
-                                        value="{{ old('total_share_amt') }}"
-                                        placeholder="{{ __('Total Share Amount') }}" readonly>
-                                    @if ($errors->has('total_share_amt'))
-                                        <span class="text-danger">{{ $errors->first('total_share_amt') }}</span>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="mb-3 row">
-                                <label for="amount"
-                                    class="col-md-2 col-form-label text-md-end text-start">{{ __('Remianing Fixed Saving') }}</label>
-                                <div class="col-md-9">
-                                    <input type="number"
-                                        class="form-control @error('fixed_saving') is-invalid @enderror"
-                                        id="fixed_saving" name="fixed_saving" value="{{ old('fixed_saving') }}"
-                                        placeholder="{{ __('Remianing Fixed Saving') }}" oninput="calculate()"
-                                        readonly>
-                                    @if ($errors->has('fixed_saving'))
-                                        <span class="text-danger">{{ $errors->first('fixed_saving') }}</span>
-                                    @endif
-                                </div>
-                            </div> --}}
-                            <input type="hidden" class="form-control" id="total_share_amt" name="total_share_amt"
-                                value="{{ old('total_share_amt') }}">
+                           
                             <input type="hidden" class="form-control" id="month" name="month"
                                 value="{{ date('m-d-Y', strtotime(currentYear()->start_month.'-01-'.currentYear()->start_year)) }}">
-                            <input type="hidden" class="form-control" id="loan_settlement_amt"
-                                name="loan_settlement_amt" value="{{ old('loan_settlement_amt') }}">
+                            
+                            <input type="hidden" class="form-control" id="total_share_amt" name="total_share_amt"
+                                value="{{ old('total_share_amt') }}">
+                            <input type="hidden" class="form-control" id="remaining_share_amount" name="remaining_share_amount"
+                                value="{{ old('remaining_share_amount') }}">
+                                <input type="hidden" class="form-control" id="remaining_share" name="remaining_share"
+                                value="{{ old('remaining_share') }}">
+                                
+                            <input type="hidden" class="form-control" id="remaining_loan_amount"
+                                name="remaining_loan_amount" value="{{ old('remaining_loan_amount') }}">
+                                
+
                             <input type="hidden" class="form-control" id="fixed_saving" name="fixed_saving"
                                 value="{{ old('fixed_saving') }}">
+                            <input type="hidden" class="form-control" id="remaining_fixed_saving" name="remaining_fixed_saving"
+                                value="{{ old('fixed_saving') }}">
+                                <input type="hidden" class="form-control" id="total_required_amt" name="total_required_amt"
+                                value="{{ old('total_required_amt') }}"> 
+                                
                             <div class="mb-3 row">
                                 <label for="amount"
                                     class="col-md-2 col-form-label text-md-end text-start">{{ __('Stamp Duty') }}</label>
@@ -285,12 +231,12 @@
                                 style="display: {{ old('payment_type') == 'cheque' ? 'block' : 'none' }};">
                                 <div class="mb-3 row">
                                     <label for="amount"
-                                        class="col-md-2 col-form-label text-md-end text-start">{{ __('Bank name') }}</label>
+                                        class="col-md-2 col-form-label text-md-end text-start">{{ __('Bank Name') }}</label>
                                     <div class="col-md-10">
                                         <input type="text"
                                             class="form-control @error('bank_name') is-invalid @enderror"
                                             id="bank_name" name="bank_name" value="{{ old('bank_name') }}"
-                                            placeholder="{{ __('Bank name') }}">
+                                            placeholder="{{ __('Bank Name') }}">
                                         @if ($errors->has('bank_name'))
                                             <span class="text-danger">{{ $errors->first('bank_name') }}</span>
                                         @endif
@@ -405,10 +351,8 @@
     var remaining_saving = 0;
     var month = $('#month').val();
     let dt = new Date(month);
-    console.log(dt);
+  
 
-    console.log(dt.getMonth());
-    console.log(dt.getMonth() + 2);
     $('input[name="loan_id"]:checked').trigger('change');
 
     function disableoption(input, member_id) {
@@ -450,6 +394,7 @@
             $('#loader').hide();
         }
         loadEMI();
+        // console.log(required_share);
     }
 
     function loadEMI() {
@@ -461,7 +406,7 @@
         var emi_d = '{{getLoanParam()[1]}}';
         var rate = Number('{{current_loan_interest()->loan_interest}}');
         rate = 9.5;
-        var emi_html = `<table class="table table-borderd"><tr><th>No.</th><th>Month</th><th>EMI amount</th><th>Interest</th><th>Principal</th><th>Payment</th></tr>`;
+        var emi_html = `<table class="table table-borderd"><tr><th>No.</th><th>Month</th><th>EMI amount (&#8377;)</th><th>Interest (&#8377;)</th><th>Principal (&#8377;)</th><th>Payment (&#8377;)</th></tr>`;
         // console.log(emi_amount, minimum_emi, loan_amount);
         if (emi_amount < minimum_emi || emi_amount > loan_amount) {
             $('#emi_amount').val(minimum_emi);
@@ -489,8 +434,8 @@
                         emi_amount = loan_amt
                     }
                     console.log(emi_amount,emi_interest);
-                    emi_html += `<tr><td>` + index + `</td><input type="hidden" value="`+((display_month+1).toString().padStart(2, '0')+'-'+year)+`" name="emi_month[]"><td>` + dmonth + `</td><input type="hidden" value="`+emi_amount+`" name="emi_amt[]"><td>` + emi_amount + `</td><input type="hidden" value="`+emi_interest.toFixed(2)+`" name="emi_interest[]"><td>` + emi_interest.toFixed(2) + `</td><input type="hidden" value="`+loan_amt+`" name="rest_principal[]"><td>` + loan_amt + `</td><input type="hidden" value="`+(emi_interest+emi_amount).toFixed(2)+`" name="installment[]"><td>`+(emi_interest+emi_amount).toFixed(2)+`</td></tr>`;
                     loan_amt = loan_amt - emi_amount;
+                    emi_html += `<tr><td>` + index + `</td><input type="hidden" value="`+((display_month+1).toString().padStart(2, '0')+'-'+year)+`" name="emi_month[]"><td>` + dmonth + `</td><input type="hidden" value="`+emi_amount+`" name="emi_amt[]"><td>` + emi_amount + `</td><input type="hidden" value="`+emi_interest.toFixed(0)+`" name="emi_interest[]"><td>` + emi_interest.toFixed(0) + `</td><input type="hidden" value="`+loan_amt+`" name="rest_principal[]"><td>` + loan_amt + `</td><input type="hidden" value="`+(emi_interest+emi_amount).toFixed(0)+`" name="installment[]"><td>`+(emi_interest+emi_amount).toFixed(0)+`</td></tr>`;
                 }
                 display_month++;
             }
@@ -546,14 +491,19 @@
 
     function calculate() {
         var total = 0;
-        var rshare = required_share - member_share
+        var rshare = required_share - member_share;
+        var remaining_loan_amount = Number($('#remaining_loan_amount').val());
         if (rshare > 0) {
             total += share_amount * rshare;
         }
         if (remaining_saving > 0) {
             total += remaining_saving;
         }
-        $('#total_share_amt').val(total);
+        if (remaining_loan_amount > 0) {
+            total += remaining_loan_amount;
+        }
+        $('#total_required_amt').val(total);
+        $('#total_amt').attr('min',total);
         total += Number($('#stamp_duty').val());
         $('#total_amt').val(total);
     }
@@ -580,16 +530,21 @@
                     var remaining_share = (required_share - member_share) > 0 ? (required_share -
                         member_share) : 0;
                     var member_loan = member.loan;
-                    // console.log(remaining_share);
+                    console.log('remaining_share'+remaining_share,member_share);
                     $('#old_principal_amt').html('&#8377;' + (member_loan ? member_loan.principal_amt : 0));
-                    $('#remaining_share').html('' + remaining_share);
-                    $('#old_share_amt').html('&#8377;' + member_share);
-                    $('#remaining_share_amt').html('&#8377;' + remaining_share * share_amount);
+                    $('#remaining_share_label').html('' + remaining_share);
+                    $('#remaining_share_amt_label').html('&#8377;' + remaining_share * share_amount);
                     $('#old_fixed_saving').html('&#8377;' + member.member_fixed_saving.member_fixed_saving);
                     $('#old_emi_amt').html('&#8377;' + (member_loan ? member_loan.emi_amount : 0));
-                    $('#remaining_fixed_saving').html('&#8377;' + member.member_fixed_saving
-                        .remaining_fixed_saving);
-                    $('#fixed_saving').val(member.member_fixed_saving.remaining_fixed_saving);
+                    $('#remaining_emi_amt').html('&#8377;' + (member_loan ? member.loan_remaining_amount : 0));
+                    $('#remaining_fixed_saving_label').html('&#8377;' + member.member_fixed_saving
+                    .remaining_fixed_saving);
+                    $('#fixed_saving').val(member.member_fixed_saving.member_fixed_saving);
+                    $('#total_share_amt').val(member_share*share_amount);
+                    $('#remaining_fixed_saving').val(member.member_fixed_saving.remaining_fixed_saving);
+                    $('#remaining_loan_amount').val(member_loan ? member.loan_remaining_amount : 0);
+                    $('#remaining_share').val(remaining_share);
+	                $('#remaining_share_amount').val(remaining_share * share_amount);
                     calculate();
                     $('#loader').hide();
                 }

@@ -6,7 +6,7 @@
 <div class="page-content">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <form action="{{ route('double_entries.store') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('double_entries.store') }}" method="post" id="myForm" enctype="multipart/form-data">
                 @csrf
                 <div class="card">
                     <div class="card-header border mb-4">
@@ -79,7 +79,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <div class="card">
@@ -99,7 +98,7 @@
                                     <select id="ledgerAccountId" class="select2 ledgerAccountId required @error('ledger_ac_id') is-invalid @enderror" row="0" aria-label="Permissions" name="ledger_ac_id[]" data-column="2" style="height: 210px;">
                                         <option value="">{{ __('Select Ledger Account') }}</option>
                                         @forelse ($ledger_accounts as $ac)
-                                            <option value="{{ $ac->id }}" ledger_grp_id="{{ $ac->ledger_group_id  }}" {{ $ac->id == old('ledger_ac_id.0') ? 'selected' : '' }}>
+                                            <option value="{{ $ac->id }}" ledger_grp_id="{{ $ac->ledger_group_id }}" {{ $ac->id == old('ledger_ac_id.0') ? 'selected' : '' }}>
                                                 {{ $ac->account_name }}
                                             </option>
                                         @empty
@@ -110,8 +109,8 @@
                                         <span class="text-danger">{{ $errors->first('ledger_ac_id.*') }}</span>
                                     @endif
                                 </div>
-                                <div class="share_input0"  style="display:none;" ><input type="number" name="share[]"  placeholder="Add Share"></div>
-                                    {{-- <input type="number" name="share" id="shareInput" style="display: none;" placeholder="Add Share"> --}}
+                                <div class="share_input0" style="display:none;"><input type="number" name="share[]" class="required_share0" placeholder="{{ __('Add Share') }}"></div>
+                                {{-- <input type="number" name="share" id="shareInput" style="display: none;" placeholder="Add Share"> --}}
                             </div>
                             {{-- <div class="col-md-3 col-3">
                                     <div class="form-group">
@@ -194,7 +193,8 @@
                             {{ __('Total Credit') }} : <p id="credit_total"><span>&#8377;0</span></p>
                         </div>
                         <div class="mb-3 row justify-content-end">
-                            <button type="submit" id="submit" class="col-md-1 offset-md-5 btn btn-primary" onclick="return checktotal()"><i class="fa fa-lock"></i>{{ __('Submit') }}</button>
+                            {{-- data-bs-toggle="modal" data-bs-target="#bd-example-modal-lg" <button type="submit" id="submit" class="col-md-1 offset-md-5 btn btn-primary" onclick="return checktotal()"><i class="fa fa-lock"></i>{{ __('Submit') }}</button> --}}
+                            <button type="button" id="submitButton" class="col-md-1 offset-md-5 btn btn-primary" onclick="return checktotal()"><i class="fa fa-lock"></i>{{ __('Submit') }}</button>
                         </div>
                     </div>
                 </div>
@@ -202,6 +202,30 @@
         </div>
     </div>
 </div>
+{{-- MODEL SHOW --}}
+<div class="modal fade text-left" id="confirmation" tabindex="-1" aria-labelledby="myModalLabel1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h5 class="modal-title" id="myModalLabel1">{{ __('Double Entry Details') }}
+                </h5>
+                <button type="button" class="close rounded-pill" data-bs-dismiss="modal" aria-label="Close">
+                    <svg xmlns="https://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                        <line x1="18" y1="6" x2="6" y2="18">
+                        </line>
+                        <line x1="6" y1="6" x2="18" y2="18">
+                        </line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="tableBody">
+                {{-- All Entry Show hear --}}
+            </div>
+        </div>
+    </div>
+</div>
+{{-- END --}}
 @endsection
 @push('script')
 <script>
@@ -228,103 +252,182 @@
 
         // $('#not_count_match').html('');
         // if (cr_total != dr_total) {
-        //     $('#not_count_match').html('Debit and Credit must be Equal.');
+        //     $('#not_count_match').html('{{ __('Debit and Credit must be Equal.') }}');
         // }
     }
 
     function checktotal() {
-
         var valid = 0;
-        $('.required').each(function(){
-            if(!this.value){
+        $('.required').each(function() {
+            if (!this.value) {
                 valid = 1;
             }
         });
-        if(valid){
-             $('#not_count_match').html('All fields are required.');
+
+        $('.ledgerAccountId').each(function() {
+            var selectedValue = $(this).find('option:selected').attr('ledger_grp_id');
+            var row = $(this).attr('row');
+            console.log(row);
+            if (selectedValue == "2") {
+                // $(".share_input" + row).show();
+
+                if (!$('.required_share' + row).val()) {
+                    valid = 1;
+                };
+            }
+        });
+
+        if (valid) {
+            // $('#not_count_match').html('All fields are required.');
+            $('#not_count_match').html('{{ __("All fields are required.") }}');
             return false;
         }
 
-
         if (cr_total != dr_total) {
             // alert('Debit and Credit must be Equal.');
-            $('#not_count_match').html('Debit and Credit must be Equal.');
+            $('#not_count_match').html('{{ __("Debit and Credit must be Equal.") }}');
             return false;
         } else {
             $('#not_count_match').html('');
+
+            confirm();
             return true;
         }
 
     }
     //end
 
+    // ***************All Form request data show in model popup***************
 
-    $('.date').flatpickr({
-        allowInput: true,
-        altInput: true,
-        altFormat: "d/m/Y",
-        dateFormat: "Y-m-d",
-    });
-
-    $('.select2').select2();
-    $('input[name="ctype"]').on('change', function() {
-        if ($(this).val() == 2) {
-            $('#cheque_div').show();
-        } else {
-            $('#cheque_div').hide();
-        }
-    });
-
-    function lockinput() {
-        $("#cr_ledger_acc_id").select2({
-            disabled: 'readonly'
-        });
-        $("#cr_particular").attr('readonly', true);
-        $("#cr_date").attr('readonly', true);
-        $("#cr_amount").attr('readonly', true);
-        $("#cr_cheque_no").attr('readonly', true);
-    }
-
-
-    // $(document).on('change','input[name="share[]"]',function(e){
-    //     $(this).val();
-    //     $(this).attr('row');
-    //     var share_amount = $(this).val()*100;
-    //     $('amount').val(share_amount);
-    // });
-
-    // *****Ledger Account select dropdown*****
-        // $(document).ready(function () {
-            $(document).on('change','.ledgerAccountId',function(e){
-                // $(this).parent().find('.share_input'+$(this).val()).remove();
-                // console.log($(this).parent());
-                var selectedValue = $(this).find('option:selected').attr('ledger_grp_id');
-                var row =  $(this).attr('row');
-                $(".share_input"+row).hide();
-
-                $(".share_input"+row).find('[name="share[]"]').length;
-
-                $(this).val();
-                console.log(row);
-                if (selectedValue == "2") {
-                    $(".share_input"+row).show();
-                } else {
-                    $(".share_input"+row).hide();
+        function confirm() {
+            $.ajax({
+                type: "POST",
+                url: "{{ route('double_entries.confirm') }}",
+                data: $('#myForm').serialize(),
+                success: function(response) {
+                    $('#confirmation').modal('show');
+                    $('#tableBody').empty();
+                    $('#tableBody').append(response.confirm);
+                    // $('#confirmation').modal('show');
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
                 }
             });
-        // });
-    // *****End*****
+        };
+        // **********end**********
 
-    var count = 0;
-    function add_ledger_entry() {
-        count = count + 1;
-        var html = `<div class="row ledger_entry">
+        $('.date').flatpickr({
+            allowInput: true,
+            altInput: true,
+            altFormat: "d/m/Y",
+            dateFormat: "Y-m-d",
+        });
+
+        $('.select2').select2();
+        $('input[name="ctype"]').on('change', function() {
+            if ($(this).val() == 2) {
+                $('#cheque_div').show();
+            } else {
+                $('#cheque_div').hide();
+            }
+        });
+
+        function lockinput() {
+            $("#cr_ledger_acc_id").select2({
+                disabled: 'readonly'
+            });
+            $("#cr_particular").attr('readonly', true);
+            $("#cr_date").attr('readonly', true);
+            $("#cr_amount").attr('readonly', true);
+            $("#cr_cheque_no").attr('readonly', true);
+        }
+
+
+        // $(document).on('change','input[name="share[]"]',function(e){
+        //     $(this).val();
+        //     $(this).attr('row');
+        //     var share_amount = $(this).val()*100;
+        //     $('amount').val(share_amount);
+        // });
+
+        // *****Ledger Account select dropdown*****
+        // $(document).ready(function () {
+
+        $(document).on('change', '.ledgerAccountId', function(e) {
+            // $(this).parent().find('.share_input'+$(this).val()).remove();
+            // console.log($(this).parent());
+            var selectedValue = $(this).find('option:selected').attr('ledger_grp_id');
+            var row = $(this).attr('row');
+            $(".share_input" + row).hide();
+
+            $(".share_input" + row).find('[name="share[]"]').length;
+
+            $(this).val();
+            console.log(row);
+
+            if (selectedValue == "2") {
+                $(".share_input" + row).show();
+            } else {
+                $(".share_input" + row).hide();
+            }
+
+// ***********************************************************************************
+            // if (selectedValue == "2") {
+            //     $(".share_input" + row).show();
+
+            //     var valid = 0;
+            //     if (!('.required_share' + row).val()) {
+            //         $('.required_share' + row).after('this field is required');
+
+            //         // if (!this.value.trim()) {
+            //         //     valid = 1;
+            //         // }
+            //     };
+            //     if (valid) {
+            //         $('#not_count_match').html('All fields are required.');
+            //         return false;
+            //     }
+            // } else {
+            //     $(".share_input" + row).hide();
+            // }
+
+
+// ***********************************************************************************
+            // if (selectedValue == "2") {
+            //     $(".share_input" + row).show();
+
+            //     var valid = 0;
+            //     $('.required_share').each(function() {
+            //         if (!this.value.trim()) {
+            //             valid = 1;
+            //         }
+            //     });
+            //     if (valid) {
+            //         $('#not_count_match').html('All fields are required.');
+            //         return false;
+            //     }
+            // } else {
+            //     $(".share_input" + row).hide();
+            // }
+// ***********************************************************************************
+
+
+        });
+        // });
+        // *****End*****
+
+        var count = 0;
+
+        function add_ledger_entry() {
+            count = count + 1;
+            var html = `<div class="row ledger_entry">
                             <div class="col-md-4 col-3">
                                 <div class="form-group">
                                     <label for="ledger_ac_id">{{ __('Ledger Account') }}<span
                                             class="text-danger">*</span></label>
                                     <select class="select2 ledgerAccountId required @error('ledger_ac_id') is-invalid @enderror"
-                                        aria-label="Permissions" name="ledger_ac_id[]" row="`+count+`"
+                                        aria-label="Permissions" name="ledger_ac_id[]" row="` + count + `"
                                         style="height: 210px;">
                                         <option value="">{{ __('Select Ledger Account') }}</option>
                                         @forelse ($ledger_accounts as $ac)
@@ -339,7 +442,7 @@
                                         <span class="text-danger">{{ $errors->first('ledger_ac_id') }}</span>
                                     @endif
                                 </div>
-                                <div class="share_input`+count+`"  style="display:none;" ><input type="number" name="share[]"  placeholder="Add Share"></div>
+                                <div class="share_input` + count + `"  style="display:none;" ><input type="number" name="share[]" class="required_share` + count + `"  placeholder="{{ __('Add Share') }}"></div>
                             </div>
                             <div class="col-md-4 col-3">
                                 <div class="form-group">
@@ -391,8 +494,8 @@
                                 </div>
                             </div>
                         </div>`;
-        $('.ledger_entry').last().after(html);
-        $('.select2').select2();
-    }
+            $('.ledger_entry').last().after(html);
+            $('.select2').select2();
+        }
 </script>
 @endpush

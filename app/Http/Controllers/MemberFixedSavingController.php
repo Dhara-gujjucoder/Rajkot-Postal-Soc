@@ -53,7 +53,7 @@ class MemberFixedSavingController extends Controller
         $data['shares'] = MemberFixedSaving::get();
         $data['active_share'] = MemberFixedSaving::where('status',1);
         $data['active_share_count'] = $data['active_share']->count();
-        $data['share_amount'] = $data['active_share']->sum('share_amount');
+        $data['share_amount'] = $data['active_share']->sum('fixed_amount');
         $data['members'] = Member::withTrashed()->orderBy('uid', 'ASC')->get();
 
         if ($request->ajax()) {

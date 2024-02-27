@@ -19,8 +19,8 @@
                         <thead>
                             <tr>
                                 <th>{{ __('Entry ID') }}</th>
-                                <th>{{ __('Credit Amount') }}</th>
-                                <th>{{ __('Debit Amount') }}</th>
+                                <th>{{ __('Credit Amount') }} (&#8377;)</th>
+                                <th>{{ __('Debit Amount') }} (&#8377;)</th>
                                 <th>{{ __('Date') }}</th>
                                 <th>{{ __('Action') }} </th>
                             </tr>
@@ -38,9 +38,14 @@
                                         @csrf
                                         @method('DELETE')
 
-                                            @can('edit-double_entries')
+                                            {{-- @can('edit-double_entries')
                                                 <a href="{{ route('double_entries.edit', $entry->id) }}" class="btn btn-outline-warning btn-sm"><i
                                                         class="bi bi-pencil-square"></i> {{__('Edit')}}</a>
+                                            @endcan --}}
+
+                                            @can('show-double_entries')
+                                                <a href="{{ route('double_entries.show', $entry->id) }}" class="btn btn-outline-info btn-sm"><i
+                                                        class="bi bi-eye-fill"></i> {{__('Show')}}</a>
                                             @endcan
 
                                             @can('delete-double_entries')

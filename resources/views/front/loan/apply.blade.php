@@ -74,19 +74,19 @@
                     <div class="col-md-6">
                         <div class="dashboard-detail-data">
                             <label class="col-form-label"><strong>{{ __('Remaining Loan') }}:</strong></label>
-                            <div class="col-form-info">&#8377; {{ $member->loan->principal_amt - $member->loan->loan_emis()->where('status',2)->sum('emi')}}</div>
+                            <div class="col-form-info">&#8377; {{ $member->loan_remaining_amount}}</div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="dashboard-detail-data">
                             <label class="col-form-label"><strong>{{ __('Paid EMI') }}:</strong></label>
-                            <div class="col-form-info"> {{ $member->loan->loan_emis()->where('status',2)->count() }}</div> {{-- sum('emi') --}}
+                            <div class="col-form-info"> {{ $member->loan->loan_emis()->paid()->count() }}</div> {{-- sum('emi') --}}
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="dashboard-detail-data">
                             <label class="col-form-label"><strong>{{ __('Remaining EMI') }}:</strong></label>
-                            <div class="col-form-info" id="required_share"> {{ $member->loan->loan_emis()->where('status',1)->count() }}</div>
+                            <div class="col-form-info" id="required_share"> {{ $member->loan->loan_emis()->pending()->count() }}</div>
                         </div>
                     </div>
 
@@ -125,7 +125,7 @@
                         </table>
                     </div>
                 </div>
-                
+
                 <div class="desh-listbox skybluebg-box wow fadeInRight" data-wow-delay="0.2s">
                     <div class="dash-box-title">{{ __('Your Old Loan Detail') }}</div>
                 </div>

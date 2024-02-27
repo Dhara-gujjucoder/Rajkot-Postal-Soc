@@ -190,9 +190,6 @@
                     min_value = element.minimum_emi;
                     interestAmount = (element.amount * interestRate) / 100;
                     // interestAmount = Number((element.amount * interestRate) / 100).toFixed(2);
-
-                    console.log(interestAmount);
-                    console.log(element.amount + '-->' + element.minimum_emi);
                 }
             });
 

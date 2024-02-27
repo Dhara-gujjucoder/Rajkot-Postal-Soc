@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class MemberFixedSaving extends Model
 {
@@ -23,6 +24,11 @@ class MemberFixedSaving extends Model
         return $this->hasOne(Member::class, 'id', 'member_id')->withTrashed();
     }
 
-
+    protected static function booted(): void
+    {
+        static::addGlobalScope('year', function (Builder $builder) {
+            $builder->where('year_id',currentYear()->id);
+        });
+    }
 
 }

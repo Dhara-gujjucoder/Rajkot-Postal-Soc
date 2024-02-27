@@ -7,6 +7,7 @@ use App\Models\MemberShare;
 use App\Models\ShareAmount;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use App\Models\MemberShareDetail;
 use App\Imports\MemberShareImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\RedirectResponse;
@@ -26,6 +27,29 @@ class MemberShareController extends Controller
 
     public function create()
     {
+        // $shares = MemberShare::get()->all();
+        // foreach ($shares as $key => $value) {
+            
+        //     $share_detail_entry = new MemberShareDetail();
+        //     $share_detail_entry->member_share_id = $value->id;
+        //     $share_detail_entry->member_id = $value->member_id;
+        //     $share_detail_entry->year_id = currentYear()->id;
+        //     $share_detail_entry->is_purchase = 1;
+        //     $share_detail_entry->save();
+
+        //     if($value->sold_on){
+  
+        //         $share_detail_entry = new MemberShareDetail();
+        //         $share_detail_entry->member_share_id = $value->id;
+        //         $share_detail_entry->member_id = $value->member_id;
+        //         $share_detail_entry->year_id = currentYear()->id;
+        //         $share_detail_entry->is_sold = 1;
+        //         $share_detail_entry->save();
+    
+        //     }
+        // }
+
+
         return view('member_share.create', [
             'page_title' => __('Add New Share'),
             'members' => Member::get(),
@@ -50,6 +74,13 @@ class MemberShareController extends Controller
         $share->status = 0;
         $share->save();
 
+        $share_detail_entry = new MemberShareDetail();
+        $share_detail_entry->member_share_id = $share->id;
+        $share_detail_entry->member_id = $share->member_id;
+        $share_detail_entry->year_id = currentYear()->id;
+        $share_detail_entry->is_sold = 1;
+        $share_detail_entry->save();
+
         $member = Member::withTrashed()->where('id', $share->member_id)->first();
         $query = MemberShare::where('member_id', $share->member_id)->where('status',1);
         $total_share = $query->count();
@@ -70,6 +101,7 @@ class MemberShareController extends Controller
 
     public function index(Request $request)
     {
+        // dd(currentYear()->id);
         $data['page_title'] = __('Member Shares');
         $data['shares'] = MemberShare::get();
         $data['active_share'] = MemberShare::where('status',1);

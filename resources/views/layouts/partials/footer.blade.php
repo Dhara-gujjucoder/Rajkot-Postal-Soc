@@ -1,5 +1,5 @@
 <footer>
-    <div class="footer clearfix mb-0 text-muted p-3">
+    <div class="footer clearfix mb-0 text-muted p-4">
         <div class="float-start">
             <p>2023 &copy; Gujjucoders</p>
         </div>

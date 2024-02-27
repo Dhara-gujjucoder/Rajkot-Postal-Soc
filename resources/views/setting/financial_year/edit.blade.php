@@ -132,21 +132,21 @@
                             <div class="col-md-12 col-12">
                                 <div class="row">
                                     <div class="col-md-4 form-check">
-                                        <label for="current">{{ __('Is current?') }}
+                                        <label for="current">{{ __('Is active?') }}
                                         <span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <div class="row ms-lg-5 p-2 ps-4">
                                     <div class="col-md-5 col-lg-2 form-check">
-                                        <input class="form-check-input" type="radio" name="is_current"
-                                            id="yes" value="1" {{ old('is_current', $financial->is_current) == 1 ? 'checked' : '' }}>
+                                        <input class="form-check-input" type="radio" name="is_active"
+                                            id="yes" value="1" {{ old('is_active', $financial->is_active) == 1 ? 'checked' : '' }}>
                                         <label class="form-check-label" for="yes">
                                             {{ __('Yes') }}
                                         </label>
                                     </div>
                                     <div class="col-md-5 col-lg-2  form-check">
-                                        <input class="form-check-input" type="radio" name="is_current"
-                                            id="no" value="0" {{ old('is_current', $financial->is_current) == 0 ? 'checked' : '' }}>
+                                        <input class="form-check-input" type="radio" name="is_active"
+                                            id="no" value="0" {{ old('is_active', $financial->is_active) == 0 ? 'checked' : '' }}>
                                         <label class="form-check-label" for="no">
                                             {{ __('No') }}
                                         </label>
@@ -156,7 +156,7 @@
                                     @endif
                                 </div>
                             </div>
-
+                            @if(!$financial->is_active)
                             <div class="col-md-12 col-12">
                                 <div class="row">
                                     <div class="col-md-3 form-check">
@@ -184,7 +184,7 @@
                                     @endif
                                 </div>
                             </div>
-
+                            @endif
                             <div class="mb-3 row">
                                 <input type="submit" class="col-md-3 offset-md-5 btn btn-primary" value="{{__('Submit')}}">
                             </div>

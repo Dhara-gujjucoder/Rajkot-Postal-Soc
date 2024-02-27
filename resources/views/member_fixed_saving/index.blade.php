@@ -85,7 +85,7 @@
 
             processing: true,
             serverSide: true,
-            ajax: "{{ route('ledger_sharecapital.index') }}",
+            ajax: "{{ route('member_fixed_saving.index') }}",
             columns: [{
                     data: 'member_id',
                     name: 'member_id',
@@ -129,7 +129,7 @@
         var cc = confirm(`{{ __('Do you really want to close the share?') }}`);
 
         if (cc) {
-            var url = "{{ route('ledger_sharecapital.update', ':id') }}";
+            var url = "{{ route('member_fixed_saving.update', ':id') }}";
             url = url.replace(':id', share_id);
             $.ajax({
                 headers: {

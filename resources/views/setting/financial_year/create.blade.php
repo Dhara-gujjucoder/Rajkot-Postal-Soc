@@ -129,27 +129,27 @@
                             <div class="col-md-12 col-12">
                                 <div class="row">
                                     <div class="col-md-3 form-check">
-                                        <label for="current">{{ __('Is current?') }}
+                                        <label for="current">{{ __('Is active?') }}
                                         <span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <div class="row ms-lg-5 p-2 ps-4">
                                     <div class="col-md-5 col-lg-2 form-check">
-                                        <input class="form-check-input" type="radio" name="is_current"
+                                        <input class="form-check-input" type="radio" name="is_active"
                                             id="yes" value="1" checked>
                                         <label class="form-check-label" for="yes">
                                             {{ __('Yes') }}
                                         </label>
                                     </div>
                                     <div class="col-md-5 col-lg-2  form-check">
-                                        <input class="form-check-input" type="radio" name="is_current"
+                                        <input class="form-check-input" type="radio" name="is_active"
                                             id="no" value="0">
                                         <label class="form-check-label" for="no">
                                             {{ __('No') }}
                                         </label>
                                     </div>
-                                    @if ($errors->has('is_current'))
-                                        <span class="text-danger">{{ $errors->first('is_current') }}</span>
+                                    @if ($errors->has('is_active'))
+                                        <span class="text-danger">{{ $errors->first('is_active') }}</span>
                                     @endif
                                 </div>
                             </div>

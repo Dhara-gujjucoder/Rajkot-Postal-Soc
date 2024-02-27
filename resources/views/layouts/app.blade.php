@@ -56,7 +56,7 @@
                     </a>
                     @include('layouts.partials.topbar')
                 </header>
-                <div class="page-heading" style="min-height:80vh;padding:25px;">
+                <div class="page-heading" style="min-height:75vh;padding:25px;">
                     <div class="page-title pb-lg-5">
                         <div class="row">
                             <div class="col-12 col-md-6 order-md-1 order-last">
@@ -130,6 +130,29 @@
             }).showToast();
         </script>
     @endif
+    <script>
+        function show_success(msg) {
+            Toastify({
+                text: msg,
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "#4fbe87",
+            }).showToast();
+        }
+        function show_error(msg) {
+            Toastify({
+                text: msg,
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "#f27474",
+            }).showToast();
+        }
+        
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))

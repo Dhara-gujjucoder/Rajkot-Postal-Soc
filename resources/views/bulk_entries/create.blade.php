@@ -25,7 +25,6 @@
                                 class="col-md-2 col-form-label text-md-end">{{ __('Month') }}</label>
                             {{-- <label for="account_name" class="col-md-4 col-form-label text-md-end">{{__('Department')}}</label> --}}
                             <div class="col-md-6">
-                                {{-- {{dd($months)}} --}}
                                 <select class="choices form-select @error('month') is-invalid @enderror"
                                     aria-label="Permissions" id="month" name="month" style="height: 210px;">
                                     <option value="">{{ __('Select Month') }}</option>
@@ -49,8 +48,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('bulk_entries.store') }}" method="post" enctype="multipart/form-data"
-                        id="bulkform">
+                    <form action="{{ route('bulk_entries.store') }}" method="post" enctype="multipart/form-data" id="bulkform">
                         @csrf
 
                         {{-- for members of each department --}}
@@ -536,7 +534,7 @@
                     .user_id).val())) + Number($('#interest_' + department.id + '_' + member
                     .user_id).val());
                 $('#total_amount_' + department.id + '_' + member.user_id).val(totals['member_' + member
-                    .user_id].toFixed(2));
+                    .user_id].toFixed(0));
 
                 ledger_type.forEach(ledger => {
 
@@ -544,18 +542,18 @@
                         .id + '_' + member.user_id).val());
                     // console.log('#' + ledger + 'total_' + department.id);
                     $('#' + ledger + 'total_' + department.id).text(totals[ledger + department
-                        .id].toFixed(2));
+                        .id].toFixed(0));
 
                 });
             });
             ledger_type.forEach(ledger2 => {
                 $('#summary_' + ledger2 + 'total_' + department.id).val(totals[ledger2 +
-                    department.id].toFixed(2));
+                    department.id].toFixed(0));
                 totals[ledger2 + 'final'] += totals[ledger2 + department.id];
             });
         });
         ledger_type.forEach(ledger3 => {
-            $('#smr_' + ledger3 + 'total').text(totals[ledger3 + 'final'].toFixed(2));
+            $('#smr_' + ledger3 + 'total').text(totals[ledger3 + 'final'].toFixed(0));
         });
 
     }

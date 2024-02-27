@@ -18,6 +18,7 @@ use App\Http\Controllers\TempReportController;
 use App\Http\Controllers\DoubleEntryController;
 use App\Http\Controllers\LedgerEntryController;
 use App\Http\Controllers\LedgerGroupController;
+use App\Http\Controllers\LedgerShareController;
 use App\Http\Controllers\LoanSettingController;
 use App\Http\Controllers\MemberShareController;
 use App\Http\Controllers\ShareAmountController;
@@ -62,9 +63,18 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
 
     Route::get('/ledger-fixed-saving', [LedgerFixedSavingController::class, 'index'])->name('ledger_reports.fixed_saving.index');
     Route::get('/ledger-fixed-saving-export/{id}',[LedgerFixedSavingController::class,'fixed_saving_export'])->name('ledger_fixed_saving_export');
+    Route::post('/ledger-all-fixed-saving-export',[LedgerFixedSavingController::class,'all_fixed_saving_export'])->name('all_fixed_saving_export');
+
+    Route::get('/ledger-share', [LedgerShareController::class, 'index'])->name('ledger_reports.share_ledger.index');
 
     Route::get('/member_share_export', [TempReportController::class, 'member_share'])->name('tempreport.member_share');
     Route::get('/member_share-export', [TempReportController::class, 'member_share_export'])->name('share_export');
+    //***** END Excel *****/
+
+    Route::get('/get/member/history/{member}', [App\Http\Controllers\MemberController::class, 'getmember_history'])->name('member.history.get');
+    Route::post('/member/resign/{member}',[MemberController::class,'resign'])->name('member.resign');
+
+    Route::post('/double_entries/confirm',[DoubleEntryController::class,'confirm'])->name('double_entries.confirm');
 
     /*all modules*/
     Route::resources([

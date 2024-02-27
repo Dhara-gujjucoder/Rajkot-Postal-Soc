@@ -33,14 +33,20 @@ class DoubleEntryController extends Controller
         return view('double_entries.index', $data);
     }
 
+    public function confirm(Request $request){
+
+        $data['confirm'] = $request;
+        // dd($data['confirm']);
+        return response()->json(['success' => true, 'confirm' => view('double_entries.confirm',$data)->render()]);
+    }
+
     public function create(){
-        $data['count'] = MasterDoubleEntry::count() + 1;
+        $data['count'] = (MasterDoubleEntry::latest()->first()->id ?? 0) + 1;
         $data['no'] = str_pad($data['count'], 4, 0, STR_PAD_LEFT);
         $data['page_title'] = __('Add Double Entry');
         $data['ledger_accounts'] = LedgerAccount::whereIn('ledger_group_id',[2,4,5])->get();
         return view('double_entries.create', $data);
     }
-
 
     public function store(Request $request)
     {
@@ -54,7 +60,7 @@ class DoubleEntryController extends Controller
             'amount.*' => 'required'
         ]);
 
-        $data['count'] = MasterDoubleEntry::count() + 1;
+        $data['count'] = (MasterDoubleEntry::latest()->first()->id ?? 0) + 1;
         $data['no'] = str_pad($data['count'], 4, 0, STR_PAD_LEFT);
 
         $master_entry = new MasterDoubleEntry();
@@ -79,7 +85,7 @@ class DoubleEntryController extends Controller
                 $meta_entry->share = $request->share[$i] ?? '0';
                 $meta_entry->particular  = $request->particular[$i] ?? '';
                 $meta_entry->amount  = $request->amount[$i] ?? 0;
-                $meta_entry->type  = $request->type[$i]?? 0;
+                $meta_entry->type = $request->type[$i]?? 0;
                 $meta_entry->save();
 
                 if($request->type[$i] == 'credit'){
@@ -90,14 +96,9 @@ class DoubleEntryController extends Controller
 
                 if($request->share[$i]){
                     $ledger_account = LedgerAccount::find($request->ledger_ac_id[$i]);
-
-                    // dd($ledger_account);
                     $member = Member::find($ledger_account->member_id);
                     $no_of_share = $member->total_share + $request->share[$i];
-                    $this->member_share($member, $no_of_share);
-                    $member->total_share = $no_of_share;
-                    $member->save();
-                    // dd($this->member_share($member, $request->share[$i]));
+                    $this->update_member_share($member, $no_of_share);
                 }
             }
             // dd($cr_total.'credit----->debit'.$dr_total);
@@ -111,68 +112,79 @@ class DoubleEntryController extends Controller
             ->withSuccess(__('Double Entry is created successfully.'));
     }
 
-    public function edit(string $id)
+    public function show(string $id)
     {
         $master_entry = MasterDoubleEntry::findOrFail($id);
-        return view('double_entries.edit', [
+
+        return view('double_entries.show', [
             'master_entry' => $master_entry,
             'ledger_accounts' => LedgerAccount::whereIn('ledger_group_id',[2,4,5])->get(),
-            'page_title'=> __('Edit Double Entry')
+            'page_title'=> __('Double Entry Details')
         ]);
     }
 
-    public function update(Request $request,MasterDoubleEntry $double_entry): RedirectResponse
-    {
-        // $request->validate([
-        //     'description' => 'required',
-        //     'ledger_ac_id' => 'required|array|min:2',
-        //     'ledger_ac_id.*' => 'required',
-        //     'particular' => 'required|array',
-        //     'particular.*' => 'required',
-        //     'amount' => 'required|array',
-        //     'amount.*' => 'required'
-        // ]);
+    // public function edit(string $id)
+    // {
+    //     $master_entry = MasterDoubleEntry::findOrFail($id);
+    //     return view('double_entries.edit', [
+    //         'master_entry' => $master_entry,
+    //         'ledger_accounts' => LedgerAccount::whereIn('ledger_group_id',[2,4,5])->get(),
+    //         'page_title'=> __('Edit Double Entry')
+    //     ]);
+    // }
 
-        // $input = $request->only('date','description');
-        // $master_entry->update($input);
+    // public function update(Request $request,MasterDoubleEntry $double_entry): RedirectResponse
+    // {
+    //     // $request->validate([
+    //     //     'description' => 'required',
+    //     //     'ledger_ac_id' => 'required|array|min:2',
+    //     //     'ledger_ac_id.*' => 'required',
+    //     //     'particular' => 'required|array',
+    //     //     'particular.*' => 'required',
+    //     //     'amount' => 'required|array',
+    //     //     'amount.*' => 'required'
+    //     // ]);
 
-        // dd($double_entry);
-        $double_entry->date = $request->date;
-        $double_entry->description = $request->description;
-        $double_entry->save();
+    //     // $input = $request->only('date','description');
+    //     // $master_entry->update($input);
 
-        $meta_entry = MetaDoubleEntry::where('mde_id',$double_entry->id)->delete();
+    //     // dd($double_entry);
+    //     $double_entry->date = $request->date;
+    //     $double_entry->description = $request->description;
+    //     $double_entry->save();
 
-        if ($request->ledger_ac_id && $request->particular && $request->amount && $request->type) {
-            $count = 0;
-            $cr_total = 0;
-            $dr_total = 0;
-            $count = count($request->ledger_ac_id);
+    //     $meta_entry = MetaDoubleEntry::where('mde_id',$double_entry->id)->delete();
 
-            for ($i = 0; $i<$count; $i++) {
-                $meta_entry = new MetaDoubleEntry();
-                $meta_entry->mde_id  = $double_entry->id;
-                $meta_entry->ledger_ac_id  = $request->ledger_ac_id[$i];
-                $meta_entry->particular  = $request->particular[$i] ?? '';
-                $meta_entry->amount  = $request->amount[$i] ?? 0;
-                $meta_entry->type  = $request->type[$i]?? 0;
-                $meta_entry->save();
+    //     if ($request->ledger_ac_id && $request->particular && $request->amount && $request->type) {
+    //         $count = 0;
+    //         $cr_total = 0;
+    //         $dr_total = 0;
+    //         $count = count($request->ledger_ac_id);
 
-                if($request->type[$i] == 'credit'){
-                    $cr_total = $cr_total + (isset($request->amount[$i]) ? (int)$request->amount[$i] : 0);
-                } elseif($request->type[$i] == 'debit') {
-                    $dr_total = $dr_total + (isset($request->amount[$i]) ? (int)$request->amount[$i] : 0);
-                }
-            }
-            // dd($cr_total.'credit----->debit'.$dr_total);
-            $double_entry->credit_amount = $cr_total;
-            $double_entry->debit_amount = $dr_total;
-            $double_entry->save();
-        }
+    //         for ($i = 0; $i<$count; $i++) {
+    //             $meta_entry = new MetaDoubleEntry();
+    //             $meta_entry->mde_id  = $double_entry->id;
+    //             $meta_entry->ledger_ac_id  = $request->ledger_ac_id[$i];
+    //             $meta_entry->particular  = $request->particular[$i] ?? '';
+    //             $meta_entry->amount  = $request->amount[$i] ?? 0;
+    //             $meta_entry->type  = $request->type[$i]?? 0;
+    //             $meta_entry->save();
 
-        return redirect()->route('double_entries.index')
-        ->withSuccess(__('Ledger Entries is updated successfully.'));
-    }
+    //             if($request->type[$i] == 'credit'){
+    //                 $cr_total = $cr_total + (isset($request->amount[$i]) ? (int)$request->amount[$i] : 0);
+    //             } elseif($request->type[$i] == 'debit') {
+    //                 $dr_total = $dr_total + (isset($request->amount[$i]) ? (int)$request->amount[$i] : 0);
+    //             }
+    //         }
+    //         // dd($cr_total.'credit----->debit'.$dr_total);
+    //         $double_entry->credit_amount = $cr_total;
+    //         $double_entry->debit_amount = $dr_total;
+    //         $double_entry->save();
+    //     }
+
+    //     return redirect()->route('double_entries.index')
+    //     ->withSuccess(__('Ledger Entries is updated successfully.'));
+    // }
 
     public function destroy(MasterDoubleEntry $double_entry): RedirectResponse
     {

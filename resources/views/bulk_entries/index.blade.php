@@ -65,7 +65,9 @@
 @push('script')
     <script>
         $(function() {
-            var table = $('#table1').DataTable({});
+            var table = $('#table1').DataTable({
+                order: [[0, 'desc']]
+            });
         });
     </script>
 @endpush

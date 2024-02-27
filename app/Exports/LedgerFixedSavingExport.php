@@ -73,9 +73,9 @@ class LedgerFixedSavingExport implements FromCollection, WithMapping, ShouldAuto
                 $total,
             ];
         }
+        $all = ($total + $ledger_account->opening_balance);
         $entry[] = [];
-        $entry[]  = ['','','','',$total];
-
+        $entry[]  = ['','','','',$total,$all];
 
         return $entry;
     }

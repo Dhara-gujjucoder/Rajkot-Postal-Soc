@@ -47,6 +47,10 @@ class FinancialYearController extends Controller
             FinancialYear::query()->where('is_current', 1)->update(['is_current' => 0]);
             $input['is_current'] = 1;
         }
+        if ($request->is_active == 1) {
+            FinancialYear::query()->where('is_active', 1)->update(['is_active' => 0]);
+            $input['is_active'] = 1;
+        }
         FinancialYear::create($input);
 
         return redirect()->route('financial_year.index')
@@ -78,6 +82,10 @@ class FinancialYearController extends Controller
         if ($request->is_current == 1) {
             FinancialYear::query()->update(['is_current' => false]);
             $financial->update(['is_current' => true]);
+        }
+        if ($request->is_active == 1) {
+            FinancialYear::query()->update(['is_active' => false]);
+            $financial->update(['is_active' => true]);
         }
         return redirect()->route('financial_year.index')
             ->withSuccess(__('Financial Year updated successfully.'));

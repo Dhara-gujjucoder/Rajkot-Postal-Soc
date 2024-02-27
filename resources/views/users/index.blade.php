@@ -39,9 +39,10 @@
                                         @csrf
                                         @method('DELETE')
 
+                                        @can('view-user')
                                         <a href="{{ route('users.show', $user->id) }}" class="btn btn-outline-info btn-sm"><i
                                                 class="bi bi-eye"></i> {{__('Show')}}</a>
-
+                                            @endcan
                                         @if (in_array('Super Admin', $user->getRoleNames()->toArray() ?? []))
                                             {{-- @if (Auth::user()->hasRole('Admin'))
                                                 <a href="{{ route('users.edit', $user->id) }}"

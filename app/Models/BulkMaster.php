@@ -24,5 +24,6 @@ class BulkMaster extends Model
             $builder->where('year_id', currentYear()->id);
         });
     }
+    
 }
 

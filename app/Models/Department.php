@@ -20,6 +20,6 @@ class Department extends Model
 
     public function members()
     {
-        return $this->hasMany(Member::class, 'department_id', 'id');
+        return $this->hasMany(Member::class, 'department_id', 'id')->where('status',1);
     }
 }

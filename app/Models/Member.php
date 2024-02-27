@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Member extends Model
 {
     use HasFactory, SoftDeletes;
-    use HasFactory;
+
     protected $fillable = [
         'user_id',
         'uid',
@@ -43,66 +44,100 @@ class Member extends Model
         'status',
     ];
 
-
+    /* Relationship with user */
     public function user()
     {
         return $this->hasOne(User::class, 'id', 'user_id')->withTrashed();
     }
 
+    /* Relationship with department */
     public function department()
     {
         return $this->hasOne(Department::class,  'id', 'department_id');
     }
 
+    /* Attribute for get fullname with reg no */
     public function getFullnameAttribute()
     {
         return "{$this->user->name} ( $this->registration_no )";
     }
 
+    /* Relationship with user for get name */
     public function getNameAttribute()
     {
         return "{$this->user->name}";
     }
 
+    protected function Status(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => $value == 1 ? __('Active') : ($value ==  2  ? __('Resigned') :  __('Deactive')),
+        );
+    }
+
+    /* Attribute for get loan remaining amount */
+    public function getLoanRemainingAmountAttribute()
+    {
+        return loan_remaining_amount($this->id);
+    }
+
+      /* Attribute for get loan remaining amount */
+      public function getRemainingFixedSavingAttribute()
+      {
+          return remaining_fixed_saving($this->id);
+      }
+  
+    // Remaining fixed saving
+
+    /* Relationship of member to fixed_saving_ledger_account */
     public function fixed_saving_ledger_account()
     {
         return $this->hasOne(LedgerAccount::class, 'member_id', 'id')->where('ledger_group_id', 1);
     }
 
+    /* Relationship of member to share_ledger_account */
     public function share_ledger_account()
     {
         return $this->hasOne(LedgerAccount::class, 'member_id', 'id')->where('ledger_group_id', 2);
     }
 
+    /* Relationship of member to loan_ledger_account */
     public function loan_ledger_account()
     {
         return $this->hasOne(LedgerAccount::class, 'member_id', 'id')->where('ledger_group_id', 3);
     }
 
+    /* Relationship for get member all shares */
     public function shares()
     {
         return $this->hasMany(MemberShare::class, 'member_id', 'id')->where('status', 1);
     }
 
+    /* Relationship for get member all fixed_saving */
     public function fixed_saving()
     {
         return $this->hasMany(MemberFixedSaving::class, 'member_id', 'id')->where('status', 1);
     }
+
+    /* Relationship with current loan */
     public function loan()
     {
         return $this->hasOne(LoanMaster::class, 'member_id', 'id')->where('status', 1);
     }
 
+
+    /* Relationship with loan for get old loan */
     public function old_loan()
     {
         return $this->hasMany(LoanMaster::class, 'member_id', 'id')->where('status', 1);
     }
 
+    /* get member fixed saving */
     public function getMemberFixedAttribute()
     {
-        $fixed_saving['member_fixed_saving'] = BulkEntry::where('member_id', $this->id)->where('status', 2)->sum('fixed');
-        $fixed_saving['total_fixed_saving'] = count(getMonthsOfYear(currentYear()->id)) * current_fixed_saving()->monthly_saving;
-        $fixed_saving['remaining_fixed_saving'] = $fixed_saving['total_fixed_saving'] - $fixed_saving['member_fixed_saving'] > 0 ? $fixed_saving['total_fixed_saving'] - $fixed_saving['member_fixed_saving'] : 0;
+        $member = Member::find($this->id);
+        $fixed_saving['member_fixed_saving'] = $member->fixed_saving_ledger_account->opening_balance+$member->fixed_saving_ledger_account->current_balance;
+        $fixed_saving['remaining_fixed_saving'] = $member->remaining_fixed_saving;
         return $fixed_saving;
     }
 }

@@ -29,12 +29,11 @@ class BulkEntryPerDepartment implements FromCollection, WithTitle, WithMapping, 
      */
     public function collection()
     {
-        $entries =  BulkEntryModel::query()
-            ->where('month', $this->month)
+        $entries = BulkEntryModel::withTrashed()->where('month', $this->month)
             ->where('department_id', $this->department_id)->get();
             $entries->push(collect([
                 'Total'=> 12,
-                'principal_total' =>  $entries->sum('principal'),
+                'principal_total' => $entries->sum('principal'),
                 'interest_total' => $entries->sum('interest'),
                 'fixed_total' => $entries->sum('fixed'),
                 'ms_total' => $entries->sum('ms'),
@@ -58,6 +57,10 @@ class BulkEntryPerDepartment implements FromCollection, WithTitle, WithMapping, 
                 $bulk_entry['total_amount'],
             ];
         }else{
+            if(!$bulk_entry->member){
+                
+                // dd($bulk_entry);
+            }
             return [
                 $bulk_entry->member->uid,
                 $bulk_entry->member->user->name,
@@ -96,7 +99,7 @@ class BulkEntryPerDepartment implements FromCollection, WithTitle, WithMapping, 
     {
         return [
             // 'A' => 10,
-            'A' => 12,   
+            'A' => 12,
             'B' => 48,
             'C' => 10,
             'D' => 10,
@@ -116,5 +119,5 @@ class BulkEntryPerDepartment implements FromCollection, WithTitle, WithMapping, 
             // Style the first row as bold text.
             1    => ['font' => ['bold' => true]]
         ];
-    }     
+    }
 }

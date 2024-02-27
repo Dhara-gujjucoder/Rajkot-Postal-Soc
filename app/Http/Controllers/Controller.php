@@ -18,7 +18,7 @@ class Controller extends BaseController
     public function __construct() 
     {
         // Fetch the Site Settings object
-        $this->financial_year = FinancialYear::get();
+        $this->financial_year = FinancialYear::active()->get();
         // $current_year = $this->financial_year->where('is_current',1)->first();
         $this->current_year = $this->financial_year->where('is_current',1)->first();
         $this->setting =  Setting::get()->first();

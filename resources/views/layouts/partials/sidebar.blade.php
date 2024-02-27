@@ -196,23 +196,32 @@
                     </li>
                 @endcan
 
-                {{-- @canany(['edit-general-setting', 'loaninterest-setting', 'share-amount-setting', 'monthly-saving-setting']) --}}
+                @canany(['ledger-share-report', 'ledger-fixed-saving-report'])
                 <li class="sidebar-item has-sub {{ request()->is('admin/ledger-fixed-saving*') ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-window-split"></i>
                         <span>{{ __('Ledger Reports') }}</span>
                     </a>
                     <ul class="submenu {{ request()->is('admin/ledger-fixed-saving') ? 'active submenu-open' : '' }}">
-                        @canany(['edit-general-setting'])
+                        @canany(['ledger-fixed-saving-report'])
                             <li class="submenu-item {{ request()->is('admin/ledger-fixed-saving') ? 'active' : '' }}">
                                 <a href="{{ route('ledger_reports.fixed_saving.index') }}" class='submenu-link'>
                                     <span>{{ __('Fixed Saving') }}</span>
                                 </a>
                             </li>
                         @endcan
+
+                        @canany(['ledger-share-report'])
+                            <li class="submenu-item {{ request()->is('admin/ledger-fixed-saving') ? 'active' : '' }}">
+                                <a href="{{ route('ledger_reports.share_ledger.index') }}" class='submenu-link'>
+                                    <span>{{ __('Share Ledger') }}</span>
+                                </a>
+                            </li>
+                        @endcan
                     </ul>
                 </li>
-                {{-- @endcan --}}
+                @endcan
+
 
                 @canany(['edit-general-setting', 'loaninterest-setting', 'share-amount-setting', 'monthly-saving-setting'])
                     <li class="sidebar-item has-sub {{ request()->is('admin/general/setting/*') || request()->is('admin/shareamount*') || request()->is('admin/monthlysaving*') ? 'active' : '' }}">

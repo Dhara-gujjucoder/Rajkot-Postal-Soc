@@ -41,6 +41,11 @@ class MemberController extends Controller
         parent::__construct();
     }
 
+    public function getmember_history(Member $member){
+        $data['member'] = $member;
+        return response()->json(['success' => true, 'history' => view('member.history', $data)->render()]);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -57,15 +62,16 @@ class MemberController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $show_btn = '<a href="' . route('members.show', $row->member->id) . '"
-                    class="btn btn-outline-info btn-sm"><i class="bi bi-eye"></i>' . __('Show') . '</a>';
-                    $edit_btn = '<a href="' . route('members.edit', $row->member->id) . '"
-                    class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square"></i>' . __('Edit') . '</a>';
-                    $delete_btn = '<form action="' . route('members.destroy', $row->member->id) . '" method="post">' . csrf_field() . method_field('DELETE') . '<button type="submit" class="btn btn-outline-danger btn-sm"
-                    onclick="return confirm(' . __('Do you want to delete this salary deduction?') . ';"><i class="bi bi-trash"></i>' . __('Delete') . '</button></form>';
+                    class="btn btn-outline-info btn-sm"><i class="bi bi-eye-fill"></i> ' . __('Show') . '</a>';
+                    $edit_btn = '&nbsp;<a href="' . route('members.edit', $row->member->id) . '"
+                    class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-fill"></i> ' . __('Edit') . '</a>';
+                    $delete_btn = '&nbsp;<form action="' . route('members.destroy', $row->member->id) . '" method="post">' . csrf_field() . method_field('DELETE') . '<button type="submit" class="btn btn-outline-danger btn-sm"
+                    onclick="return confirm(`'.__('Do you want to delete this user?').'`);"><i class="bi bi-trash-fill"></i> ' . __('Delete') . '</button></form>';
+                    $resign_btn = ($row->member->getRawOriginal('status') == 1 ? '&nbsp;<button type="button" class="btn btn-outline-primary btn-sm" onclick="load_member_details('.$row->member->id.')" data-bs-toggle="modal" data-bs-target="#loan_settle"><i class="bi bi-r-circle-fill"></i> ' . __('Resign') . '</button>' : '');
                     $action_btn = '';
                     (Auth::user()->can('view-member')) ? $action_btn .= $show_btn : '';
-                    (Auth::user()->can('edit-member')) ? $action_btn .= $edit_btn : '';
-                    (Auth::user()->can('delete-member')) ? $action_btn .= $delete_btn : '';
+                    (Auth::user()->can('edit-member') && ($row->member->getRawOriginal('status') == 1)) ? $action_btn .= $edit_btn : '';
+                    (Auth::user()->can('delete-member')) ? $action_btn .= $delete_btn.$resign_btn : '';
                     return $action_btn;
                 })
                 ->filterColumn('name', function ($query, $search) {
@@ -170,7 +176,7 @@ class MemberController extends Controller
             }
         }
 
-        $this->member_share($member, $member->total_share);
+        $this->update_member_share($member, $member->total_share);
 
         return redirect()->route('members.index')
             ->withSuccess(__('New member is added successfully.'));
@@ -318,7 +324,7 @@ class MemberController extends Controller
         unset($input['name'], $input['email'], $input['search_terms'], $input['password'], $input['is_member']);
         $member->update($input);
         // $member->syncRoles(['member']);
-        $this->member_share($member, $member->total_share);
+        $this->update_member_share($member, $member->total_share);
 
         // dd($member->share_total_price);
 
@@ -349,10 +355,22 @@ class MemberController extends Controller
      * Display the specified resource.
      */
 
+     public function resign(Member $member)
+     {
+        // dd( $member);
+         $member->update(['status' => 2]);
+         return response()->json(['success' => true, 'member' => $member,'message' => __('Member Resigned SuccessFully')]);
+     }
+
+    /**
+     * Display the specified resource.
+     */
+
     public function getmember(Member $member)
     {
         $member = Member::where('id', $member->id)->with(['loan', 'shares'])->get()->first();
         $member->member_fixed_saving = $member->member_fixed;
+        $member->loan_remaining_amount = $member->loan_remaining_amount;
         return response()->json(['success' => true, 'member' => $member]);
     }
 }
