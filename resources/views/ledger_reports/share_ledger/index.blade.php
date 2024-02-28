@@ -11,31 +11,34 @@
                 <div class="form">
 
                 </div>
+                <form method="post" action="{{ route('all_share_ledger_export') }}" id="export_saving">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-success btn-md float-start my-3">{{ __('All Export') }}</button>
+                </form>
             </div>
 
             <div class="pt-2 mt-2">
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="table1">
+                    <table class="table table-bordered" id="table1" align="center">
                         <thead>
                             <tr>
                                 <th>{{ __('Member') }}</th>
                                 <th>{{ __('Opening Balance') }}</th>
-                                <th>{{ __('Total Purchase') }} </th>
-                                <th>{{ __('Total Sold') }} </th>
+                                <th>{{ __('Total Purchase') }}</th>
+                                <th>{{ __('Total Sold') }}</th>
                                 <th>{{ __('Net Balance') }}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($members as $key => $member)
-
+                            {{-- @foreach ($members as $key => $member)
                                 <tr>
                                     <td>{{ $member->name }}</td>
-                                    <td>{{ $member->share_ledger_account->opening_balance}}</td>
+                                    <td>{{ $member->share_ledger_account->opening_balance }}</td>
                                     <td>{{ $member->purchased_share->sum('share_sum_share_amount') }}</td>
                                     <td>{{ $member->sold_share->sum('share_sum_share_amount') }}</td>
-                                    <td>{{ $member->share_ledger_account->opening_balance+$member->purchased_share->sum('share_sum_share_amount')-$member->sold_share->sum('share_sum_share_amount')  }}</td>
+                                    <td>{{ $member->share_ledger_account->opening_balance + $member->purchased_share->sum('share_sum_share_amount') - $member->sold_share->sum('share_sum_share_amount') }}</td>
                                 </tr>
-                            @endforeach
+                            @endforeach --}}
                         </tbody>
                     </table>
                 </div>
@@ -45,86 +48,41 @@
 </section>
 @endsection
 
-{{-- @push('script')
+@push('script')
 <script>
     $(function() {
         var table = $('#table1').DataTable({
-
-            // "iDisplayLength": 25,
             "pageLength": 25,
 
             processing: true,
             serverSide: true,
-            ajax: "{{ route('member_share.index') }}",
+            ajax: "{{ route('ledger_reports.share_ledger.index') }}",
             columns: [{
-                    data: 'member_id',
-                    name: 'member_id',
+                    data: 'id',
+                    name: 'id',
                     searchable: true
                 },
                 {
-                    data: 'share_code',
-                    name: 'share_code',
+                    data: 'opening_balance',
+                    name: 'opening_balance',
                     searchable: true
                 },
                 {
-                    data: 'share_amount',
-                    name: 'share_amount'
+                    data: 'purchased_share',
+                    name: 'purchased_share'
                 },
                 {
-                    data: 'purchase_on',
-                    name: 'purchase_on'
+                    data: 'sold_share',
+                    name: 'sold_share'
                 },
                 {
-                    data: 'status',
-                    name: 'status'
+                    data: 'net_balance',
+                    name: 'net_balance'
                 },
             ],
+
         });
 
-        // $('#table1_filter').after('<div class="ms-5">Total Active share</div>');
-
-        $('#member_id').on('change', function() {
-            table
-                .columns($(this).data('column'))
-                .search($(this).val())
-                .draw();
-        });
-        $('#status').on('change', function() {
-            table
-                .columns($(this).data('column'))
-                .search($(this).val())
-                .draw();
-        });
     });
-
-    function changeStatus(share_id) {
-        var cc = confirm(`{{ __('Do you really want to Sold the share?') }}`);
-
-        if (cc) {
-            var url = "{{ route('member_share.update', ':id') }}";
-            url = url.replace(':id', share_id);
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                url: url,
-                type: 'PATCH',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    status: '0'
-                },
-                dataType: 'JSON',
-                success: function(data) {
-                    if(data.status){
-                        location.reload();
-                    }
-                }
-            });
-        }
-    }
-
-    // $('#table1').dataTable({
-    //     "iDisplayLength": 25,
-    // });
 </script>
-@endpush --}}
+@endpush
