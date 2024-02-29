@@ -10,7 +10,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ShareLedgerController extends Controller
 {
-    public function index(Request $request )
+    public function index(Request $request)
     {
         $data['page_title'] = __('Share Ledger');
         // $data['members'] = Member::withTrashed()->get();
@@ -20,6 +20,11 @@ class ShareLedgerController extends Controller
             return DataTables::of($data)
                 ->editColumn('id', function ($row) {
                     return $row->name;
+                })
+                ->filterColumn('id', function ($query, $search) {
+                    $query->whereHas('user', function ($q) use ($search) {
+                        $q->where('name', 'Like', '%' . $search . '%');
+                    });
                 })
                 ->addColumn('opening_balance', function ($row) {
                     return $row->share_ledger_account->opening_balance;
@@ -36,7 +41,6 @@ class ShareLedgerController extends Controller
                 ->rawColumns(['status'])
                 ->make(true);;
         }
-
         return view('ledger_reports.share_ledger.index', $data);
     }
 
