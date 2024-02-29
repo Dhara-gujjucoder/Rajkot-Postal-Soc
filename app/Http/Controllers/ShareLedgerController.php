@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Member;
+use App\Models\BulkMaster;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Exports\ShareLedgerExport;
@@ -12,6 +13,7 @@ class ShareLedgerController extends Controller
 {
     public function index(Request $request)
     {
+
         $data['page_title'] = __('Share Ledger');
         // $data['members'] = Member::withTrashed()->get();
 
@@ -46,7 +48,7 @@ class ShareLedgerController extends Controller
 
     public function all_share_ledger_export(Request $request)
     {
-        return Excel::download(new ShareLedgerExport(), 'Ledger-Share.xlsx');
+        return Excel::download(new ShareLedgerExport(), 'Ledger-Share '.$this->current_year->title.'.xlsx');
     }
 
 
