@@ -38,7 +38,7 @@ class BulkEntryController extends Controller
     {
         $user = Auth::user();
         $months = getMonthsOfYear($this->current_year->id);
-        $data['bulk_entries'] = BulkMaster::orderBy('id','desc')->get();
+        $data['bulk_entries'] = BulkMaster::orderBy('id', 'desc')->get();
         // dd($data['bulk_entries'] );
         $data['page_title'] = __('Bulk Entries');
         return view('bulk_entries.index', $data);
@@ -59,8 +59,8 @@ class BulkEntryController extends Controller
         $data['total']['total_amount'] = 0;
 
         $data['months'] = getMonthsOfYear($this->current_year->id);
-        $data['previous_month'] = BulkEntryMaster::get()->last()->month ?? (currentYear()->start_month-1).'-'.currentYear()->start_year;
-        // dd($data['previous_month']);    
+        $data['previous_month'] = BulkEntryMaster::get()->last()->month ?? (currentYear()->start_month - 1) . '-' . currentYear()->start_year;
+        // dd($data['previous_month']);
         $data['next_month'] = date('m-Y', strtotime(date('01-' . $data['previous_month']) . " +1 month"));
         foreach ($data['months'] as $key => $month) {
             $entry = BulkMaster::where('month', $month['value'])->first();
@@ -74,12 +74,12 @@ class BulkEntryController extends Controller
                 $prefill = BulkEntry::where('user_id', $item->user_id)->where('department_id', $department->id)->where('month', $data['previous_month'])->first();
                 // dump($item->id);
                 // dd($data['next_month']);
-                $loan_emi = LoanEMI::where('member_id',$item->id)->where('month',$data['next_month'])->where('status',1)->first();
+                $loan_emi = LoanEMI::where('member_id', $item->id)->where('month', $data['next_month'])->where('status', 1)->first();
                 $item->principal = $loan_emi->emi ?? 0;
                 $item->interest = $loan_emi->interest_amt ?? 0;
-                $item->fixed = MemberFixedSaving::where('member_id',$item->id)->where('month',$data['next_month'])->where('status',1)->first()->fixed_amount ?? 0;
+                $item->fixed = MemberFixedSaving::where('member_id', $item->id)->where('month', $data['next_month'])->where('status', 1)->first()->fixed_amount ?? 0;
                 $item->ms =  0;
-                $item->total_amount += $item->principal+$item->interest+$item->fixed+$item->ms;
+                $item->total_amount += $item->principal + $item->interest + $item->fixed + $item->ms;
                 // $department->{$value . '_total'} += $item->{$value};
                 foreach ($data['ledger_type'] as $key => $value) {
                     // for get department wise total
@@ -108,6 +108,7 @@ class BulkEntryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
     public function store(Request $request)
     {
         $request->validate([
@@ -175,10 +176,9 @@ class BulkEntryController extends Controller
                     ]);
                 }
             }
-
         } catch (\Throwable $th) {
             return redirect()->route('bulk_entries.index')
-            ->withError(__('Something went wrong'));
+                ->withError(__('Something went wrong'));
         }
 
         return redirect()->route('bulk_entries.index')
@@ -200,7 +200,7 @@ class BulkEntryController extends Controller
     {
 
         $data['bulk_master'] = BulkMaster::where('id', $id)->first();
-        if($data['bulk_master']->getRawOriginal('status') == 2){
+        if ($data['bulk_master']->getRawOriginal('status') == 2) {
             return redirect()->back()->withError(__('Bulk Entry already completed.'));
         }
         $data['bulk_entry_master'] = BulkEntryMaster::where('bulk_master_id', $data['bulk_master']->id)->get();
@@ -223,13 +223,13 @@ class BulkEntryController extends Controller
             $department = Department::find($bulk_entry_master->department_id);
             DB::enableQueryLog();
             $bulk_entry_master = BulkEntryMaster::with('members')->where('bulk_master_id', $data['bulk_master']->id)
-            ->where('department_id',$bulk_entry_master->department_id)->first();
+                ->where('department_id', $bulk_entry_master->department_id)->first();
             // dd($bulk_entry_master);
             // dd(DB::getQueryLog());
             // dd($data['bulk_master']->id,$department->id);
             $members = $bulk_entry_master->members;
             // dd($members);
-            $members->map(function ($item, $subkey) use ($data, $department,$key) {
+            $members->map(function ($item, $subkey) use ($data, $department, $key) {
                 $prefill = BulkEntry::where('user_id', $item->user_id)->where('department_id', $department->id)->where('month', $data['previous_month'])->first();
                 foreach ($data['ledger_type'] as $skey => $value) {
                     // for prefill edit value
@@ -250,7 +250,7 @@ class BulkEntryController extends Controller
             $data['total']['total_amount'] += $data['departments'][$key]->total_amount_total;
             $data['departments'][$key]->is_ms_applicable = $data['bulk_master']->is_ms_applicable ?? 0;
             $data['departments'][$key]->ms_value = $data['bulk_master']->ms_value ?? 0;
-        }   
+        }
         // dd($data['departments']);
         return view('bulk_entries.edit', $data);
     }
@@ -296,9 +296,9 @@ class BulkEntryController extends Controller
             // dd($department->members()->withTrashed()->get());
             foreach ($bulk_entry_master[$key]->members as $subkey => $member) {
                 // $member = Member::withTrashed()->where('user_id',$user_id)->first();
-               
+
                 // $department = Department::where('id',$request->department_id[$subkey])->first();
-    
+
                 BulkEntry::create([
                     'user_id' => $member->user_id,
                     'member_id' => $member->id,
@@ -335,7 +335,7 @@ class BulkEntryController extends Controller
     public function export(string $id)
     {
         $month = BulkMaster::where('id', $id)->first()->month;
-        $filename = date('M-Y',strtotime('01-'.$month)).'-'.$this->current_year->title;
-        return (new ExportsBulkEntry($month))->download($filename.'.xlsx');
+        $filename = date('M-Y', strtotime('01-' . $month)) . '-' . $this->current_year->title;
+        return (new ExportsBulkEntry($month))->download($filename . '.xlsx');
     }
 }

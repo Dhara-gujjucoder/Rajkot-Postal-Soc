@@ -43,6 +43,16 @@ class BulkEntryMaster extends Model
     {
         return $this->hasOne(Receipt::class, 'id', 'receipt_id');
     }
+    public function department()
+    {
+        return $this->hasOne(Department::class, 'id', 'department_id');
+    }
+
+    public function bulk_entries()
+    {
+        return $this->hasMany(BulkEntry::class, 'bulk_entry_master_id', 'id');
+    }
+
     public function members()
     {
         return $this->hasManyThrough(Member::class,BulkEntry::class,'bulk_entry_master_id','id','id','member_id')->withTrashed();

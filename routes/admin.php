@@ -24,6 +24,7 @@ use App\Http\Controllers\MemberShareController;
 use App\Http\Controllers\ShareAmountController;
 use App\Http\Controllers\ShareLedgerController;
 use App\Http\Controllers\FinancialYearController;
+use App\Http\Controllers\JournelReportController;
 use App\Http\Controllers\LedgerAccountController;
 use App\Http\Controllers\MonthlySavingController;
 use App\Http\Controllers\SalaryDeductionController;
@@ -68,6 +69,9 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
 
     Route::get('/ledger-share', [ShareLedgerController::class, 'index'])->name('ledger_reports.share_ledger.index');
     Route::post('/ledger-share-export',[ShareLedgerController::class,'all_share_ledger_export'])->name('all_share_ledger_export');
+
+    Route::get('/journel-report', [JournelReportController::class, 'index'])->name('ledger_reports.journel_report.index');
+    Route::post('/journel-report-export',[JournelReportController::class,'journel_report_export'])->name('journel_report_export');
 
     Route::get('/member_share_export', [TempReportController::class, 'member_share'])->name('tempreport.member_share');
     Route::get('/member_share-export', [TempReportController::class, 'member_share_export'])->name('share_export');

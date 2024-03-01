@@ -24,7 +24,7 @@ class LedgerFixedSavingController extends Controller
     {
         $ledger_acc = LedgerAccount::where('id', $id)->get()->first();
         $reg_id = $ledger_acc->member->registration_no;
-        return Excel::download(new LedgerFixedSavingExport($id), 'Member-Fixed-Saving-'.($reg_id).' '. $this->current_year->title.'.xlsx');
+        return Excel::download(new LedgerFixedSavingExport($id), 'Member-Fixed-Saving-'. $reg_id .' '. $this->current_year->title.'.xlsx');
     }
 
     public function all_fixed_saving_export(Request $request)

@@ -17,10 +17,10 @@ class BulkEntry implements FromCollection,WithMultipleSheets
         $this->month = $month;
     }
 
-
     /**
     * @return \Illuminate\Support\Collection
     */
+
     public function collection()
     {
         //

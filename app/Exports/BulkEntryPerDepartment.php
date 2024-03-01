@@ -59,7 +59,7 @@ class BulkEntryPerDepartment implements FromCollection, WithTitle, WithMapping, 
         }else{
             if(!$bulk_entry->member){
                 
-                // dd($bulk_entry);
+                dd($bulk_entry);
             }
             return [
                 $bulk_entry->member->uid,

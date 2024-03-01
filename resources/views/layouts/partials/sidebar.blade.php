@@ -212,9 +212,17 @@
                         @endcan
 
                         @canany(['ledger-share-report'])
-                            <li class="submenu-item {{ request()->is('admin/ledger-fixed-saving') ? 'active' : '' }}">
+                            <li class="submenu-item {{ request()->is('admin/ledger-share-report') ? 'active' : '' }}">
                                 <a href="{{ route('ledger_reports.share_ledger.index') }}" class='submenu-link'>
                                     <span>{{ __('Share Ledger') }}</span>
+                                </a>
+                            </li>
+                        @endcan
+
+                        @canany(['journel-report'])
+                            <li class="submenu-item {{ request()->is('admin/journel-report') ? 'active' : '' }}">
+                                <a href="{{ route('ledger_reports.journel_report.index') }}" class='submenu-link'>
+                                    <span>{{ __('Journel Report') }}</span>
                                 </a>
                             </li>
                         @endcan
@@ -238,7 +246,6 @@
                                     </a>
                                 </li>
                             @endcan
-
                             @canany(['share-amount-setting'])
                                 <li class="submenu-item {{ request()->is('admin/shareamount/*') ? 'active' : '' }}">
                                     <a href="{{ route('shareamount.index') }}" class='submenu-link'>
