@@ -127,7 +127,7 @@ class MemberController extends Controller
     public function create(): View
     {
         return view('member.create', [
-            'departments' => Department::get(),
+            'departments' => Department::whereNotIn('id',['5'])->get(),
             'minimum_share' => ShareAmount::where('is_active', 1)->pluck('minimum_share')->first(),
             'roles' => Role::pluck('name')->all(),
             'page_title' => __('Add Member')
@@ -288,7 +288,7 @@ class MemberController extends Controller
         return view('member.edit', [
             'shares' => MemberShare::where('member_id', $member->id)->get(),
             // dd(MemberShare::where('member_id',$member->id)->get()),
-            'departments' => Department::get(),
+            'departments' => Department::whereNotIn('id',['5'])->get(),
             'minimum_share' => ShareAmount::where('is_active', 1)->pluck('minimum_share')->first(),
 
             'user' => $member,

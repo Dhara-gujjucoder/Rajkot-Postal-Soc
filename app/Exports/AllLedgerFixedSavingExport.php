@@ -71,22 +71,7 @@ class AllLedgerFixedSavingExport implements FromCollection, WithMapping, ShouldA
                     return $query->where('uid', $to);
                 });
             })
-            // ->when($this->month_from && $this->month_to, function ($q) use ($months){
-            //     $q->with(['member.fixed_saving' => function($query) use ($months){
-            //         // dd($months->toArray());
-            //         $query->whereIn('month',$months->toArray());
-            //     }]);
-            // })
-            // ->when($this->month_from && $this->month_to === null, function ($q) use ($months){
-            //     $q->with(['member.fixed_saving' => function($query) use ($months){
-            //         $query->where('month', $months->toArray());
-            //     }]);
-            // })
-            // ->when($this->month_from === null && $this->month_to , function ($q) use ($months){
-            //     $q->with(['member.fixed_saving' => function($query) use ($months){
-            //         $query->where('month', $months->toArray());
-            //     }]);
-            // })
+
             ->when($this->month_from || $this->month_to, function ($q) use ($months,$all_months) {
                 $q->with(['member.fixed_saving' => function ($query) use ($months,$all_months) {
 
