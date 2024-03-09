@@ -187,7 +187,7 @@
    "Cheque number":"ચેક નંબર",
    "Minimum Share": "ન્યૂનતમ શેર",
    "View Member Shares": "સભ્યના શેર જુઓ",
-   "Ledger Account Id": "લેજર ખાતા આઈડી",
+   "Ledger Account Id": "ખાતાવહીના ખાતા આઈડી",
    "Member Id": "સભ્ય આઈડી",
    "Share Code": "શેર કોડ",
    "All Share": "બધા શેર",
@@ -309,7 +309,12 @@
    "Add New Bulk Entry": "નવી બલ્ક એન્ટ્રી ઉમેરો",
    "Add Double Entry": "ડબલ એન્ટ્રી ઉમેરો",
    "Double Entry Details": "ડબલ એન્ટ્રીની વિગતો",
-    "Select Ledger Account":"લેજર એકાઉન્ટ પસંદ કરો",
+    "Select Ledger Account":"ખાતાવહી એકાઉન્ટ પસંદ કરો",
+    "Share Ledger" : "શેર ખાતાવહી",
+    "Total Purchase": "કુલ ખરીદી",
+    "Total Sold": "કુલ વેચાણ",
+    "Net Balance": "નેટ બેલેન્સ",
+    "Journel Report": "જર્નલ રિપોર્ટ",
     "All fields are required.": "બધા ક્ષેત્રો જરૂરી છે.",
    "NOTE" :"નોંધ",
     "The details of this double entry cannot be updated. Please confirm the information and then save it.":"આ ડબલ એન્ટ્રીની વિગતો અપડેટ કરી શકાતી નથી. કૃપા કરીને માહિતીની પુષ્ટિ કરો અને પછી તેને સાચવો.",
@@ -393,4 +398,6 @@
    "Fixed Saving Amount":"સ્થિર બચત રકમ",
    "The :attribute must be greater than :value.":":attribute :value કરતાં મોટી હોવી જોઈએ.",
    "This member is already exist as guarantor in following loan account.": "આ સભ્ય પહેલાથી જ નીચેના લોન ખાતામાં બાંયધરી આપનાર તરીકે અસ્તિત્વમાં છે."
+
+
 }

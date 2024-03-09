@@ -80,6 +80,7 @@
                     <div class="content-wrapper">
 
                         @yield('content')
+
                     </div>
                 </div>
 
@@ -151,7 +152,7 @@
                 backgroundColor: "#f27474",
             }).showToast();
         }
-        
+
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

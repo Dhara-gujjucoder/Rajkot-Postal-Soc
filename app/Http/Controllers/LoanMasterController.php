@@ -162,7 +162,7 @@ class LoanMasterController extends Controller
     public function settle_old_loan($member_id)
     {
         $old_loan = LoanMaster::where('member_id', $member_id)->active()->first();
-        $old_loan->update(['status' => 3]);
+        $old_loan->update(['status' => 3,'loan_settlment_month' => date('d-m-Y')]);
         $old_loan->loan_emis()->where('status',1)->update(['status' => 3]);
     }
 
@@ -218,6 +218,7 @@ class LoanMasterController extends Controller
         if ($request->amount > 0) {
             $loan->is_old_loan_settled = 1;
             $loan->loan_settlement_amt = $request->amount;
+            $loan->loan_settlment_month = date('d-m-Y');
             $loan->bank_name = $request->bank_name;
             $loan->cheque_no = $request->cheque_no;
             $loan->payment_type = $request->payment_type;

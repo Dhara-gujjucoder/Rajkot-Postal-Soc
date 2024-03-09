@@ -197,37 +197,37 @@
                 @endcan
 
                 @canany(['ledger-share-report', 'ledger-fixed-saving-report'])
-                <li class="sidebar-item has-sub {{ request()->is('admin/ledger-fixed-saving*') ? 'active' : '' }}">
-                    <a href="#" class="sidebar-link">
-                        <i class="bi bi-window-split"></i>
-                        <span>{{ __('Ledger Reports') }}</span>
-                    </a>
-                    <ul class="submenu {{ request()->is('admin/ledger-fixed-saving') ? 'active submenu-open' : '' }}">
-                        @canany(['ledger-fixed-saving-report'])
-                            <li class="submenu-item {{ request()->is('admin/ledger-fixed-saving') ? 'active' : '' }}">
-                                <a href="{{ route('ledger_reports.fixed_saving.index') }}" class='submenu-link'>
-                                    <span>{{ __('Fixed Saving') }}</span>
-                                </a>
-                            </li>
-                        @endcan
+                    <li class="sidebar-item has-sub {{ request()->is('admin/ledger-fixed-saving*') ? 'active' : '' }}">
+                        <a href="#" class="sidebar-link">
+                            <i class="bi bi-window-split"></i>
+                            <span>{{ __('Ledger Reports') }}</span>
+                        </a>
+                        <ul class="submenu {{ request()->is('admin/ledger-fixed-saving') ? 'active submenu-open' : '' }}">
+                            @canany(['ledger-fixed-saving-report'])
+                                <li class="submenu-item {{ request()->is('admin/ledger-fixed-saving') ? 'active' : '' }}">
+                                    <a href="{{ route('ledger_reports.fixed_saving.index') }}" class='submenu-link'>
+                                        <span>{{ __('Fixed Saving') }}</span>
+                                    </a>
+                                </li>
+                            @endcan
 
-                        @canany(['ledger-share-report'])
-                            <li class="submenu-item {{ request()->is('admin/ledger-share-report') ? 'active' : '' }}">
-                                <a href="{{ route('ledger_reports.share_ledger.index') }}" class='submenu-link'>
-                                    <span>{{ __('Share Ledger') }}</span>
-                                </a>
-                            </li>
-                        @endcan
+                            @canany(['ledger-share-report'])
+                                <li class="submenu-item {{ request()->is('admin/ledger-share-report') ? 'active' : '' }}">
+                                    <a href="{{ route('ledger_reports.share_ledger.index') }}" class='submenu-link'>
+                                        <span>{{ __('Share Ledger') }}</span>
+                                    </a>
+                                </li>
+                            @endcan
 
-                        @canany(['journel-report'])
-                            <li class="submenu-item {{ request()->is('admin/journel-report') ? 'active' : '' }}">
-                                <a href="{{ route('ledger_reports.journel_report.index') }}" class='submenu-link'>
-                                    <span>{{ __('Journel Report') }}</span>
-                                </a>
-                            </li>
-                        @endcan
-                    </ul>
-                </li>
+                            @canany(['journel-report'])
+                                <li class="submenu-item {{ request()->is('admin/journel-report') ? 'active' : '' }}">
+                                    <a href="{{ route('ledger_reports.journel_report.index') }}" class='submenu-link'>
+                                        <span>{{ __('Journel Report') }}</span>
+                                    </a>
+                                </li>
+                            @endcan
+                        </ul>
+                    </li>
                 @endcan
 
 

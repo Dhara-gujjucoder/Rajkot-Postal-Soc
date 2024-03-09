@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Exports\JournelReport;
 use App\Exports\JournelReportExport;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 
 class JournelReportController extends Controller
 {
     public function index(Request $request)
     {
-
+        // dd(bcrypt('1234'));
         $data['page_title'] = __('Journel Report');
 
         return view('ledger_reports.journel_report.index', $data);
