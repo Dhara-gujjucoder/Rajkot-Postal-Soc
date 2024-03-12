@@ -42,6 +42,7 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
 
     public function map($master_double_entry): array
     {
+
         // dd($master_double_entry);
         $entry = [
             [],
@@ -52,11 +53,12 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
 
         ];
         if (isset($master_double_entry['data'])) {
+            $credit_total = 0;
+            $debit_total = 0;
 
             // dd($master_double_entry['data']);
             foreach ($master_double_entry['data'] as $key => $double_entry) {
-                // $credit_total = 0;
-                // $debit_total = 0;
+
 
 
                 $credit_entry = $double_entry->meta_entry()->where('type', 'credit')->get();
@@ -71,6 +73,11 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
                     $credit_amount = isset($credit_entry[$i]) && $credit_entry[$i]->type == 'credit' ? $credit_entry[$i]->amount : '';
                     $debit_particular = isset($debit_entry[$i]) && $debit_entry[$i]->type == 'debit' ? $debit_entry[$i]->particular : '';
                     $debit_amount = isset($debit_entry[$i]) && $debit_entry[$i]->type == 'debit' ? $debit_entry[$i]->amount : '';
+                    // $credit_total = $credit_total+$credit_amount;
+                    // $debit_total   =  $debit_total+$debit_amount;
+                    $credit_total += is_numeric($credit_amount) ? $credit_amount : 0;
+                    $debit_total += is_numeric($debit_amount) ? $debit_amount : 0;
+
 
                     $entry[] = ['', $credit_particular, $credit_amount, $debit_particular, $debit_amount];
                 }
@@ -92,7 +99,7 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
 
 
         $entry[] = ['', '', '', '', '',];
-        $entry[]  = ['', '', 'TOTAL', '', 'TOTAL'];
+        $entry[]  = ['', 'TOTAL', $credit_total, '', $debit_total];
 
         return $entry;
     }
@@ -135,13 +142,13 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
             ]);
             $row = $row + 7;
 
-                foreach ($double_entry['data'] as $key => $value) {
-                    # code...
-                    $credit_entry = $value->meta_entry()->where('type', 'credit')->get();
-                    $debit_entry = $value->meta_entry()->where('type', 'debit')->get();
-                    $count = max($credit_entry->count(), $debit_entry->count());
-                    $row += $count;
-                }
+            foreach ($double_entry['data'] as $key => $value) {
+                # code...
+                $credit_entry = $value->meta_entry()->where('type', 'credit')->get();
+                $debit_entry = $value->meta_entry()->where('type', 'debit')->get();
+                $count = max($credit_entry->count(), $debit_entry->count());
+                $row += $count;
+            }
         }
     }
 }
