@@ -137,6 +137,7 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
             $int = 0;
             $fix = 0;
             $m_s = 0;
+            $total = 0;
 
             foreach ($bulk_entry_master['department_total'] as $key => $value) {
                 // dd( $value[2]);

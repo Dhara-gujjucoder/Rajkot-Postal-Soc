@@ -35,7 +35,7 @@ class HomeController extends Controller
         // dd($user->hasRole('Super Admin'));
         $user->syncPermissions();
         // dd(Hash::make('rajkotpostalsoc12#'));
-        dd($user->can('create-double_entries'));
+        // dd($user->can('create-double_entries'));
         //   dd($user->can('view-user'));
         $data['page_title'] = __('Dashboard');
         $data['total_members'] = Member::count();

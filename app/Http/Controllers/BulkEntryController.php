@@ -178,16 +178,16 @@ class BulkEntryController extends Controller
                         'status' => $request->status,
                     ]);
 
-                    $fixed_saving_entry = MemberFixedSaving::create([
-                        'ledger_account_id' => $member->fixed_saving_ledger_account->id ?? 0,
-                        'member_id' => $member->id,
-                        'month' => $request->month,
-                        'fixed_amount' => $request->{'fixed_' . $department->id . '_' . $member->user_id},
-                        'year_id' => $this->current_year->id,
-                        'status' => 1
-                    ]);
-                    $member_fixed_saving = $member->fixed_saving()->sum('fixed_amount');
-                    $member->fixed_saving_ledger_account->update(['current_balance' => $member_fixed_saving]);
+                    // $fixed_saving_entry = MemberFixedSaving::create([
+                    //     'ledger_account_id' => $member->fixed_saving_ledger_account->id ?? 0,
+                    //     'member_id' => $member->id,
+                    //     'month' => $request->month,
+                    //     'fixed_amount' => $request->{'fixed_' . $department->id . '_' . $member->user_id},
+                    //     'year_id' => $this->current_year->id,
+                    //     'status' => 1
+                    // ]);
+                    // $member_fixed_saving = $member->fixed_saving()->sum('fixed_amount');
+                    // $member->fixed_saving_ledger_account->update(['current_balance' => $member_fixed_saving]);
                 }
             }
         } catch (\Throwable $th) {
