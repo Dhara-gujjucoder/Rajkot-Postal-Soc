@@ -23,6 +23,7 @@ use App\Http\Controllers\LoanSettingController;
 use App\Http\Controllers\MemberShareController;
 use App\Http\Controllers\ShareAmountController;
 use App\Http\Controllers\ShareLedgerController;
+use App\Http\Controllers\TarijReportController;
 use App\Http\Controllers\FinancialYearController;
 use App\Http\Controllers\JournelReportController;
 use App\Http\Controllers\LedgerAccountController;
@@ -60,6 +61,9 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
     Route::get('/import/member-share', [App\Http\Controllers\MemberShareController::class, 'member_share'])->name('member_share.import');
     Route::post('/import/member-share', [App\Http\Controllers\MemberShareController::class, 'import_member_share'])->name('member_share.import');
 
+    Route::get('/member_share_export', [TempReportController::class, 'member_share'])->name('tempreport.member_share');
+    Route::get('/member_share-export', [TempReportController::class, 'member_share_export'])->name('share_export');
+
     Route::get('/tempreport', [TempReportController::class, 'create'])->name('tempreport.create');
     Route::get('/fixed-saving-export', [TempReportController::class, 'fixed_saving_export'])->name('fixed_saving_export');
 
@@ -73,8 +77,9 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
     Route::get('/journel-report', [JournelReportController::class, 'index'])->name('ledger_reports.journel_report.index');
     Route::post('/journel-report-export',[JournelReportController::class,'journel_report_export'])->name('journel_report_export');
 
-    Route::get('/member_share_export', [TempReportController::class, 'member_share'])->name('tempreport.member_share');
-    Route::get('/member_share-export', [TempReportController::class, 'member_share_export'])->name('share_export');
+    Route::get('/tarij-report', [TarijReportController::class, 'index'])->name('ledger_reports.tarij_report.index');
+    Route::post('/tarij-report-export',[TarijReportController::class,'tarij_report_export'])->name('tarij_report_export');
+
     //***** END Excel *****/
 
     Route::get('/get/member/history/{member}', [App\Http\Controllers\MemberController::class, 'getmember_history'])->name('member.history.get');

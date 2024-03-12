@@ -78,6 +78,9 @@ class BulkEntryController extends Controller
                 $item->principal = $loan_emi->emi ?? 0;
                 $item->interest = $loan_emi->interest_amt ?? 0;
                 $item->fixed = MemberFixedSaving::where('member_id', $item->id)->where('month', $data['next_month'])->where('status', 1)->first()->fixed_amount ?? 0;
+                if( $item->id == 201){
+                    // dd($item->fixed);
+                }
                 $item->ms =  0;
                 $item->total_amount += $item->principal + $item->interest + $item->fixed + $item->ms;
                 // $department->{$value . '_total'} += $item->{$value};
@@ -111,11 +114,11 @@ class BulkEntryController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'month' => 'required',
             'status' => 'required'
         ]);
-        // dd($request->all());
         try {
             $month_total = 0;
             $data['departments'] = Department::whereNot('id', 5)->get();
@@ -174,9 +177,21 @@ class BulkEntryController extends Controller
                         'total_amount' => $request->{'total_amount_' . $department->id . '_' . $member->user_id},
                         'status' => $request->status,
                     ]);
+
+                    $fixed_saving_entry = MemberFixedSaving::create([
+                        'ledger_account_id' => $member->fixed_saving_ledger_account->id ?? 0,
+                        'member_id' => $member->id,
+                        'month' => $request->month,
+                        'fixed_amount' => $request->{'fixed_' . $department->id . '_' . $member->user_id},
+                        'year_id' => $this->current_year->id,
+                        'status' => 1
+                    ]);
+                    $member_fixed_saving = $member->fixed_saving()->sum('fixed_amount');
+                    $member->fixed_saving_ledger_account->update(['current_balance' => $member_fixed_saving]);
                 }
             }
         } catch (\Throwable $th) {
+            dd( $th);
             return redirect()->route('bulk_entries.index')
                 ->withError(__('Something went wrong'));
         }
@@ -315,6 +330,19 @@ class BulkEntryController extends Controller
                     'total_amount' => $request->{'total_amount_' . $department->id . '_' . $member->user_id},
                     'status' => $request->status
                 ]);
+
+                $fixed_saving_entry = MemberFixedSaving::where('ledger_account_id',$member->fixed_saving_ledger_account->id)
+                    ->where('member_id',$member->id)->where('month',$bulk_entry_master[$key]->month)->update([
+                    'fixed_amount' => $request->{'fixed_' . $department->id . '_' . $member->user_id},
+                    'year_id' => $this->current_year->id,
+                    'status' => 1
+                ]);
+                $member_fixed_saving = $member->fixed_saving()->sum('fixed_amount');
+                if($member->id == 201){
+
+                    dd($member_fixed_saving);
+                }
+                $member->fixed_saving_ledger_account->update(['current_balance' => $member_fixed_saving]);
             }
         }
         return redirect()->route('bulk_entries.index')

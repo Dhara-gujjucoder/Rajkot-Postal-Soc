@@ -19,28 +19,7 @@
                     {{-- <div class="float-start">
                         <b>{{ __('Double Entry') }}</b>
                     </div> --}}
-                    <div class="w-50 float-start">
-                        <div class="row mb-1">
-                            <label for="month"
-                                class="col-md-2 col-form-label text-md-end">{{ __('Month') }}</label>
-                            {{-- <label for="account_name" class="col-md-4 col-form-label text-md-end">{{__('Department')}}</label> --}}
-                            <div class="col-md-6">
-                                <select class="choices form-select @error('month') is-invalid @enderror"
-                                    aria-label="Permissions" id="month" name="month" style="height: 210px;">
-                                    <option value="">{{ __('Select Month') }}</option>
-                                    @foreach ($months as $item)
-                                        <option value="{{ $item['value'] }}"
-                                            {{ $item['is_disable'] == 1 ? 'disabled' : '' }}
-                                            {{ old('month', $next_month) == $item['value'] ? 'selected' : '' }}>
-                                            {{ $item['month'] }}</option>
-                                    @endforeach
-                                </select>
-                                @if ($errors->has('month'))
-                                    <span class="text-danger">{{ $errors->first('month') }}</span>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
+                    
 
                     <div class="float-end">
                         <a href="{{ route('bulk_entries.index') }}" class="btn btn-primary btn-sm">&larr;
@@ -50,10 +29,30 @@
                 <div class="card-body">
                     <form action="{{ route('bulk_entries.store') }}" method="post" enctype="multipart/form-data" id="bulkform">
                         @csrf
+                        <div class="w-100 float-start mb-5">
+                            <div class="row mb-1">
+                                <label for="month"
+                                    class="col-md-2 col-form-label text-md-end">{{ __('Month') }}</label>
+                                {{-- <label for="account_name" class="col-md-4 col-form-label text-md-end">{{__('Department')}}</label> --}}
+                                <div class="col-md-6">
+                                    <select class="choices form-select @error('month') is-invalid @enderror"
+                                        aria-label="Permissions" id="month" name="month" style="height: 210px;">
+                                        <option value="">{{ __('Select Month') }}</option>
+                                        @foreach ($months as $item)
+                                            <option value="{{ $item['value'] }}"
+                                                {{ $item['is_disable'] == 1 ? 'disabled' : '' }}
+                                                {{ old('month', $next_month) == $item['value'] ? 'selected' : '' }}>
+                                                {{ $item['month'] }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('month'))
+                                        <span class="text-danger">{{ $errors->first('month') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
 
                         {{-- for members of each department --}}
-
-
 
                         @foreach ($departments as $mainkey => $department)
                             <div class="row">
@@ -107,7 +106,8 @@
                                 <div class="row">
                                     <div class="col-md-3 col-3 col-lg-2">
                                         <div class="form-group">
-                                            <label for="first-particular-column">{{ $member->name }}@if ($member->loan)
+                                            <label for="first-particular-column">{{ $member->name }}
+                                                @if ($member->loan)
                                                     <div class="ctooltip text-danger">&nbsp;<i
                                                             class="bi bi-info-circle-fill"></i>
                                                         <span class="tooltiptext text-start p-3">

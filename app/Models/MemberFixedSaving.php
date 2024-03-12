@@ -29,6 +29,11 @@ class MemberFixedSaving extends Model
         static::addGlobalScope('year', function (Builder $builder) {
             $builder->where('year_id',currentYear()->id);
         });
+        static::addGlobalScope('status', function (Builder $builder) {
+            $builder->where('status',1);
+        });
     }
 
 }
+
+ 

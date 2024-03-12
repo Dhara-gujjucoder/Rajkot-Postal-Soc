@@ -79,6 +79,7 @@ class LedgerFixedSavingExport implements FromCollection, WithMapping, ShouldAuto
 
         return $entry;
     }
+
     public function styles(Worksheet $sheet)
     {
         // $sheet->mergeCells('A'.$sheet->getHighestRow().':C'.$sheet->getHighestRow());

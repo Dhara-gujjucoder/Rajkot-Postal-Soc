@@ -89,10 +89,47 @@
                                     <div class="row">
                                         <div class="col-md-3 col-3 col-lg-2">
                                             <div class="form-group">
-                                                <label for="first-particular-column">{{ $member->user->name }}<span
-                                                        class="text-danger" data-bs-html="true" data-bs-toggle="tooltip"
-                                                        data-bs-original-title="<em>Loan Details</em> <p>Member Name : Test User</p><p>Amount : 200</p>">&nbsp;<i
-                                                            class="bi bi-info-circle-fill"></i></span></label>
+                                                <label for="first-particular-column">{{ $member->user->name }} 
+                                                    @if ($member->loan)
+                                                    <div class="ctooltip text-danger">&nbsp;<i
+                                                            class="bi bi-info-circle-fill"></i>
+                                                        <span class="tooltiptext text-start p-3">
+                                                            <p class="text-info text-xl">{{ __('Loan Detail') }}</p>
+                                                            <div class="row">
+                                                                <div class="col-md-4">{{ __('Member') }}</div>
+                                                                <div class="col-md-8">{{ $member->name }}</div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-4">{{ __('Loan ID') }}</div>
+                                                                <div class="col-md-8">
+                                                                    {{ $member->loan->loan_no ?? '' }}</div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-4">{{ __('Principal Amount') }}
+                                                                </div>
+                                                                <div class="col-md-8">
+                                                                    {{ $member->loan->principal_amt ?? 0 }}</div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-4">{{ __('EMI Amount') }}</div>
+                                                                <div class="col-md-8">
+                                                                    {{ $member->loan->emi_amount ?? 0 }}</div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-4">{{ __('Pending EMI') }}</div>
+                                                                <div class="col-md-8">
+                                                                    {{ $member->loan->loan_emis()->pending()->get()->count() ?? 0 }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-4">{{ __('Paid EMI') }}</div>
+                                                                <div class="col-md-8">
+                                                                    {{ $member->loan->loan_emis()->paid()->get()->count() }}
+                                                                </div>
+                                                            </div>
+                                                        </span>
+                                                    </div>
+                                                @endif</label>
                                                 <input type="hidden" class="form-control" id="particular"
                                                     name="user_id[]" value="{{ $member->user_id }}"
                                                     placeholder="{{ __('particular') }}">

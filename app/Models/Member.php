@@ -148,7 +148,7 @@ class Member extends Model
     public function getMemberFixedAttribute()
     {
         $member = Member::find($this->id);
-        $fixed_saving['member_fixed_saving'] = $member->fixed_saving_ledger_account->opening_balance + $member->fixed_saving_ledger_account->current_balance;
+        $fixed_saving['member_fixed_saving'] = $member->fixed_saving_ledger_account->current_balance;
         $fixed_saving['remaining_fixed_saving'] = $member->remaining_fixed_saving;
         return $fixed_saving;
     }
