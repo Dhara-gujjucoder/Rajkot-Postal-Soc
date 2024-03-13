@@ -27,6 +27,7 @@ class FixedSavingExport implements FromCollection,WithHeadings,WithMapping,WithS
         $heading[] = 'Total';
 
         // dd($heading);
+
         return $heading;
     }
 

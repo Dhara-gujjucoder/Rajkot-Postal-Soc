@@ -13,25 +13,49 @@ use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 
 class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, WithStrictNullComparison, WithStyles
 {
-    protected $data;
 
-    // public function __construct($id)
-    // {
-    //     $this->id = $id;
-    // }
+    protected $data, $month_from, $month_to, $months;
+
+    public function __construct($month_from, $month_to)
+    {
+        $result = [];
+        $all_months = getMonthsOfYear(currentYear()->id);
+        $this->months = collect($all_months)->pluck('value')->toArray();;
+        // dump($month_from,$month_to);
+        if ($month_from != null && $month_to != null) {
+            foreach ($all_months as $key => $value) {
+                if ($key <= $month_to && $key >= $month_from) {
+                    $result[] = $value;
+                }
+            }
+            $this->months = collect($result)->pluck('value')->toArray();
+        } elseif ($month_from != null) {
+            $this->months = [$all_months[$month_from]['value']];
+        } elseif ($month_to != null) {
+            $this->months = [$all_months[$month_to]['value']];
+        }
+
+        $this->month_from = $month_from;
+        $this->month_to = $month_to;
+    }
 
     public function collection()
     {
-        $months =  collect(getMonthsOfYear(currentYear()->id))->pluck('value')->all();
+        // $months =  collect(getMonthsOfYear(currentYear()->id))->pluck('value')->all();
         $data = [];
-        foreach ($months as $key => $value) {
+        // dd($this->months);
+        foreach ($this->months as $key => $value) {
             # code...
             $date = explode('-', $value);
+
             $data[$key]['date'] = $value;
             // if ($value == '02-2024') {
 
-            $data[$key]['data'] = MasterDoubleEntry::whereYear('date', $date[1])
-                ->whereMonth('date', $date[0])->get();
+            $month_from = $this->month_from;
+            $month_to = $this->month_to;
+            $data[$key]['data'] = MasterDoubleEntry::query()
+                ->whereMonth('date', $date[0])->whereYear('date', $date[1])
+                ->get();
             //    dd(date('m',$date[0]),date('Y',$date[1]));
             // }
         }
@@ -42,24 +66,23 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
 
     public function map($master_double_entry): array
     {
+        // dd($master_double_entry['data']->isEmpty());
 
-        // dd($master_double_entry);
-        $entry = [
-            [],
-            ['', 'THE RAJKOT POSTAL EMPLOYEE CO-OP CREDIT SOC. LTD.'],
-            ['', date("M-Y", strtotime('01-' . $master_double_entry['date']))],
-            [],
-            ['', 'CREDIT', 'RS.', 'DEBIT', 'RS.'],
 
-        ];
-        if (isset($master_double_entry['data'])) {
+        if (isset($master_double_entry['data']) &&  !$master_double_entry['data']->isEmpty()) {
+            $entry = [
+                [],
+                ['', 'THE RAJKOT POSTAL EMPLOYEE CO-OP CREDIT SOC. LTD.'],
+                ['', date("M-Y", strtotime('01-' . $master_double_entry['date']))],
+                [],
+                ['', 'CREDIT', 'RS.', 'DEBIT', 'RS.'],
+
+            ];
             $credit_total = 0;
             $debit_total = 0;
 
             // dd($master_double_entry['data']);
             foreach ($master_double_entry['data'] as $key => $double_entry) {
-
-
 
                 $credit_entry = $double_entry->meta_entry()->where('type', 'credit')->get();
                 $debit_entry = $double_entry->meta_entry()->where('type', 'debit')->get();
@@ -81,31 +104,22 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
 
                     $entry[] = ['', $credit_particular, $credit_amount, $debit_particular, $debit_amount];
                 }
-
-
-                // if ($value->type == 'credit') {
-                //     // $credit_total += $value->amount;
-                //     $entry[] = ['', $value->particular, $value->amount, ''];
-                // } elseif ($value->type == 'debit') {
-                //     // $debit_total += $value->amount;
-                //     $entry[] = ['', '','', $value->particular, $value->amount];
-                // }
-                // }
-
-
             }
+
+            $entry[] = ['', '', '', '', '',];
+            $entry[]  = ['', 'TOTAL: ', $credit_total, '', $debit_total];
+            $entry[] = ['', '', '', '', '',];
+        } else {
+            $entry = [];
         }
-
-
-
-        $entry[] = ['', '', '', '', '',];
-        $entry[]  = ['', 'TOTAL', $credit_total, '', $debit_total];
 
         return $entry;
     }
+
     public function styles(Worksheet $sheet)
     {
         $data = $this->data;
+        // dd($data);
         $sheet->mergeCells('B2:E2');
         $sheet->mergeCells('B3:E3');
         $row = 2;
@@ -122,32 +136,66 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
                 'size'  =>  14,
             ],
         ];
-
+        $substyle = [
+            'alignment' => [
+                // 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
+                'wrapText' => true,
+            ],
+            'font' => [
+                'bold' => true,
+            ],
+        ];
         foreach ($data as $key => $double_entry) {
             // dd($double_entry['data']);
+                if (isset($double_entry['data']) &&  !$double_entry['data']->isEmpty()) {
 
-            $sheet->getStyle('B' . $row . ':E' . $row)->applyFromArray($style);
-            $sheet->mergeCells('B' . $row . ':E' . $row);
-            $sheet->mergeCells('B' . ($row + 1) . ':E' . ($row + 1));
-            $sheet->getStyle('B' . ($row + 1) . ':E' . ($row + 1))->applyFromArray($style);
-            $sheet->getStyle('B' . ($row + 3) . ':E' . ($row + 3))->applyFromArray([
-                'borders' => [
-                    'bottom' => [
-                        'borderStyle' => Border::BORDER_THIN,
+                $sheet->getStyle('B' . $row . ':E' . $row)->applyFromArray($style);
+                $sheet->mergeCells('B' . $row . ':E' . $row);
+                $sheet->mergeCells('B' . ($row + 1) . ':E' . ($row + 1));
+                $sheet->getStyle('B' . ($row + 1) . ':E' . ($row + 1))->applyFromArray($style);
+                $sheet->getStyle('B' . ($row + 3) . ':E' . ($row + 3))->applyFromArray($substyle);
+                $sheet->getStyle('B' . ($row + 3) . ':E' . ($row + 3))->applyFromArray([
+                    'borders' => [
+                        'bottom' => [
+                            'borderStyle' => Border::BORDER_THIN,
+                        ],
+                        'top' => [
+                            'borderStyle' => Border::BORDER_THIN,
+                        ]
                     ],
-                    'top' => [
-                        'borderStyle' => Border::BORDER_THIN,
-                    ]
-                ],
-            ]);
-            $row = $row + 7;
+                ]);
 
-            foreach ($double_entry['data'] as $key => $value) {
-                # code...
-                $credit_entry = $value->meta_entry()->where('type', 'credit')->get();
-                $debit_entry = $value->meta_entry()->where('type', 'debit')->get();
-                $count = max($credit_entry->count(), $debit_entry->count());
-                $row += $count;
+                // $entry_count = ($double_entry['data'])->count();
+
+
+
+                // dd($entry_count);
+
+
+                $row = $row + 8;
+                // dd($row);
+
+                foreach ($double_entry['data'] as $key => $value) {
+                    # code...
+                    $credit_entry = $value->meta_entry()->where('type', 'credit')->get();
+                    $debit_entry = $value->meta_entry()->where('type', 'debit')->get();
+                    $count = max($credit_entry->count(), $debit_entry->count());
+                    $row += $count;
+
+
+                }
+                // dd($row);
+                $sheet->getStyle('B' . ($row - 3) . ':E' . ($row - 3))->applyFromArray($substyle);
+                $sheet->getStyle('B' . ($row - 3) . ':E' . ($row - 3))->applyFromArray([
+                    'borders' => [
+                        'bottom' => [
+                            'borderStyle' => Border::BORDER_THIN,
+                        ],
+                        'top' => [
+                            'borderStyle' => Border::BORDER_THIN,
+                        ]
+                    ],
+                ]);
             }
         }
     }
