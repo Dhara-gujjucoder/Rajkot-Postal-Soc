@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Models\BulkEntry;
 use App\Models\MasterDoubleEntry;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Style\Border;
@@ -20,8 +21,8 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
     {
         $result = [];
         $all_months = getMonthsOfYear(currentYear()->id);
-        $this->months = collect($all_months)->pluck('value')->toArray();;
-        // dump($month_from,$month_to);
+        $this->months = collect($all_months)->pluck('value')->toArray();
+
         if ($month_from != null && $month_to != null) {
             foreach ($all_months as $key => $value) {
                 if ($key <= $month_to && $key >= $month_from) {
@@ -41,23 +42,17 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
 
     public function collection()
     {
-        // $months =  collect(getMonthsOfYear(currentYear()->id))->pluck('value')->all();
         $data = [];
-        // dd($this->months);
         foreach ($this->months as $key => $value) {
-            # code...
             $date = explode('-', $value);
 
             $data[$key]['date'] = $value;
-            // if ($value == '02-2024') {
 
             $month_from = $this->month_from;
             $month_to = $this->month_to;
             $data[$key]['data'] = MasterDoubleEntry::query()
                 ->whereMonth('date', $date[0])->whereYear('date', $date[1])
                 ->get();
-            //    dd(date('m',$date[0]),date('Y',$date[1]));
-            // }
         }
         // dd($data);
         $this->data = $data;
@@ -66,52 +61,67 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
 
     public function map($master_double_entry): array
     {
-        // dd($master_double_entry['data']->isEmpty());
+        // dd($master_double_entry);
 
 
-        if (isset($master_double_entry['data']) &&  !$master_double_entry['data']->isEmpty()) {
-            $entry = [
-                [],
-                ['', 'THE RAJKOT POSTAL EMPLOYEE CO-OP CREDIT SOC. LTD.'],
-                ['', date("M-Y", strtotime('01-' . $master_double_entry['date']))],
-                [],
-                ['', 'CREDIT', 'RS.', 'DEBIT', 'RS.'],
+        // if (isset($master_double_entry['data']) &&  !$master_double_entry['data']->isEmpty()) {
+        $fixed_saving = 0;
+        $loan_interest = 0;
+        $loan_principal = 0;
+        $t = 0; 
+        $bulk_entry = BulkEntry::where('month', $master_double_entry['date']);
+        $fixed_saving += $bulk_entry->sum('fixed');
+        $loan_interest += $bulk_entry->sum('interest');
+        $loan_principal += $bulk_entry->sum('principal');
+        $t += $fixed_saving + $loan_interest + $loan_principal;
 
-            ];
-            $credit_total = 0;
-            $debit_total = 0;
+        $entry = [
+            [],
+            ['', 'THE RAJKOT POSTAL EMPLOYEE CO-OP CREDIT SOC. LTD.'],
+            ['', date("M-Y", strtotime('01-' . $master_double_entry['date']))],
+            [],
+            ['', 'CREDIT', 'RS.', 'DEBIT', 'RS.'],
+            ['', 'FIXED SAVING (RECEIPT)', $fixed_saving, 'RDC BANK (DEPOSIT)', $t],
+            ['', 'LOAN INTEREST INCOME', $loan_interest, '', ''],
+            ['', 'LOAN PRINCIPAL', $loan_principal, '', ''],
 
-            // dd($master_double_entry['data']);
-            foreach ($master_double_entry['data'] as $key => $double_entry) {
+        ];
+        $credit_total = 0;
+        $debit_total = 0;
 
-                $credit_entry = $double_entry->meta_entry()->where('type', 'credit')->get();
-                $debit_entry = $double_entry->meta_entry()->where('type', 'debit')->get();
+        foreach ($master_double_entry['data'] as $key => $double_entry) {
 
-                $count = max($credit_entry->count(), $debit_entry->count());
+            $credit_entry = $double_entry->meta_entry()->where('type', 'credit')->get();
+            $debit_entry = $double_entry->meta_entry()->where('type', 'debit')->get();
 
-                for ($i = 0; $i < $count; $i++) {
-                    // $entry[] = ['',($credit_entry[$i]->type == 'credit' ? $credit_entry[$i]->particular  :  ''),'',($value->type == 'debit' ? $value->particular  :  '')];
+            $count = max($credit_entry->count(), $debit_entry->count());
 
-                    $credit_particular = isset($credit_entry[$i]) && $credit_entry[$i]->type == 'credit' ? $credit_entry[$i]->particular : '';
-                    $credit_amount = isset($credit_entry[$i]) && $credit_entry[$i]->type == 'credit' ? $credit_entry[$i]->amount : '';
-                    $debit_particular = isset($debit_entry[$i]) && $debit_entry[$i]->type == 'debit' ? $debit_entry[$i]->particular : '';
-                    $debit_amount = isset($debit_entry[$i]) && $debit_entry[$i]->type == 'debit' ? $debit_entry[$i]->amount : '';
-                    // $credit_total = $credit_total+$credit_amount;
-                    // $debit_total   =  $debit_total+$debit_amount;
-                    $credit_total += is_numeric($credit_amount) ? $credit_amount : 0;
-                    $debit_total += is_numeric($debit_amount) ? $debit_amount : 0;
+            for ($i = 0; $i < $count; $i++) {
+
+                $credit_particular = isset($credit_entry[$i]) && $credit_entry[$i]->type == 'credit' ? $credit_entry[$i]->particular : '';
+                $credit_amount = isset($credit_entry[$i]) && $credit_entry[$i]->type == 'credit' ? $credit_entry[$i]->amount : '';
+                $debit_particular = isset($debit_entry[$i]) && $debit_entry[$i]->type == 'debit' ? $debit_entry[$i]->particular : '';
+                $debit_amount = isset($debit_entry[$i]) && $debit_entry[$i]->type == 'debit' ? $debit_entry[$i]->amount : '';
+
+                $credit_total += (is_numeric($credit_amount) ? $credit_amount : 0);
+                $debit_total += (is_numeric($debit_amount) ? $debit_amount : 0);
 
 
-                    $entry[] = ['', $credit_particular, $credit_amount, $debit_particular, $debit_amount];
-                }
+                $entry[] = ['', $credit_particular, $credit_amount, $debit_particular, $debit_amount];
             }
-
-            $entry[] = ['', '', '', '', '',];
-            $entry[]  = ['', 'TOTAL: ', $credit_total, '', $debit_total];
-            $entry[] = ['', '', '', '', '',];
-        } else {
-            $entry = [];
         }
+
+
+        // $entry[] = ['', 'FIXED SAVING (RECEIPT)', $fixed_saving, 'RDC BANK (DEPOSIT)', $t];
+        // $entry[] = ['', 'LOAN INTEREST INCOME', $loan_interest, '', ''];
+        // $entry[] = ['', 'LOAN PRINCIPAL', $loan_principal, '', ''];
+
+        $entry[] = ['', '', '', '', '',];
+        $entry[]  = ['', 'TOTAL: ', ($credit_total+$t), '', ($debit_total+$t)];
+        $entry[] = ['', '', '', '', '',];
+        // } else {
+        //     $entry = [];
+        // }
 
         return $entry;
     }
@@ -146,57 +156,48 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
             ],
         ];
         foreach ($data as $key => $double_entry) {
-            // dd($double_entry['data']);
-                if (isset($double_entry['data']) &&  !$double_entry['data']->isEmpty()) {
 
-                $sheet->getStyle('B' . $row . ':E' . $row)->applyFromArray($style);
-                $sheet->mergeCells('B' . $row . ':E' . $row);
-                $sheet->mergeCells('B' . ($row + 1) . ':E' . ($row + 1));
-                $sheet->getStyle('B' . ($row + 1) . ':E' . ($row + 1))->applyFromArray($style);
-                $sheet->getStyle('B' . ($row + 3) . ':E' . ($row + 3))->applyFromArray($substyle);
-                $sheet->getStyle('B' . ($row + 3) . ':E' . ($row + 3))->applyFromArray([
-                    'borders' => [
-                        'bottom' => [
-                            'borderStyle' => Border::BORDER_THIN,
-                        ],
-                        'top' => [
-                            'borderStyle' => Border::BORDER_THIN,
-                        ]
+            // if (isset($double_entry['data']) &&  !$double_entry['data']->isEmpty()) {
+
+            $sheet->getStyle('B' . $row . ':E' . $row)->applyFromArray($style);
+            $sheet->mergeCells('B' . $row . ':E' . $row);
+            $sheet->mergeCells('B' . ($row + 1) . ':E' . ($row + 1));
+            $sheet->getStyle('B' . ($row + 1) . ':E' . ($row + 1))->applyFromArray($style);
+            $sheet->getStyle('B' . ($row + 3) . ':E' . ($row + 3))->applyFromArray($substyle);
+            $sheet->getStyle('B' . ($row + 3) . ':E' . ($row + 3))->applyFromArray([
+                'borders' => [
+                    'bottom' => [
+                        'borderStyle' => Border::BORDER_THIN,
                     ],
-                ]);
+                    'top' => [
+                        'borderStyle' => Border::BORDER_THIN,
+                    ]
+                ],
+            ]);
 
-                // $entry_count = ($double_entry['data'])->count();
+            $row = $row + 11;
 
-
-
-                // dd($entry_count);
-
-
-                $row = $row + 8;
-                // dd($row);
-
-                foreach ($double_entry['data'] as $key => $value) {
-                    # code...
-                    $credit_entry = $value->meta_entry()->where('type', 'credit')->get();
-                    $debit_entry = $value->meta_entry()->where('type', 'debit')->get();
-                    $count = max($credit_entry->count(), $debit_entry->count());
-                    $row += $count;
-
-
-                }
-                // dd($row);
-                $sheet->getStyle('B' . ($row - 3) . ':E' . ($row - 3))->applyFromArray($substyle);
-                $sheet->getStyle('B' . ($row - 3) . ':E' . ($row - 3))->applyFromArray([
-                    'borders' => [
-                        'bottom' => [
-                            'borderStyle' => Border::BORDER_THIN,
-                        ],
-                        'top' => [
-                            'borderStyle' => Border::BORDER_THIN,
-                        ]
-                    ],
-                ]);
+            foreach ($double_entry['data'] as $key => $value) {
+                $credit_entry = $value->meta_entry()->where('type', 'credit')->get();
+                $debit_entry = $value->meta_entry()->where('type', 'debit')->get();
+                $count = max($credit_entry->count(), $debit_entry->count());
+                $row += $count;
             }
+
+            // dd($row);
+
+            $sheet->getStyle('B' . ($row - 3) . ':E' . ($row - 3))->applyFromArray($substyle);
+            $sheet->getStyle('B' . ($row - 3) . ':E' . ($row - 3))->applyFromArray([
+                'borders' => [
+                    'bottom' => [
+                        'borderStyle' => Border::BORDER_THIN,
+                    ],
+                    'top' => [
+                        'borderStyle' => Border::BORDER_THIN,
+                    ]
+                ],
+            ]);
+            // }
         }
     }
 }
