@@ -9,6 +9,7 @@ use App\Models\BulkEntry;
 use App\Models\BulkMaster;
 use App\Models\Department;
 use Illuminate\Http\Request;
+use App\Models\LedgerAccount;
 use App\Models\BulkEntryMaster;
 use App\Models\SalaryDeduction;
 use App\Models\MemberFixedSaving;
@@ -121,9 +122,19 @@ class BulkEntryController extends Controller
         ]);
         try {
             $month_total = 0;
+            $principal_total = 0;
+            $interest_total = 0;
+            $fixed_saving_total = 0;
+            $ms_total = 0;
+
             $data['departments'] = Department::whereNot('id', 5)->get();
             foreach ($data['departments'] as $dept) {
                 $month_total += $request->{'summary_total_amount_total_' . $dept->id};
+                $principal_total += $request->{'summary_principal_total_' . $dept->id};
+                $interest_total += $request->{'summary_interest_total_' . $dept->id};
+                $fixed_saving_total += $request->{'summary_fixed_total_' . $dept->id};
+                $ms_total += $request->{'summary_ms_total_' . $dept->id};
+
             }
             $bulk_master = BulkMaster::create([
                 'year_id' => $this->current_year->id,
@@ -133,6 +144,11 @@ class BulkEntryController extends Controller
                 'created_by' => Auth::user()->id,
                 'total' =>  $month_total,
                 'status' => $request->status,
+                'principal_total' =>  $principal_total,
+                'interest_total' => $interest_total,
+                'fixed_saving_total' => $fixed_saving_total,
+                'ms_total' => $ms_total,
+                'ledger_ac_id' => LedgerAccount::where('ledger_group_id',10)->first()->id,
             ]);
 
             foreach ($data['departments'] as $key => $department) {

@@ -44,7 +44,7 @@ class DoubleEntryController extends Controller
         $data['count'] = (MasterDoubleEntry::latest()->first()->id ?? 0) + 1;
         $data['no'] = str_pad($data['count'], 4, 0, STR_PAD_LEFT);
         $data['page_title'] = __('Add Double Entry');
-        $data['ledger_accounts'] = LedgerAccount::whereIn('ledger_group_id',[2,4,5])->get();
+        $data['ledger_accounts'] = LedgerAccount::whereIn('ledger_group_id',[2,4,5,10])->get();
         return view('double_entries.create', $data);
     }
 

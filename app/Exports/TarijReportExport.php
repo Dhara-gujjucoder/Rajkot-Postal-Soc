@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\BulkEntry;
+use App\Models\BulkMaster;
 use App\Models\MasterDoubleEntry;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Style\Border;
@@ -65,27 +66,40 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
 
 
         // if (isset($master_double_entry['data']) &&  !$master_double_entry['data']->isEmpty()) {
-        $fixed_saving = 0;
-        $loan_interest = 0;
-        $loan_principal = 0;
-        $t = 0; 
-        $bulk_entry = BulkEntry::where('month', $master_double_entry['date']);
-        $fixed_saving += $bulk_entry->sum('fixed');
-        $loan_interest += $bulk_entry->sum('interest');
-        $loan_principal += $bulk_entry->sum('principal');
-        $t += $fixed_saving + $loan_interest + $loan_principal;
+
+        // $fixed_saving = 0;
+        // $loan_interest = 0;
+        // $loan_principal = 0;
+        // $t = 0;
 
         $entry = [
             [],
             ['', 'THE RAJKOT POSTAL EMPLOYEE CO-OP CREDIT SOC. LTD.'],
             ['', date("M-Y", strtotime('01-' . $master_double_entry['date']))],
             [],
-            ['', 'CREDIT', 'RS.', 'DEBIT', 'RS.'],
-            ['', 'FIXED SAVING (RECEIPT)', $fixed_saving, 'RDC BANK (DEPOSIT)', $t],
-            ['', 'LOAN INTEREST INCOME', $loan_interest, '', ''],
-            ['', 'LOAN PRINCIPAL', $loan_principal, '', ''],
+            ['', 'CREDIT', 'RS.', 'DEBIT', 'RS.']
 
         ];
+
+        $bulk_master = BulkMaster::where('month', $master_double_entry['date'])->first();
+
+        $rdb_bank_total = 0;
+
+        if ($bulk_master) {
+            $fixed_saving = $bulk_master->fixed_saving_total;
+            $loan_interest = $bulk_master->interest_total;
+            $loan_principal = $bulk_master->principal_total;
+            $ms_total = $bulk_master->ms_total;
+            $rdb_bank_name = $bulk_master->rdc_ledger_account->account_name;
+            $rdb_bank_total = $bulk_master->total;
+
+            $entry[] = ['', 'FIXED SAVING (RECEIPT)', $fixed_saving, $rdb_bank_name, $rdb_bank_total];  //$t
+            $entry[] = ['', 'LOAN INTEREST INCOME', $loan_interest, '', ''];
+            $entry[] = ['', 'LOAN PRINCIPAL', $loan_principal, '', ''];
+            $entry[] =   ['', 'MS', $ms_total, '', ''];
+        }
+
+
         $credit_total = 0;
         $debit_total = 0;
 
@@ -117,7 +131,7 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
         // $entry[] = ['', 'LOAN PRINCIPAL', $loan_principal, '', ''];
 
         $entry[] = ['', '', '', '', '',];
-        $entry[]  = ['', 'TOTAL: ', ($credit_total+$t), '', ($debit_total+$t)];
+        $entry[]  = ['', 'TOTAL: ', ($credit_total + $rdb_bank_total), '', ($debit_total + $rdb_bank_total)];  //+$rdb_bank_total
         $entry[] = ['', '', '', '', '',];
         // } else {
         //     $entry = [];
@@ -175,7 +189,14 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
                 ],
             ]);
 
-            $row = $row + 11;
+            $row = $row + 12;
+
+            $bulk_master = BulkMaster::where('month', $double_entry['date'])
+                ->first();
+
+            if (!$bulk_master) {
+                $row = $row - 4;
+            }
 
             foreach ($double_entry['data'] as $key => $value) {
                 $credit_entry = $value->meta_entry()->where('type', 'credit')->get();
