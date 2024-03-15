@@ -1,6 +1,6 @@
 <div class="mb-3 row">
     @php
-    dd($member->member_fixed['member_fixed_saving']);
+    // dd($member->member_fixed['member_fixed_saving']);
         $no_of_month = count(getMonthsOfYear(currentYear()->id));
         $required_saving = $no_of_month * current_fixed_saving()->monthly_saving;
     $remaining_fixed_saving = $member->remaining_fixed_saving; @endphp
