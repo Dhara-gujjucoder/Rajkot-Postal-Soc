@@ -10,7 +10,7 @@
             <div class="card">
 
 
-                <div class="card-header clearfix mb-1 test">
+                <div class="card-header clearfix mb-1">
                     <div class=" float-start">
                         <h5 id="header_75" class="form-header" data-component="header">
                             {{ __('Loan Information') }}
