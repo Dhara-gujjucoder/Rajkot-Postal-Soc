@@ -21,7 +21,7 @@ class MemberImportController extends Controller
 {
     /**
      * Show the form for creating a new resource.
-     */
+    */
     public function create(): View
     {
         return view('import.member', [
@@ -31,34 +31,32 @@ class MemberImportController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     */
+    */
     public function store(Request $request): RedirectResponse
     {
         Excel::import(new MemberImport, $request->file('memberexcel'));
-        // Excel::import(new SalaryDedImport, $request->file('memberexcel'));
 
-     
         return redirect()->route('members.index')
             ->withSuccess(__('New member is added successfully.'));
     }
 
     /**
      * Store a newly created resource in storage.
-     */
+    */
     public function storewithimage(Request $request): RedirectResponse
     {
         // Excel::import(new MemberImport, $request->file('memberexcel'));
         $objphpexcel = IOFactory::load($request->file('memberexcel'));
-        
+
         // ->getSheetByName("Sheet1")
         foreach ($objphpexcel->getActiveSheet()->getDrawingCollection() as $drawing) {
-      
+
             $cellID = $drawing->getCoordinates();
-           
+
             $i = preg_replace('/[^0-9]/', '', $cellID);
             $j = preg_replace('/[^a-zA-Z]/', '', $cellID);
 
-    
+
             $images[$i]['name'] = $objphpexcel->getActiveSheet()->getCell('D' . $i)->getValue();
 
             if ($drawing instanceof Drawing) {

@@ -38,6 +38,8 @@ trait UpdateMemberShare
             // dd($share_detail_entry);
 
         }
+
+
         $member->share_ledger_account->update(['current_balance' => ($member->share_ledger_account->current_balance + ($new_share * current_share_amount()->share_amount))]);
         $member->total_share = $no_of_share;
         $member->save();
