@@ -66,7 +66,7 @@
                     <table class="table table-bordered" id="table1">
                         <thead>
                             <tr>
-                                <th scope="col">S#</th>
+                                {{-- <th scope="col">S#</th> --}}
                                 <th scope="col">{{ __('M.no') }}</th>
                                 <th scope="col">{{ __('Name') }}</th>
                                 <th scope="col">{{ __('Email') }}</th>
@@ -134,12 +134,13 @@
             processing: true,
             serverSide: true,
             ajax: "{{ route('members.index') }}",
-            columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    orderable: false,
-                    searchable: false
-                },
+            columns: [
+                // {
+                //     data: 'DT_RowIndex',
+                //     name: 'DT_RowIndex',
+                //     orderable: false,
+                //     searchable: false
+                // },
                 {
                     data: 'uid',
                     name: 'uid',
