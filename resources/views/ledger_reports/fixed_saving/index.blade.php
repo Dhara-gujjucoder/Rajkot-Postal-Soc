@@ -100,7 +100,8 @@
                     <table class="table table-bordered" id="table1">
                         <thead>
                             <tr>
-                                <th scope="col">{{ __('No.') }}</th>
+                                {{-- <th scope="col">{{ __('No.') }}</th> --}}
+                                <th scope="col">{{ __('M.no') }}</th>
                                 <th scope="col">{{ __('Name') }}</th>
                                 <th scope="col">{{ __('Ledger Group') }}</th>
                                 <th scope="col">{{ __('Member') }}</th>
@@ -112,7 +113,8 @@
                         <tbody align="center">
                             @foreach ($fixed_savings as $key => $fixed)
                                 <tr>
-                                    <td>{{ $key + 1 }}</td>
+                                    {{-- <td>{{ $key + 1 }}</td> --}}
+                                    <td>{{ $fixed->member->uid }}</td>
                                     <td>{{ $fixed->member->fullname }}</td>
                                     <td>{{ $fixed->LedgerGroupId->ledger_group }}</td>
                                     <td>{{ $fixed->member->name }}</td>

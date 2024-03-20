@@ -19,7 +19,6 @@ class MemberShare extends Model
         'purchase_on',
         'sold_on'
     ];
-
     public function member()
     {
         return $this->hasOne(Member::class, 'id', 'member_id')->withTrashed();

@@ -119,6 +119,10 @@ class MemberShareController extends Controller
                 ->filterColumn('status', function($query, $search) {
                     $query->where('status',$search);
                 })
+
+                ->addColumn('uid', function ($row) {
+                    return $row->member->uid;
+                })
                 ->editColumn('member_id', function ($row) {
                     return $row->member->fullname;
                 })

@@ -16,7 +16,7 @@
                             <label for="account_name" class="col-form-label">{{ __('Member') }}</label>
                             <div class="col-md-12">
                                 <select class="choices filter-input form-select @error('user_id') is-invalid @enderror"
-                                    aria-label="Permissions" id="user_id" data-column="1" name="user_id"
+                                    aria-label="Permissions" id="user_id" data-column="2" name="user_id"
                                     style="height: 210px;">
                                     <option value="">{{ __('Member') }}</option>
                                     @forelse ($members as $key => $member)
@@ -38,7 +38,7 @@
                             <div class="col-md-12">
                                 <select
                                     class="choices filter-input form-select @error('department_id') is-invalid @enderror"
-                                    aria-label="Permissions" id="department_id" data-column="3" name="department_id"
+                                    aria-label="Permissions" id="department_id" data-column="4" name="department_id"
                                     style="height: 210px;">
                                     <option value="">{{ __('Department') }}</option>
                                     @forelse ($departments as $key => $department)
@@ -67,6 +67,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">S#</th>
+                                <th scope="col">{{ __('M.no') }}</th>
                                 <th scope="col">{{ __('Name') }}</th>
                                 <th scope="col">{{ __('Email') }}</th>
                                 <th scope="col">{{ __('Department') }}</th>
@@ -138,6 +139,11 @@
                     name: 'DT_RowIndex',
                     orderable: false,
                     searchable: false
+                },
+                {
+                    data: 'uid',
+                    name: 'uid',
+                    searchable: true
                 },
                 {
                     data: 'name',
@@ -285,14 +291,14 @@
                 ajax_response = ajax_response.responseJSON;
                 if(typeof(ajax_response.errors) != 'undefined')
                 {
-                    $.each(ajax_response.errors, function (index,value) { 
-                        
+                    $.each(ajax_response.errors, function (index,value) {
+
                         if($('[name="'+index+'"]',form_element).hasClass('select2-element'))
                         {
                             $('[name="'+index+'"]',form_element).parent().append('<span class="invalid-feedback d-block form-error"><strong>'+value[0]+'</strong></div>');
                         }
                         else if($('[name="'+index+'"]',form_element).hasClass('form-check-input'))
-                        {   
+                        {
                             $('[name="'+index+'"]:first',form_element).parent().parent().append('<span class="invalid-feedback d-block form-error"><strong>'+value[0]+'</strong></div>');
                         }
                         else

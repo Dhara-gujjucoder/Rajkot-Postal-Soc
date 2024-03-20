@@ -21,7 +21,7 @@
                         <div class="col-md-5">
                             <label for="member_id" class="col-md-2 col-form-label">{{ __('Member') }}</label>
                             <div class="col-md-12">
-                                <select class="choices filter-input form-select" aria-label="Permissions" id="member_id" data-column="0" name="member_id" style="height: 210px;">
+                                <select class="choices filter-input form-select" aria-label="Permissions" id="member_id" data-column="1" name="member_id" style="height: 210px;">
                                     <option value="">{{ __('Member') }}</option>
                                     @forelse ($members as $key => $member)
                                         <option value="{{ $member->id }}" {{ $member->id == old('id') ? 'selected' : '' }}>
@@ -35,7 +35,7 @@
                         <div class="col-md-4">
                             <label for="account_name" class="col-md-2 col-form-label">{{ __('Status') }}</label>
                             <div class="col-md-12">
-                                <select class="choices filter-input form-select" aria-label="Permissions" id="status" data-column="4" name="status" style="height: 210px;">
+                                <select class="choices filter-input form-select" aria-label="Permissions" id="status" data-column="5" name="status" style="height: 210px;">
                                     <option value="">{{ __('Select Status') }}</option>
                                     <option value="1">{{ __('Sell') }}</option>
                                     <option value="0">{{ __('Sold') }}</option>
@@ -55,6 +55,7 @@
                     <table class="table table-bordered" id="table1">
                         <thead>
                             <tr>
+                                <th>{{ __('M.no') }}</th>
                                 <th>{{ __('Member') }}</th>
                                 <th>{{ __('Code') }}</th>
                                 <th>{{ __('Amount') }} </th>
@@ -97,7 +98,12 @@
             processing: true,
             serverSide: true,
             ajax: "{{ route('member_share.index') }}",
-            columns: [{
+            columns: [
+                {
+                    data: 'uid',
+                    name: 'uid'
+                },
+                {
                     data: 'member_id',
                     name: 'member_id',
                     searchable: true

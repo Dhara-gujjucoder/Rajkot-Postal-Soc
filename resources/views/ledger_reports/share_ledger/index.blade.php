@@ -22,6 +22,7 @@
                     <table class="table table-bordered" id="table1" align="center">
                         <thead>
                             <tr>
+                                <th>{{ __('M.no') }}</th>
                                 <th>{{ __('Member') }}</th>
                                 <th>{{ __('Opening Balance') }}</th>
                                 <th>{{ __('Total Purchase') }}</th>
@@ -57,7 +58,12 @@
             processing: true,
             serverSide: true,
             ajax: "{{ route('ledger_reports.share_ledger.index') }}",
-            columns: [{
+            columns: [
+                {
+                    data: 'uid',
+                    name: 'uid'
+                },
+                {
                     data: 'id',
                     name: 'id',
                     searchable: true
@@ -79,6 +85,8 @@
                     data: 'net_balance',
                     name: 'net_balance'
                 },
+
+
             ],
 
         });
