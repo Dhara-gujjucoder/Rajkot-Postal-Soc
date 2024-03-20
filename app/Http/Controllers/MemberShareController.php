@@ -29,7 +29,7 @@ class MemberShareController extends Controller
     {
         // $shares = MemberShare::get()->all();
         // foreach ($shares as $key => $value) {
-            
+
         //     $share_detail_entry = new MemberShareDetail();
         //     $share_detail_entry->member_share_id = $value->id;
         //     $share_detail_entry->member_id = $value->member_id;
@@ -38,14 +38,14 @@ class MemberShareController extends Controller
         //     $share_detail_entry->save();
 
         //     if($value->sold_on){
-  
+
         //         $share_detail_entry = new MemberShareDetail();
         //         $share_detail_entry->member_share_id = $value->id;
         //         $share_detail_entry->member_id = $value->member_id;
         //         $share_detail_entry->year_id = currentYear()->id;
         //         $share_detail_entry->is_sold = 1;
         //         $share_detail_entry->save();
-    
+
         //     }
         // }
 
@@ -157,6 +157,9 @@ class MemberShareController extends Controller
         $import = new MemberShareImport;
 
         Excel::import($import, $request->file('member_share'));
+        dd($import->not_insert);
+
+
         return redirect()->route('member_share.index')
             ->withSuccess(__('Member Share Imported successfully.'));
     }
