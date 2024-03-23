@@ -147,8 +147,8 @@
                                 <td><b>{{ __('EMI Amount') }}</b></td>
                                 <td>&#8377; ` + member_loan.emi_amount + `</td>
                             </tr>
-                           
-                            <tr> 
+
+                            <tr>
                                 <td><b>{{ __('Paid Loan') }}</b></td>
                                 <td>&#8377; ` + (member_loan.principal_amt - member.loan_remaining_amount) + `</td>
                                 <td><b>{{ __('Paid EMI') }}</b></td>
@@ -160,13 +160,13 @@
                             </tr>
                             <tr>    <td colspan="6">&nbsp;</td>
                             </tr>
-                            <tr> 
+                            <tr>
                                 <td colspan="2"> <b>{{ __('Remaining Loan') }}</b></td>
                                 <td colspan="4"><input type="hidden" id="loan_id"><input type="number" class="form-control amount" name="amount" placeholder="{{ __('Remaining Loan') }}" id="remaining_loan" min="`
                                     +member.loan_remaining_amount+`"  value="` +
                             member.loan_remaining_amount + `"></td>
                             </tr>
-                            <tr> 
+                            <tr>
                                 <td colspan="2"><b>{{ __('Payment Type') }}</b></td>
                                 <td colspan="4"><input class="form-check-input payment_type" type="radio" name="payment_type"
                                             id="cash" checked="" value="cash"
@@ -181,23 +181,23 @@
                                         <label class="form-check-label" for="cheque">
                                             {{ __('Cheque') }}
                                         </label></td></tr>
-                                        <tr> 
+                                        <tr>
                                 <td colspan="6"><div id="payment_details"
                                 style="display: {{ old('payment_type') == 'cheque' ? 'block' : 'none' }};">
+                                // <div class="mb-3 row">
+                                //     <label for="amount"
+                                //         class="col-md-2 col-form-label text-md-end text-start">{{ __('Bank Name') }}</label>
+                                //     <div class="col-md-10">
+                                //         <input type="text"
+                                //             class="form-control bank_name"
+                                //             id="bank_name" name="bank_name" value="{{ old('bank_name') }}"
+                                //             placeholder="{{ __('Bank Name') }}">
+
+                                //     </div>
+                                // </div>
                                 <div class="mb-3 row">
                                     <label for="amount"
-                                        class="col-md-2 col-form-label text-md-end text-start">{{ __('Bank Name') }}</label>
-                                    <div class="col-md-10">
-                                        <input type="text"
-                                            class="form-control bank_name"
-                                            id="bank_name" name="bank_name" value="{{ old('bank_name') }}"
-                                            placeholder="{{ __('Bank Name') }}">
-                                        
-                                    </div>
-                                </div>
-                                <div class="mb-3 row">
-                                    <label for="amount"
-                                        class="col-md-2 col-form-label text-md-end text-start">{{ __('Cheque No.') }}</label>
+                                        class="col-md-2 col-form-label text-md-end text-start">{{ __('Cheque No.(RDC Bank)') }}</label>
                                     <div class="col-md-10">
                                         <input type="number"
                                             class="form-control cheque_no"

@@ -5,6 +5,7 @@ namespace App\Imports;
 use DateTime;
 use App\Models\Member;
 use App\Models\MemberShare;
+use App\Models\MemberShareDetail;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithLimit;
@@ -23,20 +24,21 @@ class MemberShareImport implements ToModel, WithStartRow, WithLimit, WithMultipl
     public $total = 0;
     public function model(array $row)
     {
-        $member = Member::where('uid', $row[0])->get()->first();
+        $member = Member::where('uid', $row[1])->get()->first();
+        // dd($member);
 
         if ($member) {
             $fn_month = 3;
-            $D = ($row[3] / 100) + (isset($row[4]) ? $row[4] / 100 : 0) ;
-            $curTime = date('2022-03-01');
+            $D = ($row[5] / 100) + (isset($row[6]) ? $row[6] / 100 : 0) ;
+            $curTime = date('2023-03-01');
 
-            $this->total = $this->total + ($row[5] / 100) ;
+            $this->total = $this->total + ($row[7] / 100) ;
 
             for ($d=1; $d<=$D; $d++) {
                 $count = MemberShare::count() + 1;
                 $no = str_pad($count, 6, 0, STR_PAD_LEFT);
 
-                $ledger = MemberShare::create([
+                $share_entry = MemberShare::create([
                     'ledger_account_id' => $member->share_ledger_account->id ?? 0,
                     'member_id' => $member->id,
                     'share_code' => $no,
@@ -46,16 +48,32 @@ class MemberShareImport implements ToModel, WithStartRow, WithLimit, WithMultipl
                     'purchase_on' => $curTime,
                     // 'sold_on' => $curTime,
                 ]);
+
+                    $share_detail_entry = new MemberShareDetail();
+                    $share_detail_entry->member_share_id = $share_entry->id;
+                    $share_detail_entry->member_id = $share_entry->member_id;
+                    $share_detail_entry->year_id = currentYear()->id;
+                    $share_detail_entry->is_purchase = 1;
+                    $share_detail_entry->save();
             }
 
-            $sold = (isset($row[5]) ? $row[5] / 100 : 0);
+            $sold = (isset($row[7]) ? $row[7] / 100 : 0);
+
             if( $sold>0){
                 $SoldTime = date("Y-m-d");
+
                 for ($f=1; $f<=$sold; $f++) {
                     $membershare = MemberShare::where('member_id',$member->id)->where('status',1)->latest()->first();
                     $membershare->status = 0;
                     $membershare->sold_on = $SoldTime;
                     $membershare->save();
+
+                    $share_detail_entry = new MemberShareDetail();
+                    $share_detail_entry->member_share_id = $membershare->id;
+                    $share_detail_entry->member_id = $membershare->member_id;
+                    $share_detail_entry->year_id = currentYear()->id;
+                    $share_detail_entry->is_sold = 1;
+                    $share_detail_entry->save();
                 }
             }
 
@@ -63,14 +81,18 @@ class MemberShareImport implements ToModel, WithStartRow, WithLimit, WithMultipl
             $total_share = $query->count();
                     // $share_total_price = $query->sum('share_amount');
                     // dd($row[4]);
-                    
+
             $member->total_share = $total_share;
-            $member->share_total_price = $row[6];
+            $member->share_total_price = $row[8];
+            $opening_bal = $row[5];
                     // dd($member->share_total_price);
             $member->save();
+
+            $member->share_ledger_account->update([ 'opening_balance' =>$opening_bal ?? '']);
+
         }
         else{
-            $this->not_insert[] = 'notexist_'.$row[0];
+            $this->not_insert[] = 'notexist_'.$row[1];
         }
         return $member;
     }
@@ -84,6 +106,6 @@ class MemberShareImport implements ToModel, WithStartRow, WithLimit, WithMultipl
 
     public function limit(): int
     {
-        return 196;
+        return 219;
     }
 }

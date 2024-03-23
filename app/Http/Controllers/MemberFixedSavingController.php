@@ -49,7 +49,7 @@ class MemberFixedSavingController extends Controller
     }
     public function index(Request $request)
     {
-        $data['page_title'] = __('All Shares');
+        $data['page_title'] = __('Member Fixed Saving');
         $data['shares'] = MemberFixedSaving::get();
         $data['active_share'] = MemberFixedSaving::where('status',1);
         $data['active_share_count'] = $data['active_share']->count();
@@ -104,7 +104,7 @@ class MemberFixedSavingController extends Controller
         $import = new MemberSavingImport;
 
         Excel::import($import, $request->file('excel_file'));
-        dd($import->not_insert);
+        // dd($import->not_insert);
         return redirect()->route('member_fixed_saving.index')
             ->withSuccess(__('All Share Imported successfully.'));
     }

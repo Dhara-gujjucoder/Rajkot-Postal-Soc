@@ -57,7 +57,7 @@ class MemberController extends Controller
         $data['departments'] = Department::get();
         $data['members'] = Member::orderBy('uid', 'DESC')->get();
         if ($request->ajax()) {
-            $data = User::usermember()->with('member')->orderBy('id', 'DESC');
+            $data = User::usermember()->with('member'); //->orderBy('id', 'DESC')
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
@@ -105,6 +105,9 @@ class MemberController extends Controller
                 // ->editColumn('share_total_price', function ($row) {
                 //     return $row->member->share_total_price;
                 // })
+                ->addColumn('uid', function ($row) {
+                    return $row->member->uid;
+                })
                 ->editColumn('registration_no', function ($row) {
                     return $row->member->registration_no;
                 })

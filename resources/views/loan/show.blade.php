@@ -72,16 +72,16 @@
                         </div>
                     </div>
                     @if ($loan->payment_type == 'cheque')
-                        <div class="mb-3 row">
+                        {{-- <div class="mb-3 row">
                             <label for="email"
                                 class="col-md-4 col-form-label text-md-end text-start"><strong>{{ __('Bank Name') }}:</strong></label>
                             <div class="col-md-6" style="line-height: 35px;">
                                 {{ __($loan->bank_name) }}
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="mb-3 row">
                             <label for="email"
-                                class="col-md-4 col-form-label text-md-end text-start"><strong>{{ __('Cheque No.') }}:</strong></label>
+                                class="col-md-4 col-form-label text-md-end text-start"><strong>{{ __('Cheque No.(RDC Bank)') }}:</strong></label>
                             <div class="col-md-6" style="line-height: 35px;">
                                 {{ __($loan->cheque_no) }}
                             </div>

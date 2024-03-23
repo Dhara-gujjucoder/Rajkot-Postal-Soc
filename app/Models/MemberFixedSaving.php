@@ -16,12 +16,18 @@ class MemberFixedSaving extends Model
         'month',
         'fixed_amount',
         'year_id',
+        'is_double_entry',
         'status'
     ];
 
     public function member()
     {
         return $this->hasOne(Member::class, 'id', 'member_id')->withTrashed();
+    }
+
+    public function double_entry()
+    {
+        return $this->hasOne(MetaDoubleEntry::class, 'member_id', 'member_id')->where('month', '=', $this->month);
     }
 
     protected static function booted(): void
@@ -32,8 +38,10 @@ class MemberFixedSaving extends Model
         static::addGlobalScope('status', function (Builder $builder) {
             $builder->where('status',1);
         });
+        static::addGlobalScope('bulk_entry', function (Builder $builder) {
+            $builder->where('is_double_entry',0);
+        });
     }
-
 }
 
- 
+

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\LedgerAccount;
 use App\Models\MetaDoubleEntry;
 use App\Models\MasterDoubleEntry;
+use App\Models\MemberFixedSaving;
 use App\Traits\UpdateMemberShare;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
@@ -44,7 +45,9 @@ class DoubleEntryController extends Controller
         $data['count'] = (MasterDoubleEntry::latest()->first()->id ?? 0) + 1;
         $data['no'] = str_pad($data['count'], 4, 0, STR_PAD_LEFT);
         $data['page_title'] = __('Add Double Entry');
-        $data['ledger_accounts'] = LedgerAccount::whereIn('ledger_group_id',[2,4,5,10])->get();
+        // $data['ledger_accounts'] = LedgerAccount::whereIn('ledger_group_id',[2,4,5,10])->get();
+        $data['ledger_accounts'] = LedgerAccount::get();
+
         return view('double_entries.create', $data);
     }
 
@@ -79,12 +82,19 @@ class DoubleEntryController extends Controller
             $count = count($request->ledger_ac_id);
 
             for ($i = 0; $i<$count; $i++) {
+                $ledger_account = LedgerAccount::find($request->ledger_ac_id[$i]);
+                $member = Member::find($ledger_account->member_id);
+                $month = date('m-Y',strtotime($request->date));
+                // dd($member);
+
                 $meta_entry = new MetaDoubleEntry();
                 $meta_entry->mde_id  = $master_entry->id;
                 $meta_entry->ledger_ac_id  = $request->ledger_ac_id[$i];
                 $meta_entry->share = $request->share[$i] ?? '0';
                 $meta_entry->particular  = $request->particular[$i] ?? '';
                 $meta_entry->amount  = $request->amount[$i] ?? 0;
+                $meta_entry->member_id = $member->id??0;
+                $meta_entry->month = $month;
                 $meta_entry->type = $request->type[$i]?? 0;
                 $meta_entry->save();
 
@@ -95,12 +105,39 @@ class DoubleEntryController extends Controller
                 }
 
                 if($request->share[$i]){
-                    $ledger_account = LedgerAccount::find($request->ledger_ac_id[$i]);
-                    $member = Member::find($ledger_account->member_id);
                     $no_of_share = $member->total_share + $request->share[$i];
                     $this->update_member_share($member, $no_of_share);
                 }
+
+                if($ledger_account->ledger_group_id == 1){
+
+
+                    // $fixed_saving = MemberFixedSaving::where('month',$month)->where('member_id',$ledger_account->member_id)->first();
+
+                    // if($fixed_saving){
+                    //     $fixed_saving->fixed_amount = $fixed_saving->fixed_amount + $meta_entry->amount;
+                    //     $fixed_saving->save();
+
+                    //     $member->fixed_saving_ledger_account->update(['current_balance' => $member->fixed_saving_ledger_account->current_balance + $meta_entry->amount]);
+                    // }else{
+
+                        $ledger = MemberFixedSaving::create([
+                            'ledger_account_id' => $member->fixed_saving_ledger_account->id ?? 0,
+                            // 'member_id' => $member->id,
+                            'member_id' => $ledger_account->member_id,
+                            'month' => $month,
+                            'fixed_amount' => $meta_entry->amount,
+                            'year_id' => 1,
+                            'status' => 1,
+                            'is_double_entry' => 1
+                            // 'created_date' => $end_date->format('Y-m-d'),
+                        ]);
+                        $member->fixed_saving_ledger_account->update(['current_balance' => $member->fixed_saving_ledger_account->current_balance + $meta_entry->amount]);
+                    // }
+                    // dd($ledger);
+                }
             }
+
             // dd($cr_total.'credit----->debit'.$dr_total);
             $master_entry->credit_amount = $cr_total;
             $master_entry->debit_amount = $dr_total;
@@ -118,7 +155,8 @@ class DoubleEntryController extends Controller
 
         return view('double_entries.show', [
             'master_entry' => $master_entry,
-            'ledger_accounts' => LedgerAccount::whereIn('ledger_group_id',[2,4,5])->get(),
+            // 'ledger_accounts' => LedgerAccount::whereIn('ledger_group_id',[2,4,5])->get(),
+            'ledger_accounts' => LedgerAccount::get(),
             'page_title'=> __('Double Entry Details')
         ]);
     }

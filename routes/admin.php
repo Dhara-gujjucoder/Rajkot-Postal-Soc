@@ -47,7 +47,7 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
     Route::get('/users/profile/{user}', [App\Http\Controllers\UserController::class, 'profile'])->name('users.profile');
     Route::post('/users/profile/{user}', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('users.profile');
     Route::get('/import/member', [App\Http\Controllers\MemberImportController::class, 'create'])->name('member.import');
-    Route::post('/import/member', [App\Http\Controllers\MemberImportController::class, 'storewithimage'])->name('member.import');
+    Route::post('/import/member', [App\Http\Controllers\MemberImportController::class, 'store'])->name('member.import');
     Route::get('/import/salary', [App\Http\Controllers\SalaryDeductionController::class, 'salary_import'])->name('salary.import');
     Route::post('/import/salary', [App\Http\Controllers\SalaryDeductionController::class, 'importsalary'])->name('salary.import');
     Route::get('/export/bulk_entries/{id}', [App\Http\Controllers\BulkEntryController::class, 'export'])->name('bulk_entries.export');

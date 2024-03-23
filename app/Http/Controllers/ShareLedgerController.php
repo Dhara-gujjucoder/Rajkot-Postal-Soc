@@ -28,6 +28,9 @@ class ShareLedgerController extends Controller
                         $q->where('name', 'Like', '%' . $search . '%');
                     });
                 })
+                ->addColumn('uid', function ($row) {
+                    return $row->uid;
+                })
                 ->addColumn('opening_balance', function ($row) {
                     return $row->share_ledger_account->opening_balance;
                 })

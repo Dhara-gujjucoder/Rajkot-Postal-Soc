@@ -193,7 +193,7 @@
                                 </div>
                             </div>
                             <div id="payment_details" style="display: {{ old('payment_type') == 'cheque' ? 'block' : 'none' }};">
-                                <div class="mb-3 row">
+                                {{-- <div class="mb-3 row">
                                     <label for="amount" class="col-md-2 col-form-label text-md-end text-start">{{ __('Bank Name') }}</label>
                                     <div class="col-md-10">
                                         <input type="text" class="form-control @error('bank_name') is-invalid @enderror" id="bank_name" name="bank_name" value="{{ old('bank_name') }}" placeholder="{{ __('Bank Name') }}">
@@ -201,9 +201,9 @@
                                             <span class="text-danger">{{ $errors->first('bank_name') }}</span>
                                         @endif
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="mb-3 row">
-                                    <label for="amount" class="col-md-2 col-form-label text-md-end text-start">{{ __('Cheque No.') }}</label>
+                                    <label for="amount" class="col-md-2 col-form-label text-md-end text-start">{{ __('Cheque No.(RDC Bank)') }}</label>
                                     <div class="col-md-10">
                                         <input type="number" class="form-control @error('cheque_no') is-invalid @enderror" id="cheque_no" name="cheque_no" value="{{ old('cheque_no') }}" placeholder="{{ __('Cheque No.') }}">
                                         @if ($errors->has('cheque_no'))

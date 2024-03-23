@@ -101,7 +101,7 @@ class LoanMasterController extends Controller
             'stamp_duty' => 'required',
             'g2_member_id' => 'required',
             'payment_type' => 'required',
-            'bank_name' => 'required_if:payment_type,cheque',
+            // 'bank_name' => 'required_if:payment_type,cheque',
             'cheque_no' => 'required_if:payment_type,cheque',
             'gcheque_no' => 'required|numeric',
             'gbank_name' => 'string'
@@ -206,7 +206,7 @@ class LoanMasterController extends Controller
         $request->validate([
             'amount' => 'required',
             'payment_type'=>'required',
-            'bank_name' => 'required_if:payment_type,cheque',
+            // 'bank_name' => 'required_if:payment_type,cheque',
             'cheque_no' => 'required_if:payment_type,cheque'
         ]);
         if($request->amount < 200){

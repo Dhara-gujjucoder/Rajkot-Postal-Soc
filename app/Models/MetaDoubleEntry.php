@@ -18,6 +18,7 @@ class MetaDoubleEntry extends Model
         'particular',
         'amount',
         'member_id',
+        'month',
         'type',
     ];
 
