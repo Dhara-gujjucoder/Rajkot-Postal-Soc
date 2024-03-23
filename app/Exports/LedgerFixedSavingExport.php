@@ -4,6 +4,7 @@ namespace App\Exports;
 
 use App\Models\Member;
 use App\Models\LedgerAccount;
+use App\Models\MemberFixedSaving;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -42,12 +43,9 @@ class LedgerFixedSavingExport implements FromCollection, WithMapping, ShouldAuto
 
     public function map($ledger_account): array
     {
-
         $entry  = [
             [], [], [], [],
-
             [],
-
             ['', getSetting()->title],
             ['', getSetting()->address],
             ['', 'REG. NO.' . $ledger_account->member->registration_no],
@@ -55,27 +53,39 @@ class LedgerFixedSavingExport implements FromCollection, WithMapping, ShouldAuto
 
             ['Name :', $ledger_account->member->name, 'Member No.', $ledger_account->member->uid],
             ['Address :', $ledger_account->member->current_address, 'Ledger', $ledger_account->account_name],
-            ['Period', currentYear()->title, 'F.Y',currentYear()->title], [],
+            ['Period', currentYear()->title, 'F.Y', currentYear()->title], [],
 
             ['Date', 'L/F', 'Particular', 'DR', 'CR', 'Balance'],
 
             [date('Y-m-d'), '', 'Opening balance', '', '', $ledger_account->opening_balance],
-
         ];
+
         $fixed_saving = $ledger_account->member->fixed_saving()->get();
+        // dd($fixed_saving );
         $total = 0;
         foreach ($fixed_saving as $key => $value) {
-            $total =  $total+$value->fixed_amount;
-            $entry[] = [
+            // dump( $value->double_entry);
+            $total =  $total + $value->fixed_amount;
 
-                $value->month,'','','',
-                $value->fixed_amount,
-                $total,
+            $entry[] = [
+                $value->month, '', '', '', $value->fixed_amount, $total,
             ];
+            // withoutGlobalScope('bulk_entry')->
+
+            $double_entry_data = MemberFixedSaving::withoutGlobalScope('bulk_entry')->where('member_id', $ledger_account->member->id)
+                ->where('month', $value->month)->where('is_double_entry', 1)->get();
+
+            if ($double_entry_data->isNotEmpty()) {
+                $entry[] = [
+                    $value->month, '', $value->double_entry->particular ?? '', '', $value->double_entry->amount, $total + $value->double_entry->amount,
+                ];
+                $total = $total + $value->double_entry->amount;
+            }
         }
+
         $all = ($total + $ledger_account->opening_balance);
         $entry[] = [];
-        $entry[]  = ['','','','',$total,$all];
+        $entry[]  = ['', '', '', 'TOTAL:', $total, $all];
 
         return $entry;
     }
@@ -123,6 +133,6 @@ class LedgerFixedSavingExport implements FromCollection, WithMapping, ShouldAuto
                 ]
             ],
         ]);
-        $sheet->getStyle('A' . $sheet->getHighestRow() . ':'.$sheet->getHighestColumn().$sheet->getHighestRow())->getFont()->setBold(true);
+        $sheet->getStyle('A' . $sheet->getHighestRow() . ':' . $sheet->getHighestColumn() . $sheet->getHighestRow())->getFont()->setBold(true);
     }
 }

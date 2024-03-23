@@ -92,9 +92,11 @@ class BulkEntryController extends Controller
                     // $item->{$value} = $prefill->{$value} ?? 0;
                     // if($loan_emi ){
                     // }
+
                 }
             });
             $department->members = $members;
+
             // for get all field total
             $data['total']['principal'] += $department->principal_total;
             $data['total']['interest'] += $department->interest_total;

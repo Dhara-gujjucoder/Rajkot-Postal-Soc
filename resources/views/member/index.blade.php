@@ -129,7 +129,6 @@
 @endsection
 @push('script')
 <script>
-
         var table = $('#table1').DataTable({
             processing: true,
             serverSide: true,

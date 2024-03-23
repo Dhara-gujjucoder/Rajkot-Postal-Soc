@@ -11,9 +11,10 @@
                 <div class="form">
 
                 </div>
-                <form method="post" action="{{ route('all_share_ledger_export') }}" id="export_saving">
+                <form method="post" action="{{ route('all_share_ledger_export') }}" id="export_share_ledger">
                     @csrf
-                    <button type="submit" class="btn btn-outline-success btn-md float-start my-3">{{ __('All Export') }}</button>
+                    <button type="submit" id="submitBtn" class="btn btn-outline-success btn-md float-start my-3">{{ __('All Export') }}</button>
+                    <div id="loading" style="display: none;" class="btn btn-outline-light btn-md float-start my-3">{{ __('Loading...') }}</div>
                 </form>
             </div>
 
@@ -92,5 +93,39 @@
         });
 
     });
+
+
+    $('#submitBtn').on('click', function() {
+            $('#loading').show(); // Display the loading symbol
+            $('#submitBtn').hide();
+            // Serialize the form data
+            var formData = $('#export_share_ledger').serialize();
+
+            // Submit form data using AJAX
+            $.ajax({
+                url: $('#export_share_ledger').attr('action'),
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    // Hide loading symbol after successful submission
+                    $('#loading').hide();
+                    $('#submitBtn').show();
+                    $('#month_from').val('');
+
+                    // Clear the form fields or do any other necessary actions
+                    // $('#export_share_ledger')[0].reset();
+                    // const element = document.querySelector('#month_from');
+                    // const element2 = document.querySelector('#month_to');
+                    // const choices = new Choices('#month_from');
+                    // const choices2 = new Choices('#month_to');
+
+                },
+                error: function(xhr) {
+                       $('#loading').hide();
+                    // Handle errors if needed
+                }
+            });
+        });
+
 </script>
 @endpush

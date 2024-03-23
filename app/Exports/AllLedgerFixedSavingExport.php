@@ -4,6 +4,7 @@ namespace App\Exports;
 
 use App\Models\Member;
 use App\Models\LedgerAccount;
+use App\Models\MemberFixedSaving;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Style\Border;
@@ -150,19 +151,29 @@ class AllLedgerFixedSavingExport implements FromCollection, WithMapping, ShouldA
             // $opening_balance += $ledger_account->opening_balance;
             $fixed_saving = $ledger_account->member->fixed_saving;
             $total = 0;
+
             foreach ($fixed_saving as $key => $value) {
                 $total = $total + $value->fixed_amount;
 
                 $entry[] = [
 
-                    $value->month, '', '', '',
-                    $value->fixed_amount,
-                    $total,
+                    $value->month, '', '', '', $value->fixed_amount, $total,
                 ];
+
+                $double_entry_data = MemberFixedSaving::withoutGlobalScope('bulk_entry')->where('member_id',$ledger_account->member->id)
+                ->where('month',$value->month)->where('is_double_entry',1)->get();
+
+                if($double_entry_data->isNotEmpty()){
+                    $entry[] = [
+                        $value->month, '', $value->double_entry->particular ?? '', '', $value->double_entry->amount, $total+$value->double_entry->amount,
+                    ];
+                    $total = $total + $value->double_entry->amount;
+                }
             }
+
             $all = ($total + $ledger_account->opening_balance);
             $entry[] = [];
-            $entry[]  = ['', '', '', '', $total, $all];
+            $entry[]  = ['', '', '', 'TOTAL:', $total, $all];
             $this->main_total['saving'] +=  $total;
             $this->main_total['balance'] +=  $all;
             // dd( $this->main_total['saving'] );
@@ -221,7 +232,7 @@ class AllLedgerFixedSavingExport implements FromCollection, WithMapping, ShouldA
                 // $sheet->getStyle('E'. ($rowIndex+25))->applyFromArray($substyle);
                 // $sheet->getStyle('F'. ($rowIndex+25))->applyFromArray($substyle);
 
-
+                $sheet->getStyle('A' . ($rowIndex + 10) . ':F' . ($rowIndex + 10))->applyFromArray($substyle);
                 $sheet->getStyle('A' . ($rowIndex + 10) . ':F' . ($rowIndex + 10))->applyFromArray([
                     'borders' => [
                         'bottom' => [
@@ -234,12 +245,29 @@ class AllLedgerFixedSavingExport implements FromCollection, WithMapping, ShouldA
                 ]);
 
                 $records = $record->member->fixed_saving->count();
+                $double_entry_count = MemberFixedSaving::withoutGlobalScope('bulk_entry')->where('member_id',$record->member->id)
+               ->where('is_double_entry',1)->count();
+               $records =  $records +  $double_entry_count ;
+
                 $rowIndex +=  $records + 19;
 
                 // dd($rowIndex);
                 $rowTotal = ($rowTotal + $records + 19);
-                $sheet->getStyle('E' . ($rowTotal))->applyFromArray($substyle);
-                $sheet->getStyle('F' . ($rowTotal))->applyFromArray($substyle);
+
+                // $sheet->getStyle('E' . ($rowTotal))->applyFromArray($substyle);
+                // $sheet->getStyle('F' . ($rowTotal))->applyFromArray($substyle);
+
+                $sheet->getStyle('D' . ($rowTotal) . ':F' . ($rowTotal))->applyFromArray($substyle);
+                $sheet->getStyle('D' . ($rowTotal) . ':F' . ($rowTotal))->applyFromArray([
+                    'borders' => [
+                        'bottom' => [
+                            'borderStyle' => Border::BORDER_THIN,
+                        ],
+                        'top' => [
+                            'borderStyle' => Border::BORDER_THIN,
+                        ]
+                    ],
+                ]);
 
                 $sheet->getStyle('A' . $sheet->getHighestRow() . ':' . $sheet->getHighestColumn() . $sheet->getHighestRow())->getFont()->setBold(true);
             }
