@@ -38,6 +38,8 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
         $total = [];
 
         foreach ($this->data as $key => $value) {
+
+
             // dd($value->department->department_name);
             $total[$key] = [
                 $value->department->department_name,
