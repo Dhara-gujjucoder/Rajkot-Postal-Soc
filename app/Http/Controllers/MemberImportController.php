@@ -50,7 +50,7 @@ class MemberImportController extends Controller
         // Excel::import(new MemberImport, $request->file('memberexcel'));
         $objphpexcel = IOFactory::load($request->file('memberexcel'));
         
-        // ->getSheetByName("Sheet1")
+        // // ->getSheetByName("Sheet1")
         foreach ($objphpexcel->getActiveSheet()->getDrawingCollection() as $drawing) {
       
             $cellID = $drawing->getCoordinates();
