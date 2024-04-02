@@ -52,11 +52,13 @@ class MemberController extends Controller
 
     public function index(Request $request)
     {
+        // dd($request->all());
         $data['page_title'] = __('View Members');
-        $data['departments'] = 1;
+        // $data['departments'] = 1;
         $data['departments'] = Department::get();
         $data['members'] = Member::orderBy('uid', 'DESC')->get();
         if ($request->ajax()) {
+//   dd($request->all());
             $data = User::usermember()->with('member'); //->orderBy('id', 'DESC')
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -108,6 +110,12 @@ class MemberController extends Controller
                 ->addColumn('uid', function ($row) {
                     return $row->member->uid;
                 })
+                ->filterColumn('uid', function ($query, $search) {
+                    $query->whereHas('member', function ($q) use ($search) {
+                        // dd($search);
+                        $q->where('uid','like', $search);
+                    });
+                })
                 ->editColumn('registration_no', function ($row) {
                     return $row->member->registration_no;
                 })
@@ -123,6 +131,8 @@ class MemberController extends Controller
                 })
                 ->rawColumns(['action', 'roles'])
                 ->make(true);
+
+
         }
         return view('member.index', $data);
     }
