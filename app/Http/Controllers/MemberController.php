@@ -371,7 +371,9 @@ class MemberController extends Controller
 
     public function getmember(Member $member)
     {
-        $member = Member::where('id', $member->id)->with(['loan', 'shares'])->get()->first();
+        $member = Member::where('id', $member->id)->with(['loan', 'shares','loan.loan_emis' => function ($query) {
+            $query->paid();
+        }])->get()->first();
         $member->member_fixed_saving = $member->member_fixed;
         $member->loan_remaining_amount = $member->loan_remaining_amount;
         return response()->json(['success' => true, 'member' => $member]);

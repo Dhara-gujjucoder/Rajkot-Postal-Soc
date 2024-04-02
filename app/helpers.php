@@ -164,13 +164,13 @@ if (!function_exists('getLedgerGroupDropDown')) {
             // dd($final);
             $member_fixed_Saving = MemberFixedSaving::where('member_id', $member_id)->whereIn('month',$final);
             // $nil_entries =  $member_fixed_Saving->where('fixed_amount',0)->count();
-            $saving_amount = $member_fixed_Saving->sum('fixed_amount');
-            // dd($saving_amount);
+            $saving_amount = $member_fixed_Saving->withoutGlobalScope('bulk_entry')->sum('fixed_amount');
+            // dd($member_fixed_Saving->get());
+            $required_amount = $member_fixed_Saving->groupBy('month')->get(['month'])->count()*current_fixed_saving()->monthly_saving;
+        //    dd( $saving_amount);
             // $member = Member::find($member_id);
             // $count = count(getMonthsOfYear(currentYear()->id));
-            $required_amount = $member_fixed_Saving->count()*current_fixed_saving()->monthly_saving;
-            // dd( $member_fixed_Saving->get());
-            return  $required_amount-$saving_amount;
+            return  $required_amount-$saving_amount > 0 ? $required_amount-$saving_amount : 0;
         }
     }
 }

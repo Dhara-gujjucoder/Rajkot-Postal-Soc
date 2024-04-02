@@ -251,7 +251,7 @@
         var fixed = Number($('#fixed_saving').val()) ? Number($('#fixed_saving').val()) : 0;
         console.log(loan, fixed);
         total = loan - fixed;
-        $('#total_amount').val(total.toFixed(0));
+        // $('#total_amount').val(total.toFixed(0));
     }
 
     $(document).on('submit','#loan_close',function(e){

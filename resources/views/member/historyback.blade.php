@@ -3,7 +3,7 @@
     // dd($member->member_fixed['member_fixed_saving']);
         $no_of_month = count(getMonthsOfYear(currentYear()->id));
         $required_saving = $no_of_month * current_fixed_saving()->monthly_saving;
-    @endphp
+    $remaining_fixed_saving = $member->remaining_fixed_saving; @endphp
     <input type="hidden" class="form-control" id="month" name="month"
         value="{{ date('m-d-Y', strtotime(currentYear()->start_month . '-01-' . currentYear()->start_year)) }}">
 
@@ -13,7 +13,10 @@
     <input type="hidden" class="form-control" id="remaining_loan_amount" name="remaining_loan_amount"
         value="{{ old('remaining_loan_amount', $member->loan_remaining_amount) }}">
 
-
+    {{-- <input type="hidden" class="form-control" id="total_fixed_saving" name="total_fixed_saving"
+        value="{{ old('fixed_saving', $member->member_fixed['member_fixed_saving']) }}"> --}}
+    {{-- <input type="hidden" class="form-control" id="remaining_fixed_saving" name="remaining_fixed_saving"
+        value="{{ old('fixed_saving', $remaining_fixed_saving) }}"> --}}
     <input type="hidden" class="form-control" id="total_required_amt" name="total_required_amt"
         value="{{ old('total_required_amt') }}">
     <input type="hidden" class="form-control" id="member_id" name="member_id" value="{{ old('member_id') }}">
@@ -69,7 +72,7 @@
                     {{-- <td>&nbsp;</td> --}}
                     <td>{{ __('Share amount') }}</td>
                     <td><span class="badge bg-light-info"
-                            id="remaining_share_amt_label">&#8377;{{ $member->share_ledger_account->current_balance }}
+                            id="remaining_share_amt_label">&#8377;{{ $member->shares->count() * current_share_amount()->share_amount }}
                         </span></td>
                 </tr>
                 <tr class="bg-body-secondary">
@@ -85,7 +88,7 @@
                 <tr>
                     <td>{{ __('Remaining fixed saving') }}</td>
                     <td><span class="badge bg-light-info"
-                            id="remaining_fixed_saving_label">&#8377;{{ $member->remaining_fixed_saving }}
+                            id="remaining_fixed_saving_label">&#8377;{{ $remaining_fixed_saving }}
                         </span></td>
                 </tr>
 
@@ -100,30 +103,23 @@
                                 value="{{ $member->loan_remaining_amount }}">
                         </td>
                     </tr> --}}
-                @if ($member->loan_remaining_amount > ($member->remaining_fixed_saving+$member->share_ledger_account->current_balance))
-                @else
-
-                <tr>
-                        <td colspan="2" class="text-center"><b>{{ __('Amount Settlement') }}</b></td>
+                @if ($member->loan_remaining_amount)
+                    <tr>
+                        <td colspan="2" class="text-center"><b>{{ __('Loan Settlement') }}</b></td>
                     </tr>
 
                     <tr>
-                        <td> <input class="form-check-input payment_type ms-3" type="checkbox" name="share_amount_check"
-                            id="share_amount_check" value="share_check" onchange="take_fixed_saving()"
-                            {{ $member->share_ledger_account->current_balance > 0 ? 'checked' : '' }}>
-                        <label class="form-check-label pl-2" for="fixed_saving_check">
-                            {{ __('Share Amount') }} :  {{$member->share_ledger_account->current_balance}}
-                        </label></td>
+                        <td><b>{{ __('Are you want to use fixed saving ?') }}</b></td>
                         <td colspan="2">
                             <input class="form-check-input payment_type ms-3" type="checkbox" name="fixed_saving_check"
                                 id="fixed_saving_check" value="fixed_saving_check" onchange="take_fixed_saving()"
                                 {{ $member->member_fixed['member_fixed_saving'] > 0 ? 'checked' : '' }}>
                             <label class="form-check-label pl-2" for="fixed_saving_check">
-                                {{ __('Fixed Saving') }} :  {{ $member->fixed_saving_ledger_account->current_balance  }}
+                                {{ __('Fixed Saving') }}
                             </label>
                         </td>
                     </tr>
-                    {{-- <tr id="fixed_saving_details"
+                    <tr id="fixed_saving_details"
                         style="display: {{ $member->member_fixed['member_fixed_saving'] > 0 ? 'contents' : 'none' }};">
 
                         <td> <label for="amount"
@@ -136,10 +132,24 @@
                                 onchange="calculate()" placeholder="{{ __('Fixed Saving') }}">
 
                         </td>
-                    </tr> --}}
-                  
-                {{-- @elseif($member->member_fixed['member_fixed_saving']) --}}
-                {{-- <tr>
+                    </tr>
+                    <tr id="final_total">
+                        <td><label for="amount"
+                                class=" form-label text-md-end text-start"><b>{{ __('Total amount') }}</b></label>
+                        </td>
+                        <td colspan="2">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <input type="number" class="form-control total_amount" id="total_amount" readonly
+                                        name="total_amount" {{ $member->loan_remaining_amount }}
+                                        value="{{ $member->loan_remaining_amount }}"
+                                        placeholder="{{ __('Total amount') }}">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                @elseif($member->member_fixed['member_fixed_saving'])
+                <tr>
                     <td colspan="2" class="text-center">{{ __('Fixed Amount Settlement') }}</td>
                 </tr>
                     <tr>
@@ -152,23 +162,9 @@
                                 value="{{ old('fixed_saving', $member->member_fixed['member_fixed_saving']) }}" placeholder="{{ __('Fixed Saving') }}">
 
                         </td>
-                    </tr> --}}
+                    </tr>
                 @endif
-                <tr id="final_total">
-                    <td><label for="amount"
-                            class=" form-label text-md-end text-start"><b>{{ __('Total amount') }}</b></label>
-                    </td>
-                    <td colspan="2">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <input type="number" class="form-control total_amount" id="total_amount" 
-                                    name="total_amount" 
-                                    value="{{ ($member->remaining_fixed_saving+$member->share_ledger_account->current_balance)-$member->loan_remaining_amount }}"
-                                    placeholder="{{ __('Total amount') }}">
-                            </div>
-                        </div>
-                    </td>
-                </tr>
+
                 <tr>
                     <td><b>{{ __('Payment Type') }}</b></td>
                     <td colspan="2"><input class="form-check-input payment_type ms-3" type="radio"
@@ -217,10 +213,7 @@
                         </div>
                     </td>
                 </tr>
-                @if(($member->remaining_fixed_saving+$member->share_ledger_account->current_balance)-$member->loan_remaining_amount)
-                <tr><td colspan="2" class="text-danger">Note : You are resigning in nagative amount</td></tr>
 
-                @endif
             </tbody>
         </table>
     </div>

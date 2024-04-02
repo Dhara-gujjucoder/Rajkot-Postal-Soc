@@ -68,7 +68,7 @@
                     <div class="col-md-6">
                         <div class="dashboard-detail-data">
                             <label class="col-form-label"><strong>{{ __('Current loan') }}:</strong></label>
-                            <div class="col-form-info">&#8377; {{ $member->loan->principal_amt }}</div>
+                            <div class="col-form-info">&#8377; {{ $member->loan->principal_amt ?? 0 }}</div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -80,13 +80,13 @@
                     <div class="col-md-6">
                         <div class="dashboard-detail-data">
                             <label class="col-form-label"><strong>{{ __('Paid EMI') }}:</strong></label>
-                            <div class="col-form-info"> {{ $member->loan->loan_emis()->paid()->count() }}</div> {{-- sum('emi') --}}
+                            <div class="col-form-info"> {{ $member->loan ?  $member->loan->loan_emis()->paid()->count() : 0}}</div> {{-- sum('emi') --}}
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="dashboard-detail-data">
                             <label class="col-form-label"><strong>{{ __('Remaining EMI') }}:</strong></label>
-                            <div class="col-form-info" id="required_share"> {{ $member->loan->loan_emis()->pending()->count() }}</div>
+                            <div class="col-form-info" id="required_share"> {{  $member->loan ? $member->loan->loan_emis()->pending()->count() : 0 }}</div>
                         </div>
                     </div>
 

@@ -17,6 +17,7 @@ class MemberFixedSaving extends Model
         'fixed_amount',
         'year_id',
         'is_double_entry',
+        'loan_settlement',
         'status'
     ];
 
@@ -29,7 +30,10 @@ class MemberFixedSaving extends Model
     {
         return $this->hasOne(MetaDoubleEntry::class, 'member_id', 'member_id')->where('month', '=', $this->month);
     }
-
+    public function scopeLoan($query)
+    {
+        return $query->whereNotNull('loan_settlement');
+    }
     protected static function booted(): void
     {
         static::addGlobalScope('year', function (Builder $builder) {
@@ -41,6 +45,7 @@ class MemberFixedSaving extends Model
         static::addGlobalScope('bulk_entry', function (Builder $builder) {
             $builder->where('is_double_entry',0);
         });
+       
     }
 }
 

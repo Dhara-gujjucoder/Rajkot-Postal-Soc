@@ -50,6 +50,7 @@ class LoanController extends Controller
         $data['page_title'] = __('Loan Apply');
         $data['user'] = Auth::user();
         $data['member'] = $data['user']->member;
+        // dd($data['member'] );
         $data['loan'] = LoanMaster::where('member_id', $data['user']->member->id)->first();
         $data['old_loans'] = LoanMaster::where('member_id', $data['user']->member->id)->where('status',1)->get();
 
