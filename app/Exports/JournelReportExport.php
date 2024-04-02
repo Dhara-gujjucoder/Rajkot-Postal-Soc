@@ -27,7 +27,6 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
     {
         $this->month = $month;
         // $this->request = request();
-
     }
 
     public function collection()
@@ -38,8 +37,6 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
         $total = [];
 
         foreach ($this->data as $key => $value) {
-
-
             // dd($value->department->department_name);
             $total[$key] = [
                 $value->department->department_name,
@@ -111,7 +108,7 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                 [],
                 [],
                 ['', '', '', 'LOAN SETTLEMENT Pri.'],
-                ['', 'Sr.', 'M.No.', 'Name', 'Rec.No.', 'Pri.Rs.', 'Int.Rs.', 'FS.Rs.', 'MS.', 'Total']
+                ['Sr.', 'M.No.', 'Emp.No.', 'Name', 'Rec.No.', 'Pri.Rs.', 'Int.Rs.', 'FS.Rs.', 'MS.', 'Total']
             ];
 
             $loan_settlement_amt = 0;
@@ -119,7 +116,7 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
             foreach ($bulk_entry_master['loan_settlment'] as $key => $value) {
                 $loan_settlement_amt = $loan_settlement_amt + $value->loan_settlement_amt;
                 // dd( $value->member->uid);
-                array_push($entry, ['', $key + 1, $value->member->uid,  $value->member->name, '', $value->loan_settlement_amt, '0', '0', '0', $value->loan_settlement_amt]);
+                array_push($entry, [$key + 1,  $value->member->uid, $value->member->registration_no, $value->member->name, '', $value->loan_settlement_amt, '0', '0', '0', $value->loan_settlement_amt]);
             }
 
             $entry[] = [];
@@ -173,7 +170,7 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                 ['', '', '', ('Dept: ' . $bulk_entry_master->department->department_name)],
                 [],
                 [],
-                ['', 'Sr.', 'M.No.', 'Name', 'Rec.No.', 'Pri.Rs.', 'Int.Rs.', 'FS.Rs.', 'MS.', 'Total']
+                ['Sr.', 'M.No.', 'Emp.No.', 'Name', 'Rec.No.', 'Pri.Rs.', 'Int.Rs.', 'FS.Rs.', 'MS.', 'Total']
             ];
 
             // dd($bulk_entry_master->members);
@@ -191,7 +188,7 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                 $ms += $value->ms;
 
                 $entry[] = [
-                    '', $key + 1, $value->member->uid, $value->member->name ?? '', '', $value->principal, $value->interest, $value->fixed, $value->ms,  $value->principal + $value->interest + $value->fixed + $value->ms,
+                    $key + 1, $value->member->uid, $value->member->registration_no, $value->member->name ?? '', '', $value->principal, $value->interest, $value->fixed, $value->ms, $value->principal + $value->interest + $value->fixed + $value->ms,
                     // $bulk_entry_master->rec_no, <=== 'Rec.No.'
                 ];
             }
@@ -210,28 +207,29 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
         $rowIndex = 3;
         $rowTotal = 0;
 
-        if ($data->count()) {
-            $style = [
-                'alignment' => [
-                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-                    'wrapText' => true,
-                ],
-                'font' => [
-                    'bold' => true,
-                    'size' => 14,
-                ],
-            ];
+        $style = [
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                'wrapText' => true,
+            ],
+            'font' => [
+                'bold' => true,
+                'size' => 14,
+            ],
+        ];
 
-            $substyle = [
-                'alignment' => [
-                    // 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
-                    'wrapText' => true,
-                ],
-                'font' => [
-                    'bold' => true,
-                ],
-            ];
+        $substyle = [
+            'alignment' => [
+                // 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
+                'wrapText' => true,
+            ],
+            'font' => [
+                'bold' => true,
+            ],
+        ];
+
+        if ($data->count()) {
 
             foreach ($data as $key => $record) {
                 if (!is_array($record) && $record->bulk_entries->count()) {
@@ -249,8 +247,7 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                     // $sheet->getStyle('E'. ($rowIndex+25))->applyFromArray($substyle);
                     // $sheet->getStyle('F'. ($rowIndex+25))->applyFromArray($substyle);
 
-
-                    $sheet->getStyle('B' . ($rowIndex + 5) . ':J' . ($rowIndex + 5))->applyFromArray($substyle);
+                    $sheet->getStyle('A' . ($rowIndex + 5) . ':J' . ($rowIndex + 5))->applyFromArray($substyle);
                     $sheet->getStyle('A' . ($rowIndex + 5) . ':J' . ($rowIndex + 5))->applyFromArray([
                         'borders' => [
                             'bottom' => [
@@ -272,7 +269,6 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
 
                     $sheet->getStyle('E' . ($rowTotal - 1) . ':J' . ($rowTotal - 1))->applyFromArray($substyle);
 
-
                     $sheet->getStyle('E' . ($rowTotal - 1) . ':J' . ($rowTotal - 1))->applyFromArray([
                         'borders' => [
                             'bottom' => [
@@ -285,20 +281,18 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                     ]);
                 } elseif (is_array($record)) {
                     // dd($record['loan_settlment']);
-                    // dump($rowTotal); //641, 183, 264
+                    dump($rowTotal); //641, 183, 264
                     $line_of_total = $rowTotal + 1;
 
 
-
-                    // dd($line_of_total);
 
                     if ($record['loan_settlment']->count()) {
 
                         /*this is for loan settlement style*/
                         $sheet->getStyle('D' . ($line_of_total + 2) . ':E' . ($line_of_total + 2))->applyFromArray($substyle);
 
-                        $sheet->getStyle('B' . ($line_of_total + 3) . ':J' . ($line_of_total + 3))->applyFromArray($substyle);
-                        $sheet->getStyle('B' . ($line_of_total + 3) . ':J' . ($line_of_total + 3))->applyFromArray([
+                        $sheet->getStyle('A' . ($line_of_total + 3) . ':J' . ($line_of_total + 3))->applyFromArray($substyle);
+                        $sheet->getStyle('A' . ($line_of_total + 3) . ':J' . ($line_of_total + 3))->applyFromArray([
                             'borders' => [
                                 'bottom' => [
                                     'borderStyle' => Border::BORDER_THIN,
@@ -310,6 +304,8 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                         ]);
 
                         $line_of_total = $rowTotal + 6 + $record['loan_settlment']->count();
+
+                        dd($line_of_total);
 
                         $sheet->getStyle('E' . ($line_of_total) . ':J' . ($line_of_total))->applyFromArray($substyle);
                         $sheet->getStyle('E' . ($line_of_total) . ':J' . ($line_of_total))->applyFromArray([
@@ -325,8 +321,8 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                     } else {
                         // *******for Loan settlement*********
                         $sheet->getStyle('D' . ($line_of_total + 2) . ':E' . ($line_of_total + 2))->applyFromArray($substyle);
-                        $sheet->getStyle('B' . ($line_of_total + 3) . ':J' . ($line_of_total + 3))->applyFromArray($substyle);
-                        $sheet->getStyle('B' . ($line_of_total + 3) . ':J' . ($line_of_total + 3))->applyFromArray([
+                        $sheet->getStyle('A' . ($line_of_total + 3) . ':J' . ($line_of_total + 3))->applyFromArray($substyle);
+                        $sheet->getStyle('A' . ($line_of_total + 3) . ':J' . ($line_of_total + 3))->applyFromArray([
                             'borders' => [
                                 'bottom' => [
                                     'borderStyle' => Border::BORDER_THIN,
@@ -361,6 +357,8 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                                 ]
                             ],
                         ]);
+                        //add hear
+                        dd($line_of_total);
                         $sheet->getStyle('E' . ($line_of_total + 18) . ':J' . ($line_of_total + 18))->applyFromArray($substyle);
                         $sheet->getStyle('E' . ($line_of_total + 18) . ':J' . ($line_of_total + 18))->applyFromArray([
                             'borders' => [
@@ -373,14 +371,13 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                             ],
                         ]);
                     }
-
                     // dump('ss'.$line_of_total);
-                    // dd($line_of_total);
+                        // dd($line_of_total);
 
                     if (count($record['department_total']) && count($record['loan_settlment'])) {
+
                         $sheet->getStyle('D' . ($line_of_total + 4) . ':E' . ($line_of_total + 4))->applyFromArray($substyle);
                         // $sheet->mergeCells('B' . ($line_of_total+4) . ':D' . ($line_of_total+4));
-
                         $sheet->getStyle('F' . ($line_of_total + 5) . ':J' . ($line_of_total + 5))->applyFromArray($substyle);
                         $sheet->getStyle('B' . ($line_of_total + 5) . ':J' . ($line_of_total + 5))->applyFromArray([
                             'borders' => [
@@ -409,13 +406,11 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                         ]);
                     }
 
+
                 }
             }
         }
     }
-
-
-
 
 
 

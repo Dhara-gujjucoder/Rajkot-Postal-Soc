@@ -24,7 +24,7 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::before(function ($user, $ability) {
-            
+
             // return true;
             if($user->hasRole('Super Admin')){
                 if(!currentYear()->is_active) {
@@ -47,6 +47,6 @@ class AuthServiceProvider extends ServiceProvider
             }
             // return $user->hasRole('Super Admin') ? true : null;
         });
-       
+
     }
 }

@@ -163,7 +163,6 @@
                 @endcanany
 
 
-
                 @canany(['create-loan_matrix', 'edit-loan_matrix', 'delete-loan_matrix', 'view-loan_matrix', 'create-loaninterest', 'edit-loaninterest', 'delete-loaninterest', 'view-loaninterest', 'loan-create', 'loan-edit', 'loan-delete', 'loan-view'])
                     <li class="sidebar-item  has-sub {{ request()->is('admin/loan_matrix*') || request()->is('admin/loaninterest*') || request()->is('admin/loan*') ? 'active' : '' }}">
                         <a href="#" class="sidebar-link">
@@ -236,18 +235,21 @@
                                 </li>
                             @endcan
 
+                           
                         </ul>
                     </li>
                 @endcan
 
-                @canany(['edit-general-setting', 'loaninterest-setting', 'share-amount-setting', 'monthly-saving-setting'])
+                {{-- {{ dump(Auth::user()->can('loaninterest-setting')) }} --}}
+                
+                @canany(['view-general-setting', 'view-loaninterest-setting', 'view-share-amount-setting', 'view-monthly-saving-setting'])
                     <li class="sidebar-item has-sub {{ request()->is('admin/general/setting/*') || request()->is('admin/shareamount*') || request()->is('admin/monthlysaving*') ? 'active' : '' }}">
                         <a href="#" class="sidebar-link">
                             <i class="bi bi-gear-fill"></i>
                             <span>{{ __('Setting') }}</span>
                         </a>
                         <ul class="submenu {{ request()->is('admin/general/setting/*') ? 'active submenu-open' : '' }}">
-                            @canany(['edit-general-setting'])
+                            @canany(['view-general-setting'])
                                 <li class="submenu-item {{ request()->is('admin/general/setting*') ? 'active' : '' }}">
                                     <a href="{{ route('setting.create', 1) }}" class='submenu-link'>
                                         {{-- <i class="bi bi-person-check-fill"></i> --}}
@@ -255,7 +257,7 @@
                                     </a>
                                 </li>
                             @endcan
-                            @canany(['share-amount-setting'])
+                            @canany(['view-share-amount-setting'])
                                 <li class="submenu-item {{ request()->is('admin/shareamount/*') ? 'active' : '' }}">
                                     <a href="{{ route('shareamount.index') }}" class='submenu-link'>
                                         {{-- <i class="bi bi-person-check-fill"></i> --}}
@@ -263,7 +265,7 @@
                                     </a>
                                 </li>
                             @endcan
-                            @canany(['monthly-saving-setting'])
+                            @canany(['view-monthly-saving-setting'])
                                 <li class="submenu-item {{ request()->is('admin/monthlysaving/*') ? 'active' : '' }}">
                                     <a href="{{ route('monthlysaving.index') }}" class='submenu-link'>
                                         {{-- <i class="bi bi-person-check-fill"></i> --}}
@@ -282,6 +284,16 @@
                         </ul>
                     </li>
                 @endcan
+
+                @canany(['view-balance_sheet','edit-balance_sheet'])
+                    <li class="sidebar-item {{ request()->is('admin/balance_sheet') ? 'active' : '' }}">
+                        <a href="{{ route('balance_sheet.index') }}" class='sidebar-link'>
+                            <i class="bi bi-clipboard-plus"></i>
+                            <span>{{ __('Balance SHEET') }}</span>
+                        </a>
+                    </li>
+                @endcan
+
             </ul>
         </div>
     </div>

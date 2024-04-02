@@ -15,20 +15,20 @@
                         <div class="col-md-4">
                             <label for="account_name" class="col-form-label">{{ __('Member') }}</label>
                             <div class="col-md-12">
-                                <select class="choices filter-input form-select @error('user_id') is-invalid @enderror"
-                                    aria-label="Permissions" id="user_id" data-column="2" name="user_id"
+                                <select class="choices filter-input form-select @error('uid') is-invalid @enderror"
+                                    aria-label="Permissions" id="uid" data-column="0" name="uid"
                                     style="height: 210px;">
                                     <option value="">{{ __('Member') }}</option>
                                     @forelse ($members as $key => $member)
-                                        <option value="{{ $member->user_id }}"
-                                            {{ $member->user_id == old('user_id') ? 'selected' : '' }}>
+                                        <option value="{{ $member->uid }}"
+                                            {{ $member->uid == old('uid') ? 'selected' : '' }}>
                                             {{ $member->fullname }}
                                         </option>
                                     @empty
                                     @endforelse
                                 </select>
-                                @if ($errors->has('user_id'))
-                                    <span class="text-danger">{{ $errors->first('user_id') }}</span>
+                                @if ($errors->has('uid'))
+                                    <span class="text-danger">{{ $errors->first('uid') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -38,7 +38,7 @@
                             <div class="col-md-12">
                                 <select
                                     class="choices filter-input form-select @error('department_id') is-invalid @enderror"
-                                    aria-label="Permissions" id="department_id" data-column="4" name="department_id"
+                                    aria-label="Permissions" id="department_id" data-column="3" name="department_id"
                                     style="height: 210px;">
                                     <option value="">{{ __('Department') }}</option>
                                     @forelse ($departments as $key => $department)
@@ -192,7 +192,7 @@
                 .search($(this).val())
                 .draw();
         });
-        $('#user_id').on('change', function() {
+        $('#uid').on('change', function() {
             table
                 .columns($(this).data('column'))
                 .search($(this).val())

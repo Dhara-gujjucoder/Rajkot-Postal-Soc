@@ -24,6 +24,7 @@ use App\Http\Controllers\MemberShareController;
 use App\Http\Controllers\ShareAmountController;
 use App\Http\Controllers\ShareLedgerController;
 use App\Http\Controllers\TarijReportController;
+use App\Http\Controllers\BalanceSheetController;
 use App\Http\Controllers\FinancialYearController;
 use App\Http\Controllers\JournelReportController;
 use App\Http\Controllers\LedgerAccountController;
@@ -53,6 +54,8 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
     Route::get('/export/bulk_entries/{id}', [App\Http\Controllers\BulkEntryController::class, 'export'])->name('bulk_entries.export');
     Route::get('/get/member/{member}', [App\Http\Controllers\MemberController::class, 'getmember'])->name('member.get');
     Route::get('/get/guarantor_count/{member}', [App\Http\Controllers\LoanMasterController::class, 'guarantor_count'])->name('guarantor_count.get');
+
+
 
     //***** Excel *****
     Route::get('/import/saving', [App\Http\Controllers\MemberFixedSavingController::class, 'all_share'])->name('all_share.import');            //******//
@@ -101,11 +104,13 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
         'department' => DepartmentController::class,
         'salary_deduction' => SalaryDeductionController::class,
         'financial_year' => FinancialYearController::class,
-        'loaninterest'=> LoanSettingController::class,
+        'loaninterest' => LoanSettingController::class,
         'shareamount' => ShareAmountController::class,
-        'monthlysaving'=>  MonthlySavingController::class,
+        'monthlysaving' =>  MonthlySavingController::class,
         'member_fixed_saving' => MemberFixedSavingController::class,
         'member_share' => MemberShareController::class,
+        'balance_sheet' => BalanceSheetController::class,
+
     ]);
 
     /*main setting*/
