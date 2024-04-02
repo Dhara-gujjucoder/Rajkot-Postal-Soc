@@ -135,7 +135,7 @@
                             @endif
                     </div>
                 </div>
-
+                <br>
                 @if (!$loan)
                 @else
                     <div class="desh-listbox skybluebg-box wow fadeInRight" data-wow-delay="0.2s">
