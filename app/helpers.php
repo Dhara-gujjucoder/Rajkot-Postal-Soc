@@ -134,6 +134,7 @@ if (!function_exists('getLedgerGroupDropDown')) {
     if (!function_exists('loan_remaining_amount')) {
         function loan_remaining_amount($member_id)
         {
+            // dd($member_id);
             return LoanEMI::where('member_id', $member_id)->pending()->sum('emi');
         }
     }

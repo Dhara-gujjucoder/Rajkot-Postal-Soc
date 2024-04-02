@@ -50,7 +50,7 @@ class LoanMasterController extends Controller
                     // $edit_btn = '<a href="' . route('loan.edit', $row->id) . '"
                     // class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square"></i>' . __('Edit') . '</a>';onclick="return confirm(`'.__('Do you want to delete this user?').'`);"
                     $delete_btn = '<button type="button"  class="btn btn-outline-danger btn-sm me-2" onclick="load_member_details('.$row->member_id.',`_settle`)" data-bs-toggle="modal" data-bs-target="#loan_settle"><i class="bi bi-trash"></i>' . __('Close') . '</button>&nbsp;';
-                    $pay_loan_btn = '<button type="button" data-bs-toggle="modal" data-bs-target="#loan_pay" onclick="load_member_details('.$row->member_id.',`_pay`)" 
+                    $pay_loan_btn = '<button type="button" data-bs-toggle="modal" data-bs-target="#loan_pay" onclick="load_member_details('.$row->member_id.',`_pay`)"
                     class="btn btn-outline-warning btn-sm me-2"><i class="bi bi-eye"></i> ' . __('Pay') . '</button>';
                     // (Auth::user()->can('view-ledger_account')) ? $action_btn.= $show_btn : '';
                     // (Auth::user()->can('edit-loan')) ? $action_btn .= $edit_btn : '';
@@ -287,7 +287,7 @@ class LoanMasterController extends Controller
             if($loan->member->loan_remaining_amount-$request->amount){
 
                //all remaining emi Entries
-   
+
                $emi_amount = $loan->emi_amount;
                $loan_amt = $loan->member->loan_remaining_amount-$request->amount;
                $loan_amount = $loan_amt;
@@ -295,19 +295,19 @@ class LoanMasterController extends Controller
                $emi_c = getLoanParam()[0];
                $emi_d = getLoanParam()[1];
                $rate = current_loan_interest()->loan_interest;
-              
+
                $dmonth = date('d-m-Y');
-               
+
                $member = Member::find($loan->member_id);
-   
+
                $loan->loan_emis()->pending()->delete();
-   
+
                    for ($i = 1; $i <= $no_of_emi; $i++) {
                        $emi_interest = intval($loan_amt * $rate / 100 * $emi_c / $emi_d);
                        $date = new DateTime($dmonth);
                        $date->add(new DateInterval('P1M'));
                        $dmonth = $date->format('d-m-Y');
-                       
+
                        if ($loan_amt > 0) {
                            if ($loan_amt < $emi_amount) {
                                $emi_amount = $loan_amt;
@@ -328,9 +328,9 @@ class LoanMasterController extends Controller
                                'status' => 1,
                            ]);
                        }
-                   
+
                    }
-                
+
             }else{
                 $loan->loan_emis()->pending()->delete();
                 $loan->bank_name = $request->bank_name;
@@ -341,7 +341,7 @@ class LoanMasterController extends Controller
             }
         }
 
-        
+
         if ($request->ajax()) {
             return response()->json(['success' => true, 'msg' => __('Loan Closed SucccessFully')]);
         }

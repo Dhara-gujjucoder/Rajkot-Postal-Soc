@@ -137,7 +137,7 @@
 
                         </td>
                     </tr> --}}
-                  
+
                 {{-- @elseif($member->member_fixed['member_fixed_saving']) --}}
                 {{-- <tr>
                     <td colspan="2" class="text-center">{{ __('Fixed Amount Settlement') }}</td>
@@ -160,9 +160,9 @@
                     </td>
                     <td colspan="2">
                         <div class="row">
-                            <div class="col-md-12">
-                                <input type="number" class="form-control total_amount" id="total_amount" 
-                                    name="total_amount" 
+                            <div class="col-md-12" {{  $member->loan_remaining_amount }} {{  $member->id }}>
+                                <input type="number" class="form-control total_amount" id="total_amount"
+                                    name="total_amount"
                                     value="{{ ($member->remaining_fixed_saving+$member->share_ledger_account->current_balance)-$member->loan_remaining_amount }}"
                                     placeholder="{{ __('Total amount') }}">
                             </div>
@@ -217,7 +217,7 @@
                         </div>
                     </td>
                 </tr>
-                @if(($member->remaining_fixed_saving+$member->share_ledger_account->current_balance)-$member->loan_remaining_amount)
+                @if(($member->remaining_fixed_saving+$member->share_ledger_account->current_balance)-$member->loan_remaining_amount < 0)
                 <tr><td colspan="2" class="text-danger">Note : You are resigning in nagative amount</td></tr>
 
                 @endif

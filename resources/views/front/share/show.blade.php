@@ -18,12 +18,12 @@
                 </div>
                 <div class="col-md-6">
                     <div class="dashboard-detail-data">
-                        <label class="col-form-label"><strong>{{ __('Active Share Amount') }}:</strong></label>
+                        <label class="col-form-label"><strong>{{ __('Amount') }}:</strong></label>
                         <div class="col-form-info">&#8377; {{ $share_amount ?? 0 }}</div>
                     </div>
                 </div>
             </div>
-            
+
             <div class="desh-listbox skybluebg-box wow fadeInDown" data-wow-delay="0.2s">
                 <div class="dash-box-title">{{ __('All Share') }}</div>
             </div>

@@ -32,12 +32,12 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
     public function collection()
     {
         $this->data = BulkEntryMaster::where('month', $this->month)->orderBy('id', 'desc')->get();
-        // dd($this->month);
+
         $this->settlement = LoanMaster::where('loan_settlment_month', 'like', '%' . $this->month)->get();
         $total = [];
 
         foreach ($this->data as $key => $value) {
-            // dd($value->department->department_name);
+
             $total[$key] = [
                 $value->department->department_name,
                 $value->bulk_entries->sum('principal') + $value->bulk_entries->sum('interest') + $value->bulk_entries->sum('fixed') + $value->bulk_entries->sum('ms'),
@@ -50,22 +50,22 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
             // $total[$key] = [$value->department->department_name,$value->department_total];
         }
 
-        //    dd($this->settlement[0]->member->name);
+
         // $total[$key + 1] = ['LOAN SETTLEMENT  Pri.', '', 0, 0, 0, 0];
-        // dd($total);
+
 
         $newData = collect([
             'summary' => ['department_total' => $total, 'loan_settlment' => $this->settlement]
         ]);
 
         $this->data = $this->data->concat($newData);
-        // dd($this->data);
+
         return $this->data;
     }
 
     public function title(): string
     {
-        // dd($this->month);
+
         return date('M-Y', strtotime('01-' . $this->month));
     }
 
@@ -74,7 +74,7 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
         $data = $this->data;
         $drawings = [];
         $rowIndex = 2;
-        // dd($data);
+
         foreach ($data as $key => $record) {
             if (!is_array($record) && $record->bulk_entries->count()) {
 
@@ -103,7 +103,7 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
         // $this->index++;
         if (is_array($bulk_entry_master)) {
 
-            // dd($bulk_entry_master);
+
             $entry = [
                 [],
                 [],
@@ -115,7 +115,7 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
 
             foreach ($bulk_entry_master['loan_settlment'] as $key => $value) {
                 $loan_settlement_amt = $loan_settlement_amt + $value->loan_settlement_amt;
-                // dd( $value->member->uid);
+
                 array_push($entry, [$key + 1,  $value->member->uid, $value->member->registration_no, $value->member->name, '', $value->loan_settlement_amt, '0', '0', '0', $value->loan_settlement_amt]);
             }
 
@@ -139,7 +139,7 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
             $total = 0;
 
             foreach ($bulk_entry_master['department_total'] as $key => $value) {
-                // dd( $value[2]);
+
                 $pri += $value[2];
                 $int += $value[3];
                 $fix += $value[4];
@@ -153,10 +153,10 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
             $entry[] = [];
             $entry[] = ['', '', '', '', 'TOTAL: ', $pri + $loan_settlement_amt,  $int, $fix, $m_s, $total + $loan_settlement_amt];
 
-            // dd($entry);
+
             return $entry;
         } else {
-            // dd($bulk_entry_master);
+
             if (!$bulk_entry_master->bulk_entries->count()) {
                 $entry = [];
                 return $entry;
@@ -173,7 +173,7 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                 ['Sr.', 'M.No.', 'Emp.No.', 'Name', 'Rec.No.', 'Pri.Rs.', 'Int.Rs.', 'FS.Rs.', 'MS.', 'Total']
             ];
 
-            // dd($bulk_entry_master->members);
+
             $total = 0;
             $principal = 0;
             $fixed = 0;
@@ -239,7 +239,7 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                     $sheet->mergeCells('D' . ($rowIndex + 1) . ':H' . ($rowIndex + 1));
                     $sheet->mergeCells('D' . ($rowIndex + 2) . ':H' . ($rowIndex + 2));
                     $range = 'B' . $rowIndex . ':E' . ($rowIndex + 4);
-                    // dd($range);
+
 
                     $sheet->getStyle($range)->applyFromArray($style);
                     // $sheet->getStyle('E' . ($rowIndex + 17) . ':J' . ($rowIndex + 17))->applyFromArray($substyle);
@@ -262,10 +262,10 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                     $records = $record->bulk_entries->count();
                     $rowIndex +=  $records + 11;
 
-                    // dd($records);
+
 
                     $rowTotal = ($rowTotal + $records + 11);
-                    // dd($rowTotal);
+
 
                     $sheet->getStyle('E' . ($rowTotal - 1) . ':J' . ($rowTotal - 1))->applyFromArray($substyle);
 
@@ -281,7 +281,7 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                     ]);
                 } elseif (is_array($record)) {
                     // dd($record['loan_settlment']);
-                    dump($rowTotal); //641, 183, 264
+                    // dump($rowTotal); //641, 183, 264
                     $line_of_total = $rowTotal + 1;
 
 
@@ -305,7 +305,7 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
 
                         $line_of_total = $rowTotal + 6 + $record['loan_settlment']->count();
 
-                        dd($line_of_total);
+                        // dd($line_of_total);
 
                         $sheet->getStyle('E' . ($line_of_total) . ':J' . ($line_of_total))->applyFromArray($substyle);
                         $sheet->getStyle('E' . ($line_of_total) . ':J' . ($line_of_total))->applyFromArray([
@@ -358,7 +358,7 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                             ],
                         ]);
                         //add hear
-                        dd($line_of_total);
+                        // dd($line_of_total);
                         $sheet->getStyle('E' . ($line_of_total + 18) . ':J' . ($line_of_total + 18))->applyFromArray($substyle);
                         $sheet->getStyle('E' . ($line_of_total + 18) . ':J' . ($line_of_total + 18))->applyFromArray([
                             'borders' => [

@@ -190,7 +190,7 @@
             let min_val = Number($('#sampleSlider').val());
             var loan = @json($loan);
 
-            // console.log(min_val);
+            console.log(min_val);
 
             loan.forEach(element => {
                 if (min_val == element.amount) {
@@ -200,7 +200,7 @@
                     required_share = element.required_share;
                     interestAmount = (element.amount * interestRate) / 100;
                     emi_month = (element.amount / element.minimum_emi);
-
+                    console.log(interestAmount);
                     // console.log(emi_month+'<----EmiMonth');
                     // console.log(element.amount + '-->' + element.minimum_emi);
                 }

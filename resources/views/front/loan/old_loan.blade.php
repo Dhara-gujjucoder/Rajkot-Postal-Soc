@@ -35,32 +35,37 @@
                 </div>
                 <div class="wow fadeInLeft" data-wow-delay="0.2s">
                     <div class="loan-table">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>{{ __('No.')}}</th>
-                                    <th>{{ __('Month')}}</th>
-                                    <th>{{ __('EMI Amount')}}</th>
-                                    <th>{{ __('Interest')}}</th>
-                                    <th>{{ __('Principal')}}</th>
-                                    <th>{{ __('Payment')}}</th>
-                                    <th>{{ __('Status')}}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                    @foreach ($loan->loan_emis as $key => $emi)
-                                        <tr>
-                                            <td data-label="No.">{{ $key+1 }}</td>
-                                            <td data-label="Month">{{ date('M-Y',strtotime('01-'.$emi->month)) }}</td>
-                                            <td data-label="EMI Amount">{{ $emi->emi }}</td>
-                                            <td data-label="Interest">{{ $emi->interest_amt }}</td>
-                                            <td data-label="Principal">{{ $emi->rest_principal }}</td>
-                                            <td data-label="Payment">{{ $emi->installment }}</td>
-                                            <td data-label="Status">{{ $emi->status }}</td>
-                                        </tr>
-                                    @endforeach
-                            </tbody>
-                        </table>
+                        @if ($loan->loan_emis)
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        {{-- <th>{{ __('No.')}}</th> --}}
+                                        <th>{{ __('Month')}}</th>
+                                        <th>{{ __('EMI Amount')}}</th>
+                                        <th>{{ __('Interest')}}</th>
+                                        <th>{{ __('Principal')}}</th>
+                                        <th>{{ __('Payment')}}</th>
+                                        <th>{{ __('Status')}}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        @foreach ($loan->loan_emis as $key => $emi)
+                                            <tr>
+                                                {{-- <td data-label="No.">{{ $key+1 }}</td> --}}
+                                                <td data-label="Month">{{ date('M-Y',strtotime('01-'.$emi->month)) }}</td>
+                                                <td data-label="EMI Amount">{{ $emi->emi }}</td>
+                                                <td data-label="Interest">{{ $emi->interest_amt }}</td>
+                                                <td data-label="Principal">{{ $emi->rest_principal }}</td>
+                                                <td data-label="Payment">{{ $emi->installment }}</td>
+                                                <td data-label="Status">{{ $emi->status }}</td>
+                                            </tr>
+                                        @endforeach
+                                </tbody>
+                            </table>
+                        @else
+                            {{ 'no any loan' }}
+                        @endif
+
                     </div>
                 </div>
             </div>

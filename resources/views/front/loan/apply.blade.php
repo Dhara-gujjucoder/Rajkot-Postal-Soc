@@ -67,26 +67,26 @@
                 <div class="row wow fadeInUp" data-wow-delay="0.2s">
                     <div class="col-md-6">
                         <div class="dashboard-detail-data">
-                            <label class="col-form-label"><strong>{{ __('Current loan') }}:</strong></label>
+                            <label class="col-form-label"><strong>{{ __('Current') }}:</strong></label>
                             <div class="col-form-info">&#8377; {{ $member->loan->principal_amt ?? 0 }}</div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="dashboard-detail-data">
-                            <label class="col-form-label"><strong>{{ __('Remaining Loan') }}:</strong></label>
-                            <div class="col-form-info">&#8377; {{ $member->loan_remaining_amount}}</div>
+                            <label class="col-form-label"><strong>{{ __('Loan') }}:</strong></label>
+                            <div class="col-form-info">&#8377; {{ $member->loan_remaining_amount }}</div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="dashboard-detail-data">
                             <label class="col-form-label"><strong>{{ __('Paid EMI') }}:</strong></label>
-                            <div class="col-form-info"> {{ $member->loan ?  $member->loan->loan_emis()->paid()->count() : 0}}</div> {{-- sum('emi') --}}
+                            <div class="col-form-info"> {{ $member->loan ? $member->loan->loan_emis()->paid()->count() : 0 }}</div> {{-- sum('emi') --}}
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="dashboard-detail-data">
                             <label class="col-form-label"><strong>{{ __('Remaining EMI') }}:</strong></label>
-                            <div class="col-form-info" id="required_share"> {{  $member->loan ? $member->loan->loan_emis()->pending()->count() : 0 }}</div>
+                            <div class="col-form-info" id="required_share"> {{ $member->loan ? $member->loan->loan_emis()->pending()->count() : 0 }}</div>
                         </div>
                     </div>
 
@@ -97,71 +97,83 @@
                 </div>
                 <div class="wow fadeInLeft" data-wow-delay="0.2s">
                     <div class="loan-table">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>{{ __('No.')}}</th>
-                                    <th>{{ __('Month')}}</th>
-                                    <th>{{ __('EMI Amount')}}</th>
-                                    <th>{{ __('Interest')}}</th>
-                                    <th>{{ __('Principal')}}</th>
-                                    <th>{{ __('Payment')}}</th>
-                                    <th>{{ __('Status')}}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($loan->loan_emis as $key => $emi)
-                                    <tr>
-                                        <td data-label="No.">{{ $key+1 }}</td>
-                                        <td data-label="Month">{{ date('M-Y',strtotime('01-'.$emi->month)) }}</td>
-                                        <td data-label="EMI Amount">{{ $emi->emi }}</td>
-                                        <td data-label="Interest">{{ $emi->interest_amt }}</td>
-                                        <td data-label="Principal">{{ $emi->rest_principal }}</td>
-                                        <td data-label="Payment">{{ $emi->installment }}</td>
-                                        <td data-label="Status">{{ $emi->status }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                            @if (!$loan)
+                                <div class="col-md-12">
+                                    <div class="dashboard-detail-data">
+                                        <label style="display: block; margin: 0 auto;"><strong>{{ __('No loan found') }}</strong></label>
+                                    </div>
+                                </div>
+                            @elseif ($loan->loan_emis->isEmpty())
+                                {{ 'No loan found' }}
+                            @else
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            {{-- <th>{{ __('No.')}}</th> --}}
+                                            <th>{{ __('Month') }}</th>
+                                            <th>{{ __('EMI Amount') }}</th>
+                                            <th>{{ __('Interest') }}</th>
+                                            <th>{{ __('Principal') }}</th>
+                                            <th>{{ __('Payment') }}</th>
+                                            <th>{{ __('Status') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($loan->loan_emis as $key => $emi)
+                                            <tr>
+                                                {{-- <td data-label="No.">{{ $key+1 }}</td> --}}
+                                                <td data-label="Month">{{ date('M-Y', strtotime('01-' . $emi->month)) }}</td>
+                                                <td data-label="EMI Amount">{{ $emi->emi }}</td>
+                                                <td data-label="Interest">{{ $emi->interest_amt }}</td>
+                                                <td data-label="Principal">{{ $emi->rest_principal }}</td>
+                                                <td data-label="Payment">{{ $emi->installment }}</td>
+                                                <td data-label="Status">{{ $emi->status }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            @endif
                     </div>
                 </div>
 
-                <div class="desh-listbox skybluebg-box wow fadeInRight" data-wow-delay="0.2s">
-                    <div class="dash-box-title">{{ __('Your Old Loan Detail') }}</div>
-                </div>
-                <div class="wow fadeInLeft" data-wow-delay="0.2s">
-                    <div class="loan-table">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>{{ __('No.')}}</th>
-                                    <th>{{ __('Loan No')}}</th>
-                                    {{-- <th>Month</th> --}}
-                                    <th>{{ __('Principal')}}</th>
-                                    <th>{{ __('EMI Amount')}}</th>
-                                    <th>{{ __('Payment Type')}}</th>
-                                    <th>{{ __('Status')}}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($old_loans as $key => $emi)
-                                    <tr>
-                                        <td data-label="No.">{{ $key+1 }}</td>
-                                        <td data-label="Loan No">{{ $emi->loan_no }}</td>
-                                        {{-- <td data-label="Month">{{ date('d-M-Y',strtotime($emi->month)) }}</td> --}}
-                                        <td data-label="Principal">{{ $emi->principal_amt }}</td>
-                                        <td data-label="EMI Amount">{{ $emi->emi_amount }}</td>
-                                        <td data-label="Payment Type">{{ $emi->payment_type }}</td>
-                                        <td data-label="Status">
-                                            <a href="{{ route('user.loan.old_loan',['loan_id' => $emi->id]) }}"><i
-                                                class="bi bi-plus-circle"></i><button> {{ __('View') }}</button></a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                @if (!$loan)
+                @else
+                    <div class="desh-listbox skybluebg-box wow fadeInRight" data-wow-delay="0.2s">
+                        <div class="dash-box-title">{{ __('Your Old Loan Detail') }}</div>
                     </div>
-                </div>
+                    <div class="wow fadeInLeft" data-wow-delay="0.2s">
+                        <div class="loan-table">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        {{-- <th>{{ __('No.')}}</th> --}}
+                                        <th>{{ __('Loan No') }}</th>
+                                        {{-- <th>Month</th> --}}
+                                        <th>{{ __('Principal') }}</th>
+                                        <th>{{ __('EMI Amount') }}</th>
+                                        <th>{{ __('Payment Type') }}</th>
+                                        <th>{{ __('Status') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($old_loans as $key => $emi)
+                                        <tr>
+                                            {{-- <td data-label="No.">{{ $key+1 }}</td> --}}
+                                            <td data-label="Loan No">{{ $emi->loan_no }}</td>
+                                            {{-- <td data-label="Month">{{ date('d-M-Y',strtotime($emi->month)) }}</td> --}}
+                                            <td data-label="Principal">{{ $emi->principal_amt }}</td>
+                                            <td data-label="EMI Amount">{{ $emi->emi_amount }}</td>
+                                            <td data-label="Payment Type">{{ $emi->payment_type }}</td>
+                                            <td data-label="Status">
+                                                <a href="{{ route('user.loan.old_loan', ['loan_id' => $emi->id]) }}"><button class="btn-primary"> {{ __('View') }}</button></a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                @endif
 
                 {{-- <div class="mt-5 justify-content-center skybluebg-box wow fadeInUp" data-wow-delay="0.2s">
                         <div class="loan-details">

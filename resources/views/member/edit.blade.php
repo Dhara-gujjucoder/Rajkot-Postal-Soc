@@ -548,7 +548,7 @@
                 dataType: 'JSON',
                 success: function(data) {
                     if (data.status) {
-                        $('#share_acc' + share_id).parent().html(`<b>{{ __('Closed') }}</b>`);
+                        $('#share_acc' + share_id).parent().html(`<b>{{ __('Sold') }}</b>`);
                         $('#total_share').val(data.total_share);
                     }
                 }
