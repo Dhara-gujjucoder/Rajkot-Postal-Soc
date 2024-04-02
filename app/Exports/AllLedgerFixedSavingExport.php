@@ -164,7 +164,7 @@ class AllLedgerFixedSavingExport implements FromCollection, WithMapping, ShouldA
                 ->where('month',$value->month)->where('is_double_entry',1)->get();
 
                 if($double_entry_data->isNotEmpty()){
-                    dd($double_entry_data);
+                    // dd($double_entry_data);
                     // dd($value->double_entry);
                     $entry[] = [
                         $value->month, '', $value->double_entry->particular ?? '', '', $value->double_entry->amount ?? 0, $total + ($value->double_entry->amount??0),
