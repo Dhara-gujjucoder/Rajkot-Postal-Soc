@@ -43,19 +43,19 @@
                 <div class="row wow fadeInUp" data-wow-delay="0.2s">
                     <div class="col-md-6">
                         <div class="dashboard-detail-data">
-                            <label class="col-form-label"><strong>{{ __('Name') }}:</strong></label>
+                            <label class="col-form-label"><strong>{{ __('Name') }} :</strong></label>
                             <div class="col-form-info">{{ $user->name }}</div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="dashboard-detail-data">
-                            <label class="col-form-label"><strong>{{ __('PAN Number') }}:</strong></label>
+                            <label class="col-form-label"><strong>{{ __('PAN Number') }} :</strong></label>
                             <div class="col-form-info">{{ $member->pan_no }}</div>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="dashboard-detail-data">
-                            <label class="col-form-label"><strong>{{ __('Present Address') }}:</strong></label>
+                            <label class="col-form-label"><strong>{{ __('Present Address') }} :</strong></label>
                             <div class="col-form-info">{{ $member->parmenant_address }}</div>
                         </div>
                     </div>
@@ -67,25 +67,25 @@
                 <div class="row wow fadeInUp" data-wow-delay="0.2s">
                     <div class="col-md-6">
                         <div class="dashboard-detail-data">
-                            <label class="col-form-label"><strong>{{ __('Current') }}:</strong></label>
+                            <label class="col-form-label"><strong>{{ __('Current') }} :</strong></label>
                             <div class="col-form-info">&#8377; {{ $member->loan->principal_amt ?? 0 }}</div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="dashboard-detail-data">
-                            <label class="col-form-label"><strong>{{ __('Loan') }}:</strong></label>
+                            <label class="col-form-label"><strong>{{ __('Loan') }} :</strong></label>
                             <div class="col-form-info">&#8377; {{ $member->loan_remaining_amount }}</div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="dashboard-detail-data">
-                            <label class="col-form-label"><strong>{{ __('Paid EMI') }}:</strong></label>
+                            <label class="col-form-label"><strong>{{ __('Paid EMI') }} :</strong></label>
                             <div class="col-form-info"> {{ $member->loan ? $member->loan->loan_emis()->paid()->count() : 0 }}</div> {{-- sum('emi') --}}
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="dashboard-detail-data">
-                            <label class="col-form-label"><strong>{{ __('Remaining EMI') }}:</strong></label>
+                            <label class="col-form-label"><strong>{{ __('Remaining EMI') }} :</strong></label>
                             <div class="col-form-info" id="required_share"> {{ $member->loan ? $member->loan->loan_emis()->pending()->count() : 0 }}</div>
                         </div>
                     </div>
@@ -97,42 +97,42 @@
                 </div>
                 <div class="wow fadeInLeft" data-wow-delay="0.2s">
                     <div class="loan-table">
-                            @if (!$loan)
-                                <div class="col-md-12">
-                                    <div class="dashboard-detail-data">
-                                        <label style="display: block; margin: 0 auto;"><strong>{{ __('No loan found') }}</strong></label>
-                                    </div>
+                        @if (!$loan)
+                            <div class="col-md-12">
+                                <div class="dashboard-detail-data">
+                                    <label style="display: block; margin: 0 auto;"><strong>{{ __('No loan found') }}</strong></label>
                                 </div>
-                            @elseif ($loan->loan_emis->isEmpty())
-                                {{ 'No loan found' }}
-                            @else
-                                <table class="table table-bordered">
-                                    <thead>
+                            </div>
+                        @elseif ($loan->loan_emis->isEmpty())
+                            {{ 'No loan found' }}
+                        @else
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        {{-- <th>{{ __('No.')}}</th> --}}
+                                        <th>{{ __('Month') }}</th>
+                                        <th>{{ __('EMI Amount') }}</th>
+                                        <th>{{ __('Interest') }}</th>
+                                        <th>{{ __('Principal') }}</th>
+                                        <th>{{ __('Payment') }}</th>
+                                        <th>{{ __('Status') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($loan->loan_emis as $key => $emi)
                                         <tr>
-                                            {{-- <th>{{ __('No.')}}</th> --}}
-                                            <th>{{ __('Month') }}</th>
-                                            <th>{{ __('EMI Amount') }}</th>
-                                            <th>{{ __('Interest') }}</th>
-                                            <th>{{ __('Principal') }}</th>
-                                            <th>{{ __('Payment') }}</th>
-                                            <th>{{ __('Status') }}</th>
+                                            {{-- <td data-label="No.">{{ $key+1 }}</td> --}}
+                                            <td data-label="Month">{{ date('M-Y', strtotime('01-' . $emi->month)) }}</td>
+                                            <td data-label="EMI Amount">{{ $emi->emi }}</td>
+                                            <td data-label="Interest">{{ $emi->interest_amt }}</td>
+                                            <td data-label="Principal">{{ $emi->rest_principal }}</td>
+                                            <td data-label="Payment">{{ $emi->installment }}</td>
+                                            <td data-label="Status">{{ $emi->status }}</td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($loan->loan_emis as $key => $emi)
-                                            <tr>
-                                                {{-- <td data-label="No.">{{ $key+1 }}</td> --}}
-                                                <td data-label="Month">{{ date('M-Y', strtotime('01-' . $emi->month)) }}</td>
-                                                <td data-label="EMI Amount">{{ $emi->emi }}</td>
-                                                <td data-label="Interest">{{ $emi->interest_amt }}</td>
-                                                <td data-label="Principal">{{ $emi->rest_principal }}</td>
-                                                <td data-label="Payment">{{ $emi->installment }}</td>
-                                                <td data-label="Status">{{ $emi->status }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @endif
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @endif
                     </div>
                 </div>
                 <br>

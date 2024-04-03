@@ -41,7 +41,6 @@ Route::prefix('user')->name('user.')->middleware(['auth:users','blockIP'])->grou
 
     Route::get('/all-share', [ShareController::class, 'show'])->name('share.show');
 
-
     Route::get('locale/{locale}', function ($lang) {
         Session::put('locale', $lang);
         app()->setLocale($lang);

@@ -3,8 +3,15 @@
     <style>
     </style>
     <div class="dashboard-detail-page apply-detail-page">
+
+        <div class="clearfix container back-btn-contain mb-3">
+            <div class="float-end">
+                <a href="{{ route('user.loan.apply') }}" class="btn btn-primary">&larr; {{ __('Back') }}</a>
+            </div>
+        </div>
         <div class="container">
             <div class="dashboard-box-listing">
+
                 <div class="desh-listbox skybluebg-box wow fadeInDown" data-wow-delay="0.2s">
                     <div class="dash-box-title">{{ __('Personal Details') }}</div>
                 </div>
@@ -12,19 +19,19 @@
                 <div class="row wow fadeInUp" data-wow-delay="0.2s">
                     <div class="col-md-6">
                         <div class="dashboard-detail-data">
-                            <label class="col-form-label"><strong>{{ __('Name') }}:</strong></label>
+                            <label class="col-form-label"><strong>{{ __('Name') }} :</strong></label>
                             <div class="col-form-info">{{ $user->name }}</div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="dashboard-detail-data">
-                            <label class="col-form-label"><strong>{{ __('PAN Number') }}:</strong></label>
+                            <label class="col-form-label"><strong>{{ __('PAN Number') }} :</strong></label>
                             <div class="col-form-info">{{ $member->pan_no }}</div>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="dashboard-detail-data">
-                            <label class="col-form-label"><strong>{{ __('Present Address') }}:</strong></label>
+                            <label class="col-form-label"><strong>{{ __('Present Address') }} :</strong></label>
                             <div class="col-form-info">{{ $member->parmenant_address }}</div>
                         </div>
                     </div>
@@ -65,7 +72,6 @@
                         @else
                             {{ 'no any loan' }}
                         @endif
-
                     </div>
                 </div>
             </div>

@@ -12,13 +12,13 @@
             <div class="row wow fadeInUp" data-wow-delay="0.2s">
                 <div class="col-md-6">
                     <div class="dashboard-detail-data">
-                        <label class="col-form-label"><strong>{{ __('Active Share') }}:</strong></label>
+                        <label class="col-form-label"><strong>{{ __('Active Share') }} :</strong></label>
                         <div class="col-form-info">{{ $active_share_count ?? 0 }}</div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="dashboard-detail-data">
-                        <label class="col-form-label"><strong>{{ __('Amount') }}:</strong></label>
+                        <label class="col-form-label"><strong>{{ __('Amount') }} :</strong></label>
                         <div class="col-form-info">&#8377; {{ $share_amount ?? 0 }}</div>
                     </div>
                 </div>

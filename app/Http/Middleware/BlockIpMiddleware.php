@@ -19,11 +19,12 @@ class BlockIpMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         // dd($request->ip());
-        if (in_array($request->ip(), $this->whiteIps)) {
-            return $next($request);
-        }elseif(request()->is('home')){
-            return $next($request);
-        }
-        return redirect()->route('front.home');
+        return $next($request);
+        // if (in_array($request->ip(), $this->whiteIps)) {
+        //     return $next($request);
+        // }elseif(request()->is('home')){
+        //     return $next($request);
+        // }
+        // return redirect()->route('front.home');
     }
 }

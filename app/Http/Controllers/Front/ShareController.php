@@ -18,7 +18,7 @@ class ShareController extends Controller
     public function show()
     {
         $data['page_title'] = __('All Share');
-        $user = Auth::user(); 
+        $user = Auth::user();
 
         $data['active_share'] = MemberShare::where('member_id', $user->member->id)->where('status',1);
         $data['active_share_count'] = $data['active_share']->count();
@@ -26,9 +26,9 @@ class ShareController extends Controller
 
         // dd($data['active_share']->count());
 
-        $data['shares'] = MemberShare::where('member_id', $user->member->id)->get(); 
+        $data['shares'] = MemberShare::where('member_id', $user->member->id)->get();
 
         return view('front.share.show', $data);
     }
-   
+
 }

@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="shortcut icon" href="{{asset($setting->favicon)}}">
+    <link rel="shortcut icon" href="{{ asset($setting->favicon) }}">
     <title>{{ $setting->title }}</title>
     <link href="{{ asset('front/css/bootstrap.css') }}" rel="stylesheet">
     <link href="{{ asset('front/css/animate.css') }}" rel="stylesheet">
@@ -27,10 +27,13 @@
         @include('front.layouts.topbar')
         <div class="main-middle-section inner-main-PTB">
             @if (session('success'))
-            <div class="alert alert-success">
-                {{  session('success')  }}
-            </div>
-        @endif
+                <div class="container">
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                </div>
+            @endif
+
             @yield('content')
         </div>
         <div class="cor-img-pos bottom-vec-img"></div>
@@ -55,24 +58,25 @@
                 backgroundColor: "#4fbe87",
             }).showToast();
         </script>
-    @endif--}}
+    @endif --}}
     <script>
-        $('#switch_language').on('change',function(){
+        $('#switch_language').on('change', function() {
 
             console.log(($(this).is(":checked")));
-            if($(this).is(":checked")){
+            if ($(this).is(":checked")) {
                 console.log('en');
-                location.replace("{{ route('user.change.locale','en') }}");
-            }else{
+                location.replace("{{ route('user.change.locale', 'en') }}");
+            } else {
                 console.log('hu');
-                location.replace("{{ route('user.change.locale','gu') }}");
+                location.replace("{{ route('user.change.locale', 'gu') }}");
             }
         })
         let jquery_datatable = $("#table1").DataTable({
-    responsive: true
-})
+            responsive: true
+        })
     </script>
 
-      @stack('script')
+    @stack('script')
 </body>
+
 </html>
