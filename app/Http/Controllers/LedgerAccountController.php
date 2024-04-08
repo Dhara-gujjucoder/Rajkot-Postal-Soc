@@ -30,7 +30,6 @@ class LedgerAccountController extends Controller
      */
     public function index(Request $request)
     {
-        
         $user = Auth::user();
         $data['ledger_accounts'] = LedgerAccount::get();
         $data['members'] = Member::withTrashed()->orderBy('uid', 'ASC')->get();
@@ -50,7 +49,7 @@ class LedgerAccountController extends Controller
                     $action_btn = '';
                     // (Auth::user()->can('view-ledger_account')) ? $action_btn.= $show_btn : '';
                     (Auth::user()->can('edit-ledger_account')) ? $action_btn .= $edit_btn : '';
-                    (Auth::user()->can('delete-ledger_account')) ? $action_btn .= $delete_btn : '';
+                    // (Auth::user()->can('delete-ledger_account')) ? $action_btn .= $delete_btn : '';
                     return $action_btn;
                 })
                 ->filterColumn('member_id', function ($query, $search) {

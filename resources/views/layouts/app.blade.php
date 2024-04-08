@@ -8,11 +8,8 @@
         {{ (isset($page_title) ? $page_title : '') . ' | ' . Config::get('name', $setting->title ?? 'Rajkot Postal Soc.') }}
     </title>
 
-
     <link rel="shortcut icon" href="{{ asset(isset($setting) ? $setting->favicon : 'assets/images/favicon.png') }}"
         type="image/x-icon">
-
-
 
     <link rel="stylesheet" href="{{ asset('assets/compiled/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/compiled/css/app-dark.css') }}">
@@ -32,7 +29,6 @@
 </head>
 
 <body>
-
     <script src="{{ asset('assets/static/js/initTheme.js') }}"></script>
     @guest
         <div id="app">
@@ -109,6 +105,8 @@
 
     @if (session('success'))
         <script>
+                    // toast.warning(renderToast, toastOptions);
+
             Toastify({
                 text: "{{ session('success') }}",
                 duration: 3000,

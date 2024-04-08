@@ -12,6 +12,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\BulkEntryController;
+use App\Http\Controllers\ChangeYearController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\LoanMasterController;
 use App\Http\Controllers\TempReportController;
@@ -91,7 +92,7 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
     Route::post('/double_entries/confirm',[DoubleEntryController::class,'confirm'])->name('double_entries.confirm');
     Route::post('/loan/partial_pay/{loan}',[LoanMasterController::class,'partial_pay'])->name('loan.partial_pay');
 
-    
+
     /*all modules*/
     Route::resources([
         'roles' => RoleController::class,
@@ -114,6 +115,10 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
         'balance_sheet' => BalanceSheetController::class,
 
     ]);
+    /** Financial Year Change */
+    Route::get('/year/{id}', [ChangeYearController::class, 'change_year'])->name('change_year');
+    /**End */
+
 
     /*main setting*/
     Route::get('locale/{locale}', function ($lang) {

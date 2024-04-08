@@ -32,7 +32,6 @@
                 @can('create-ledger_group')
                     <a href="{{ route('ledger_group.create') }}" class="btn btn-outline-success btn-md  float-end my-3"><i class="bi bi-plus-circle"></i> {{__('Add New Ledger Group')}}</a>
                 @endcan
-
             </div>
 
             <div class="table-responsive">

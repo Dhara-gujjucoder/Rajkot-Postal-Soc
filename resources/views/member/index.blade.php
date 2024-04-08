@@ -15,13 +15,10 @@
                         <div class="col-md-4">
                             <label for="account_name" class="col-form-label">{{ __('Member') }}</label>
                             <div class="col-md-12">
-                                <select class="choices filter-input form-select @error('uid') is-invalid @enderror"
-                                    aria-label="Permissions" id="uid" data-column="0" name="uid"
-                                    style="height: 210px;">
+                                <select class="choices filter-input form-select @error('uid') is-invalid @enderror" aria-label="Permissions" id="uid" data-column="0" name="uid" style="height: 210px;">
                                     <option value="">{{ __('Member') }}</option>
                                     @forelse ($members as $key => $member)
-                                        <option value="{{ $member->uid }}"
-                                            {{ $member->uid == old('uid') ? 'selected' : '' }}>
+                                        <option value="{{ $member->uid }}" {{ $member->uid == old('uid') ? 'selected' : '' }}>
                                             {{ $member->fullname }}
                                         </option>
                                     @empty
@@ -36,14 +33,10 @@
                         <div class="col-md-4">
                             <label for="department_id" class="col-form-label">{{ __('Department') }}</label>
                             <div class="col-md-12">
-                                <select
-                                    class="choices filter-input form-select @error('department_id') is-invalid @enderror"
-                                    aria-label="Permissions" id="department_id" data-column="3" name="department_id"
-                                    style="height: 210px;">
+                                <select class="choices filter-input form-select @error('department_id') is-invalid @enderror" aria-label="Permissions" id="department_id" data-column="3" name="department_id" style="height: 210px;">
                                     <option value="">{{ __('Department') }}</option>
                                     @forelse ($departments as $key => $department)
-                                        <option value="{{ $department->id }}"
-                                            {{ $department->id == old('department_id') ? 'selected' : '' }}>
+                                        <option value="{{ $department->id }}" {{ $department->id == old('department_id') ? 'selected' : '' }}>
                                             {{ $department->department_name }}
                                         </option>
                                     @empty
@@ -56,8 +49,7 @@
                 </div>
 
                 @can('create-member')
-                    <a href="{{ route('members.create') }}" class="btn btn btn-outline-success btn-md mb-3"><i
-                            class="bi bi-plus-circle"></i> {{ __('Add New Member') }}</a>
+                    <a href="{{ route('members.create') }}" class="btn btn btn-outline-success btn-md mb-3"><i class="bi bi-plus-circle"></i> {{ __('Add New Member') }}</a>
                 @endcan
 
             </div>
@@ -85,19 +77,16 @@
             </div>
         </div>
     </div>
-    <div class="modal fade text-left" id="loan_settle" tabindex="-1" aria-labelledby="myModalLabel1"
-        style="display: none;" aria-hidden="true">
+    <div class="modal fade text-left" id="loan_settle" tabindex="-1" aria-labelledby="myModalLabel1" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
             <div class="modal-content">
-                <form id="loan_close" method="post" action="{{ route('member.resign',['member' => 'id']) }}">
+                <form id="loan_close" method="post" action="{{ route('member.resign', ['member' => 'id']) }}">
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title" id="myModalLabel1">{{ __('Resignation') }}
                         </h5>
                         <button type="button" class="close rounded-pill" data-bs-dismiss="modal" aria-label="Close">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-x">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
                                 <line x1="18" y1="6" x2="6" y2="18">
                                 </line>
                                 <line x1="6" y1="6" x2="18" y2="18">
@@ -116,7 +105,7 @@
                             <i class="bx bx-x d-block d-sm-none"></i>
                             <span class="d-none d-sm-block">{{ __('Cancel') }}</span>
                         </button>
-                        <button type="submit" class="btn btn-primary ms-1">
+                        <button type="submit" class="btn btn-primary ms-1" >
                             <i class="bx bx-check d-block d-sm-none"></i>
                             <span class="d-none d-sm-block">{{ __('Submit') }}</span>
                         </button>
@@ -129,75 +118,73 @@
 @endsection
 @push('script')
 <script>
-        var table = $('#table1').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: "{{ route('members.index') }}",
-            columns: [
-                // {
-                //     data: 'DT_RowIndex',
-                //     name: 'DT_RowIndex',
-                //     orderable: false,
-                //     searchable: false
-                // },
-                {
-                    data: 'uid',
-                    name: 'uid',
-                    searchable: true
-                },
-                {
-                    data: 'name',
-                    name: 'name',
-                    searchable: true
-                },
-                {
-                    data: 'email',
-                    name: 'email',
-                    searchable: true
-                },
-                {
-                    data: 'department_id',
-                    name: 'department_id',
-                    searchable: true
-                },
-                // {
-                //     data: 'share_total_price',
-                //     name: 'share_total_price',
-                //     searchable: true
-                // },
-                {
-                    data: 'registration_no',
-                    name: 'registration_no'
-                },
-                {
-                    data: 'roles',
-                    name: 'roles',
-                    searchable: false
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                },
-            ],
+    var table = $('#table1').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('members.index') }}",
+        columns: [
+            // {
+            //     data: 'DT_RowIndex',
+            //     name: 'DT_RowIndex',
+            //     orderable: false,
+            //     searchable: false
+            // },
+            {
+                data: 'uid',
+                name: 'uid',
+                searchable: true
+            },
+            {
+                data: 'name',
+                name: 'name',
+                searchable: true
+            },
+            {
+                data: 'email',
+                name: 'email',
+                searchable: true
+            },
+            {
+                data: 'department_id',
+                name: 'department_id',
+                searchable: true
+            },
+            // {
+            //     data: 'share_total_price',
+            //     name: 'share_total_price',
+            //     searchable: true
+            // },
+            {
+                data: 'registration_no',
+                name: 'registration_no'
+            },
+            {
+                data: 'roles',
+                name: 'roles',
+                searchable: false
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
+        ],
 
-        });
+    });
 
-        // $('#table1_length').before('<div class="ms-5">ddsdf</div>');
-
-        $('#department_id').on('change', function() {
-            table
-                .columns($(this).data('column'))
-                .search($(this).val())
-                .draw();
-        });
-        $('#uid').on('change', function() {
-            table
-                .columns($(this).data('column'))
-                .search($(this).val())
-                .draw();
-        });
+    $('#department_id').on('change', function() {
+        table
+            .columns($(this).data('column'))
+            .search($(this).val())
+            .draw();
+    });
+    $('#uid').on('change', function() {
+        table
+            .columns($(this).data('column'))
+            .search($(this).val())
+            .draw();
+    });
 
 
     function load_member_details(member_id) {
@@ -218,23 +205,11 @@
 
                     $('#loader').hide();
                     $('#member_id').val(member_id);
-                    // calculate();
-                    take_fixed_saving();
+                    calculate();
+                    // take_fixed_saving();
                 }
             }
         });
-    }
-
-    function take_fixed_saving() {
-        // $('.payment_details').hide();
-        $('#fixed_saving_details').hide();
-        var payment_type = $('input[name="fixed_saving_check"]:checked').val();
-        if (payment_type == 'fixed_saving_check') {
-            $('#fixed_saving_details').show();
-        }else{
-            $('#fixed_saving').val(0);
-        }
-        calculate();
     }
 
     function change_payment_type() {
@@ -247,20 +222,39 @@
 
     function calculate() {
         var total = 0;
+        var payment_fixed = $('input[name="fixed_saving_check"]:checked').val();
+        var payment_share = $('input[name="share_amount_check"]:checked').val();
+
         var loan = Number($('#remaining_loan').val());
-        var fixed = Number($('#fixed_saving').val()) ? Number($('#fixed_saving').val()) : 0;
-        console.log(loan, fixed);
-        total = loan - fixed;
-        // $('#total_amount').val(total.toFixed(0));
+        var share = Number($('#share_amt').val()) ? Number($('#share_amt').val()) : 0;
+        var fixed = Number($('#fixed_saving_amt').val()) ? Number($('#fixed_saving_amt').val()) : 0;
+
+        console.log(loan, fixed, share, payment_fixed, payment_share);
+        var subtotal = 0;
+        if (payment_fixed == 'fixed_saving_check') {
+            console.log(total);
+
+            subtotal = subtotal + fixed;
+        }
+        if (payment_share == 'share_check') {
+            console.log(total);
+
+            subtotal = subtotal + share;
+        }
+        total = subtotal - loan;
+        console.log(subtotal, total);
+
+        // total = loan - fixed;<0 {}
+        $('#total_amount').val(total.toFixed(0));
     }
 
-    $(document).on('submit','#loan_close',function(e){
+    $(document).on('submit', '#loan_close', function(e) {
         e.preventDefault();
         var form_element = $(this);
         var action = $(form_element).attr('action');
         url = action.replace('id', $('#member_id').val());
         var form_data = new FormData($(form_element)[0]);
-        $('.form-error',form_element).remove();
+        $('.form-error', form_element).remove();
         $('#loader').show();
         $.ajax({
             type: "POST",
@@ -269,48 +263,38 @@
             cache: false,
             contentType: false,
             processData: false,
-            success: function (ajax_response) {
+            success: function(ajax_response) {
                 $('#loader').hide();
-                if(ajax_response.success == true)
-                {
+                if (ajax_response.success == true) {
                     show_success(ajax_response.message);
                     $('#loan_settle').modal('hide');
                     table.ajax.reload();
-                }
-                else if(ajax_response.success == false)
-                {
+                } else if (ajax_response.success == false) {
                     show_error(ajax_response.message);
-                }
-                else
-                {
+                } else {
                     alert('Something went wrong!!');
                 }
             },
-            error:function(ajax_response){
+            error: function(ajax_response) {
                 $('body').addClass('loaded');
+                $('#loader').hide();
                 ajax_response = ajax_response.responseJSON;
-                if(typeof(ajax_response.errors) != 'undefined')
-                {
-                    $.each(ajax_response.errors, function (index,value) {
+                if (typeof(ajax_response.errors) != 'undefined') {
+                    $.each(ajax_response.errors, function(index, value) {
 
-                        if($('[name="'+index+'"]',form_element).hasClass('select2-element'))
-                        {
-                            $('[name="'+index+'"]',form_element).parent().append('<span class="invalid-feedback d-block form-error"><strong>'+value[0]+'</strong></div>');
-                        }
-                        else if($('[name="'+index+'"]',form_element).hasClass('form-check-input'))
-                        {
-                            $('[name="'+index+'"]:first',form_element).parent().parent().append('<span class="invalid-feedback d-block form-error"><strong>'+value[0]+'</strong></div>');
-                        }
-                        else
-                        {
-                            $('[name="'+index+'"]',form_element).after('<span class="invalid-feedback d-block form-error"><strong>'+value[0]+'</strong></div>');
+                        if ($('[name="' + index + '"]', form_element).hasClass('select2-element')) {
+                            $('[name="' + index + '"]', form_element).parent().append('<span class="invalid-feedback d-block form-error"><strong>' + value[0] + '</strong></div>');
+                        } else if ($('[name="' + index + '"]', form_element).hasClass('form-check-input')) {
+                            $('[name="' + index + '"]:first', form_element).parent().parent().append('<span class="invalid-feedback d-block form-error"><strong>' + value[0] + '</strong></div>');
+                        } else {
+                            $('[name="' + index + '"]', form_element).after('<span class="invalid-feedback d-block form-error"><strong>' + value[0] + '</strong></div>');
                         }
                     });
-                    setTimeout(() => {
-                        $('html, body').animate({
-                            scrollTop: $(".form-error",form_element).offset().top - 120
-                        }, 500);
-                    }, 500);
+                    // setTimeout(() => {
+                    //     $('html, body').animate({
+                    //         scrollTop: $(".form-error", form_element).offset().top - 120
+                    //     }, 500);
+                    // }, 500);
                 }
             }
         });

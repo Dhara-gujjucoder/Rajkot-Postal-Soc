@@ -42,11 +42,11 @@
                                                             class="bi bi-pencil-square"></i> {{__('Edit')}}</a>
                                                 @endcan
 
-                                                @can('delete-department')
+                                                {{-- @can('delete-department')
                                                         <button type="submit" class="btn btn-outline-danger btn-sm"
                                                             onclick="return confirm(`{{__('Do you want to delete this Department?')}}`);"><i
                                                                 class="bi bi-trash"></i> {{__('Delete')}}</button>
-                                                @endcan
+                                                @endcan --}}
 
                                         </form>
                                     </td>

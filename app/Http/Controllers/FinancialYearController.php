@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\FinancialYear;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\ChangeYearController;
 
 class FinancialYearController extends Controller
 {
@@ -43,15 +44,23 @@ class FinancialYearController extends Controller
             'end_month' => 'required',
         ]);
         $input = $request->all();
-        if ($request->is_current == 1) {
-            FinancialYear::query()->where('is_current', 1)->update(['is_current' => 0]);
-            $input['is_current'] = 1;
-        }
+        $input['is_current'] = 0;
+        // if ($request->is_current == 1) {
+        //     FinancialYear::query()->where('is_current', 1)->update(['is_current' => 0]);
+        //     $input['is_current'] = 0;
+        // }
         if ($request->is_active == 1) {
             FinancialYear::query()->where('is_active', 1)->update(['is_active' => 0]);
             $input['is_active'] = 1;
         }
-        FinancialYear::create($input);
+        $year = FinancialYear::create($input);
+
+
+        /*for create finaciayal year records*/
+        $printReport = new ChangeYearController;
+        $printReport->change_year($year->id);
+        /* end for create finaciayal year records*/
+
 
         return redirect()->route('financial_year.index')
             ->withSuccess(__('Financial Year is created successfully.'));

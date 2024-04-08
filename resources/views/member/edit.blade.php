@@ -25,15 +25,15 @@
                                 <div class="form-group opening_balance">
                                     <label for="registration_no">
                                         <span>{{ __('Fixed Saving Opening Balance') }} :</span>
-                                        <b> {{ $user->fixed_saving_ledger_account->opening_balance }}</b>
+                                        <b> {{ $user->fixed_saving_ledger_account->opening_balance ?? ''}}</b>
                                     </label>
                                     <label for="registration_no">
                                         <span>{{ __('Share Opening Balance') }} :</span>
-                                        <b> {{ $user->share_ledger_account->opening_balance }}</b>
+                                        <b> {{ $user->share_ledger_account->opening_balance ?? ''}}</b>
                                     </label>
                                     <label for="registration_no">
                                         <span>{{ __('Loan Opening Balance') }} :</span>
-                                        <b> {{ $user->loan_ledger_account->opening_balance }}</b>
+                                        <b> {{ $user->loan_ledger_account->opening_balance ?? ''}}</b>
                                     </label>
                                 </div>
                             </div>

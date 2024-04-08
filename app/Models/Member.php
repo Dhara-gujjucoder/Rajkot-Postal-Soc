@@ -44,16 +44,9 @@ class Member extends Model
         'status',
     ];
 
-    /* Relationship with user */
-    public function user()
+    public function scopeActive($query)
     {
-        return $this->hasOne(User::class, 'id', 'user_id')->withTrashed();
-    }
-
-    /* Relationship with department */
-    public function department()
-    {
-        return $this->hasOne(Department::class,  'id', 'department_id');
+        return $query->where('status', 1);
     }
 
     /* Attribute for get fullname with reg no */
@@ -86,6 +79,18 @@ class Member extends Model
     {
         return remaining_fixed_saving($this->id);
     }
+    /* Relationship with user */
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id')->withTrashed();
+    }
+
+    /* Relationship with department */
+    public function department()
+    {
+        return $this->hasOne(Department::class,  'id', 'department_id');
+    }
+
 
     // Remaining fixed saving
 
@@ -153,3 +158,4 @@ class Member extends Model
         return $fixed_saving;
     }
 }
+

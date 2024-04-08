@@ -11,10 +11,13 @@ use App\Models\AccountType;
 use App\Models\LedgerGroup;
 use App\Models\MemberShare;
 use App\Models\ShareAmount;
+use App\Models\MemberResign;
 use Illuminate\Http\Request;
 use App\Models\LedgerAccount;
 use Illuminate\Http\Response;
+use Illuminate\Validation\Rule;
 use Yajra\DataTables\DataTables;
+use App\Models\MemberShareDetail;
 use App\Traits\UpdateMemberShare;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +27,7 @@ use App\Http\Requests\StoreUserRequest;
 use Illuminate\Validation\Rules\Exists;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\StoreMemberRequest;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\UpdateMemberRequest;
 
 class MemberController extends Controller
@@ -41,7 +45,9 @@ class MemberController extends Controller
         parent::__construct();
     }
 
-    public function getmember_history(Member $member){
+    public function getmember_history(Member $member)
+    {
+
         $data['member'] = $member;
         return response()->json(['success' => true, 'history' => view('member.history', $data)->render()]);
     }
@@ -58,7 +64,7 @@ class MemberController extends Controller
         $data['departments'] = Department::get();
         $data['members'] = Member::orderBy('uid', 'DESC')->get();
         if ($request->ajax()) {
-//   dd($request->all());
+            //   dd($request->all());
             $data = User::usermember()->with('member'); //->orderBy('id', 'DESC')
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -68,12 +74,12 @@ class MemberController extends Controller
                     $edit_btn = '&nbsp;<a href="' . route('members.edit', $row->member->id) . '"
                     class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-fill"></i> ' . __('Edit') . '</a>';
                     $delete_btn = '&nbsp;<form action="' . route('members.destroy', $row->member->id) . '" method="post">' . csrf_field() . method_field('DELETE') . '<button type="submit" class="btn btn-outline-danger btn-sm"
-                    onclick="return confirm(`'.__('Do you want to delete this user?').'`);"><i class="bi bi-trash-fill"></i> ' . __('Delete') . '</button></form>';
-                    $resign_btn = ($row->member->getRawOriginal('status') == 1 ? '&nbsp;<button type="button" class="btn btn-outline-primary btn-sm" onclick="load_member_details('.$row->member->id.')" data-bs-toggle="modal" data-bs-target="#loan_settle"><i class="bi bi-r-circle-fill"></i> ' . __('Resign') . '</button>' : '');
+                    onclick="return confirm(`' . __('Do you want to delete this user?') . '`);"><i class="bi bi-trash-fill"></i> ' . __('Delete') . '</button></form>';
+                    $resign_btn = ($row->member->getRawOriginal('status') == 1 ? '&nbsp;<button type="button" class="btn btn-outline-primary btn-sm" onclick="load_member_details(' . $row->member->id . ')" data-bs-toggle="modal" data-bs-target="#loan_settle"><i class="bi bi-r-circle-fill"></i> ' . __('Resign') . '</button>' : '');
                     $action_btn = '';
                     (Auth::user()->can('view-member')) ? $action_btn .= $show_btn : '';
                     (Auth::user()->can('edit-member') && ($row->member->getRawOriginal('status') == 1)) ? $action_btn .= $edit_btn : '';
-                    (Auth::user()->can('delete-member')) ? $action_btn .= $delete_btn.$resign_btn : '';
+                    (Auth::user()->can('delete-member')) ? $action_btn .= $delete_btn . $resign_btn : '';
                     return $action_btn;
                 })
                 ->filterColumn('name', function ($query, $search) {
@@ -113,7 +119,7 @@ class MemberController extends Controller
                 ->filterColumn('uid', function ($query, $search) {
                     $query->whereHas('member', function ($q) use ($search) {
                         // dd($search);
-                        $q->where('uid','like', $search);
+                        $q->where('uid', 'like', $search);
                     });
                 })
                 ->editColumn('registration_no', function ($row) {
@@ -131,8 +137,6 @@ class MemberController extends Controller
                 })
                 ->rawColumns(['action', 'roles'])
                 ->make(true);
-
-
         }
         return view('member.index', $data);
     }
@@ -140,7 +144,7 @@ class MemberController extends Controller
     public function create(): View
     {
         return view('member.create', [
-            'departments' => Department::whereNotIn('id',['5'])->get(),
+            'departments' => Department::whereNotIn('id', ['5'])->get(),
             'minimum_share' => ShareAmount::where('is_active', 1)->pluck('minimum_share')->first(),
             'roles' => Role::pluck('name')->all(),
             'page_title' => __('Add Member')
@@ -182,7 +186,7 @@ class MemberController extends Controller
                 $ledger_entry->member_id =  $member->id;
                 $ledger_entry->opening_balance = 0;
                 $ledger_entry->type  = 'DR';
-                $ledger_entry->year_id = 1;
+                $ledger_entry->year_id = currentYear()->id;
                 $ledger_entry->created_by = 1;
                 $ledger_entry->status = 1;
                 $ledger_entry->save();
@@ -301,7 +305,7 @@ class MemberController extends Controller
         return view('member.edit', [
             'shares' => MemberShare::where('member_id', $member->id)->get(),
             // dd(MemberShare::where('member_id',$member->id)->get()),
-            'departments' => Department::whereNotIn('id',['5'])->get(),
+            'departments' => Department::whereNotIn('id', ['5'])->get(),
             'minimum_share' => ShareAmount::where('is_active', 1)->pluck('minimum_share')->first(),
 
             'user' => $member,
@@ -368,20 +372,63 @@ class MemberController extends Controller
      * Display the specified resource.
      */
 
-     public function resign(Member $member)
-     {
-        // dd( $member);
-         $member->update(['status' => 2]);
-         return response()->json(['success' => true, 'member' => $member,'message' => __('Member Resigned SuccessFully')]);
-     }
+    public function resign(Request $request, Member $member)
+    {
+        // dd($request->all());
+
+        // dd( $member->share_ledger_account());
+
+        $request->validate([
+            'total_amount' => 'required|integer|gt:0',
+        ], [
+            'total_amount.gt' => 'Note : You did not resign in a negative amount.',
+        ]);
+
+        $resign = new MemberResign();
+        $resign->share_ledger_account_id = $member->share_ledger_account->id;
+        $resign->fixed_ledger_account_id = $member->fixed_saving_ledger_account->id;
+        $resign->loan_ledger_account_id = $member->loan_ledger_account->id;
+        $resign->member_id = $member->id;
+        $resign->principal_amount = $member->loan->principal_amt;
+        $resign->remaining_loan_amount = $member->loan_remaining_amount;
+        $resign->share_amount = $member->share_ledger_account->current_balance;
+        $resign->total_fixed_saving = $member->fixed_saving_ledger_account->current_balance;
+        $resign->share_amount_used = isset($request->share_amount_check) ? 1 : 0;
+        $resign->fixed_saving_used = isset($request->fixed_saving_check) ? 1 : 0;
+        $resign->total_amount = $request->total_amount;
+        $resign->payment_type = $request->payment_type;
+        $resign->cheque_no = $request->cheque_no;
+        $resign->save();
+
+        if (isset($request->share_amount_check)) {
+            $shares = $member->shares()->get();
+            foreach ($shares as $share) {
+
+        $share->status = 0;
+                $share->save();
+
+                $share_detail_entry = new MemberShareDetail();
+                $share_detail_entry->member_share_id = $share->id;
+                $share_detail_entry->member_id = $share->member_id;
+                $share_detail_entry->year_id = currentYear()->id;
+                $share_detail_entry->is_sold = 1;
+                $share_detail_entry->save();
+            }
+            $member->update(['total_share' => 0]);
+            $member->share_ledger_account()->update(['current_balance' => 0]);
+        }
+
+        $member->update(['status' => 2]);
+        return response()->json(['success' => true, 'member' => $member, 'message' => __('Member Resigned SuccessFully')]);
+    }
 
     /**
      * Display the specified resource.
-     */
+    */
 
     public function getmember(Member $member)
     {
-        $member = Member::where('id', $member->id)->with(['loan', 'shares','loan.loan_emis' => function ($query) {
+        $member = Member::where('id', $member->id)->with(['loan', 'shares', 'loan.loan_emis' => function ($query) {
             $query->paid();
         }])->get()->first();
         $member->member_fixed_saving = $member->member_fixed;

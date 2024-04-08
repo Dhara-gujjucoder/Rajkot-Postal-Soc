@@ -18,7 +18,7 @@ class ShareLedgerController extends Controller
         // $data['members'] = Member::withTrashed()->get();
 
         if ($request->ajax()) {
-            $data = Member::withTrashed();
+            $data = Member::active();
             return DataTables::of($data)
                 ->editColumn('id', function ($row) {
                     return $row->name;
@@ -42,6 +42,7 @@ class ShareLedgerController extends Controller
                 })
                 ->addColumn('net_balance', function ($row) {
                     return $row->share_ledger_account->opening_balance + $row->purchased_share->sum('share_sum_share_amount') - $row->sold_share->sum('share_sum_share_amount');
+
                 })
                 ->rawColumns(['status'])
                 ->make(true);;

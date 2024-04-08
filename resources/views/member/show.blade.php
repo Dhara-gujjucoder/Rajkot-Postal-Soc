@@ -22,35 +22,35 @@
                         <label for="email"
                         class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Fixed Saving Opening Balance') }}:</strong></label>
                         <div class="col-md-6" style="line-height: 35px;">
-                            {{ $user->fixed_saving_ledger_account->opening_balance }}
+                            {{ $user->fixed_saving_ledger_account->opening_balance ?? ''}}
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="email"
                         class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Share Opening Balance') }}:</strong></label>
                         <div class="col-md-6" style="line-height: 35px;">
-                            {{ $user->share_ledger_account->opening_balance }}
+                            {{ $user->share_ledger_account->opening_balance ?? ''}}
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="email"
                         class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Loan Opening Balance') }}:</strong></label>
                         <div class="col-md-6" style="line-height: 35px;">
-                            {{ $user->loan_ledger_account->opening_balance }}
+                            {{ $user->loan_ledger_account->opening_balance ?? ''}}
                         </div>
                     </div> -->
                     <div class="mb-3 form-group opening_balance">
                         <label for="email">
                             <span>{{ __('Fixed Saving Opening Balance') }}:</span>
-                            <b>{{ $user->fixed_saving_ledger_account->opening_balance }}</b>
+                            <b>{{ $user->fixed_saving_ledger_account->opening_balance ?? ''}}</b>
                         </label>
                         <label for="email">
                             <span>{{ __('Share Opening Balance') }}:</span>
-                            <b>{{ $user->share_ledger_account->opening_balance }}</b>
+                            <b>{{ $user->share_ledger_account->opening_balance ?? ''}}</b>
                         </label>
                         <label for="email">
                             <span>{{ __('Loan Opening Balance') }}:</span>
-                            <b>{{ $user->loan_ledger_account->opening_balance }}</b>
+                            <b>{{ $user->loan_ledger_account->opening_balance ?? ''}}</b>
                         </label>
                     </div>
 

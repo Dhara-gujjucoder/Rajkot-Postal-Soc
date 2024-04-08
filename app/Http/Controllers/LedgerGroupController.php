@@ -25,6 +25,7 @@ class LedgerGroupController extends Controller
     /**
      * Display a listing of the resource.
      */
+
     public function index(Request $request)
     {
         $data['ledger_groups'] = LedgerGroup::orderBy('id','ASC')->paginate(10);
@@ -44,7 +45,7 @@ class LedgerGroupController extends Controller
                     $action_btn = '';
                     // (Auth::user()->can('view-member')) ? $action_btn.= $show_btn : '';
                     (Auth::user()->can('edit-member')) ? $action_btn.= $edit_btn : '';
-                    (Auth::user()->can('delete-member')) ? $action_btn.= $delete_btn : '';
+                    // (Auth::user()->can('delete-member')) ? $action_btn.= $delete_btn : '';
                     return $action_btn;
                 })
                 ->filterColumn('parent_id', function($query, $search) {

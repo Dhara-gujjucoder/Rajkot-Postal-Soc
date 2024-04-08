@@ -26,6 +26,7 @@ class LedgerAccount extends Model
         'status',
     ];
 
+
     protected static function booted(): void
     {
         static::addGlobalScope('year', function (Builder $builder) {
@@ -33,12 +34,12 @@ class LedgerAccount extends Model
         });
     }
 
-    protected function yearId(): Attribute
-    {
-        return Attribute::make(
-            set: fn (string $value) => FinancialYear::where('is_current',1)->pluck('id')->first(),
-        );
-    }
+    // protected function yearId(): Attribute
+    // {
+    //     return Attribute::make(
+    //         set: fn (string $value) => FinancialYear::where('is_current',1)->pluck('id')->first(),
+    //     );
+    // }
 
     public function LedgerGroupId()
     {

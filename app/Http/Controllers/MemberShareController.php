@@ -49,7 +49,6 @@ class MemberShareController extends Controller
         //     }
         // }
 
-
         return view('member_share.create', [
             'page_title' => __('Add New Share'),
             'members' => Member::get(),
@@ -93,7 +92,10 @@ class MemberShareController extends Controller
         //     $member->share_total_price = $balance;
         // }
 
+        $member->share_ledger_account->update(
+            ['current_balance' =>  ($total_share * current_share_amount()->share_amount)]);
         $member->save();
+
 
         return response()->json(['status' => true, 'total_share' => $total_share]);
         // ->withSuccess(__('Member is deleted successfully.'));

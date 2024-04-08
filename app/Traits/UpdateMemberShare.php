@@ -39,10 +39,12 @@ trait UpdateMemberShare
 
         }
 
+        if($member->share_ledger_account){
 
-        $member->share_ledger_account->update(['current_balance' => ($member->share_ledger_account->current_balance + ($new_share * current_share_amount()->share_amount))]);
-        $member->total_share = $no_of_share;
-        $member->save();
+            $member->share_ledger_account->update(['current_balance' => ($member->share_ledger_account->current_balance + ($new_share * current_share_amount()->share_amount))]);
+            $member->total_share = $no_of_share;
+            $member->save();
+        }
         // $share_total_price = MemberShare::where('member_id', $member->id)->where('status', 1)->first();
 
         // $member->share_total_price =  $member->share_total_price + ($new_share * current_share_amount()->share_amount);   //$share_total_price;
