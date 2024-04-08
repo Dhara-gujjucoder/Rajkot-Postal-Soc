@@ -38,8 +38,8 @@ class LoanController extends Controller
         $data['user'] = Auth::user();
         $data['member_id'] = $data['user']->member->uid;
         $super_admin = User::role('Super Admin', 'web')->get()->first();
-        // $email_id = $super_admin->notification_email ?? 'noreply@gmail.com';
-        $email_id = 'bhavikg.gc@gmail.com';
+        $email_id = $super_admin->notification_email ?? 'noreply@gmail.com';
+        // $email_id = 'bhavikg.gc@gmail.com';
         Mail::to($email_id)->send(new LoanMail($data));
 
         return redirect()->back()->withSuccess(__('Thank you for your request of loan, we will contact you soon.'));
