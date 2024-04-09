@@ -184,7 +184,8 @@
                                     </a>
                                 </li>
                             @endcan
-                            @canany(['loaninterest-setting'])
+
+                            @canany(['loaninterest-setting', 'create-loaninterest-setting', 'edit-loaninterest-setting', 'view-loaninterest-setting'])
                                 <li class="submenu-item {{ request()->is('admin/loaninterest*') ? 'active' : '' }}">
                                     <a href="{{ route('loaninterest.index') }}" class='submenu-link'>
                                         <span>{{ __('Loan Interest') }}</span>
@@ -235,13 +236,13 @@
                                 </li>
                             @endcan
 
-                           
+
                         </ul>
                     </li>
                 @endcan
 
                 {{-- {{ dump(Auth::user()->can('loaninterest-setting')) }} --}}
-                
+
                 @canany(['view-general-setting', 'view-loaninterest-setting', 'view-share-amount-setting', 'view-monthly-saving-setting'])
                     <li class="sidebar-item has-sub {{ request()->is('admin/general/setting/*') || request()->is('admin/shareamount*') || request()->is('admin/monthlysaving*') ? 'active' : '' }}">
                         <a href="#" class="sidebar-link">

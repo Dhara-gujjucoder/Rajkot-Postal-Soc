@@ -97,6 +97,7 @@
                     <div class="modal-body" id="moddl">
                         <table class="table table-bordered">
                             <tbody id="loan_details">
+
                             </tbody>
                         </table>
                     </div>

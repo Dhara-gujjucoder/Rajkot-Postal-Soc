@@ -38,12 +38,15 @@ class LoanController extends Controller
         $data['user'] = Auth::user();
         $data['member_id'] = $data['user']->member->uid;
         $super_admin = User::role('Super Admin', 'web')->get()->first();
-        $email_id = $super_admin->notification_email ?? 'noreply@gmail.com';
+        // $email_id = $super_admin->notification_email ?? 'noreply@gmail.com';
         // $email_id = 'bhavikg.gc@gmail.com';
+        $email_id = getSetting()->email ?? 'noreply@gmail.com';
+        // dd(getSetting()->email);
         Mail::to($email_id)->send(new LoanMail($data));
 
         return redirect()->back()->withSuccess(__('Thank you for your request of loan, we will contact you soon.'));
     }
+
 
     public function apply()
     {
@@ -52,7 +55,7 @@ class LoanController extends Controller
         $data['member'] = $data['user']->member;
         // dd($data['member'] );
         $data['loan'] = LoanMaster::where('member_id', $data['user']->member->id)->first();
-        $data['old_loans'] = LoanMaster::where('member_id', $data['user']->member->id)->where('status',1)->get();
+        $data['old_loans'] = LoanMaster::where('member_id', $data['user']->member->id)->where('status','!=',1)->get();
 
         return view('front.loan.apply', $data);
     }

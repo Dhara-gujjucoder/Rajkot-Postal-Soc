@@ -154,7 +154,8 @@
                     </tr>
                     <tr>
                         <td><b>{{ __('Payment Type') }}</b></td>
-                        <td colspan="2"><input class="form-check-input payment_type ms-3" type="radio" name="payment_type" id="cash" checked="" value="cash" {{ old('payment_type') == 'cash' ? 'checked' : '' }} onchange="change_payment_type()">
+                        <td colspan="2">
+                            <input class="form-check-input payment_type ms-3" type="radio" name="payment_type" id="cash" checked="" value="cash" {{ old('payment_type') == 'cash' ? 'checked' : '' }} onchange="change_payment_type()">
                             <label class="form-check-label pl-2" for="cash">
                                 {{ __('Cash') }}
                             </label>

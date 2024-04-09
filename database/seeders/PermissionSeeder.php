@@ -45,10 +45,10 @@ class PermissionSeeder extends Seeder
             // 'edit-salary_deduction',
             // 'delete-salary_deduction',
 
-            'create-financial_year',
-            'edit-financial_year',
-            'delete-financial_year',
-            'view-financial_year',
+            // 'create-financial_year',
+            // 'edit-financial_year',
+            // 'delete-financial_year',
+            // 'view-financial_year',
 
             // 'create-ledger_entries',
             // 'edit-ledger_entries',
@@ -100,11 +100,13 @@ class PermissionSeeder extends Seeder
             // 'view-balance_sheet',
             // 'edit-balance_sheet',
 
-            'view-general-setting',
+            // 'view-general-setting',
             // 'edit-general-setting',
-            'edit-loaninterest-setting',
-            'edit-share-amount-setting',
-            'edit-monthly-saving-setting'
+            // 'edit-loaninterest-setting',
+            // 'edit-share-amount-setting',
+            // 'edit-monthly-saving-setting'
+
+            'create-loaninterest-setting',
 
         ];
 

@@ -340,10 +340,50 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-12 d-flex justify-content-end">
-                                <button type="submit" class="btn btn-primary me-1 mb-1">{{ __('Submit') }}</button>
-                                <button type="reset" class="btn btn-light-secondary me-1 mb-1">{{ __('Reset') }}</button>
+
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <input class="form-check-input payment_type ms-3" type="radio" name="payment_type" id="cash" checked="" value="cash" {{ old('payment_type') == 'cash' ? 'checked' : '' }} onchange="change_payment_type()">
+                                    <label class="form-check-label pl-2" for="cash">
+                                        {{ __('Cash') }}
+                                    </label>
+                                    <input class="form-check-input payment_type ms-3" type="radio" name="payment_type" id="cheque" value="cheque" onchange="change_payment_type()" {{ old('payment_type') == 'cheque' ? 'checked' : '' }}>
+                                    <label class="form-check-label pl-2" for="cheque">
+                                        {{ __('Cheque') }}
+                                    </label>
+                                </div>
                             </div>
+
+                        </div>
+
+                        <div class="col-md-12 col-12">
+                            <div class="form-group">
+                                <div class="mb-3 form-group opening_balance">
+                                    <label for="total_share">
+                                        <span>{{ __('Register Fee') }}:</span>
+                                        <b>{{ 10 }}</b>
+                                    </label>
+                                    <label for="total_share">
+                                        <span>{{ __('Share Amount') }}:</span>
+                                        <b></b>
+                                    </label>
+                                    <label for="total_share">
+                                        <span>{{ __('Total') }}:</span>
+                                        <b></b>
+                                    </label>
+                                </div>
+
+                                {{-- <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label for="total_share">{{ __('Register Fee: 10') }}</label><br>
+                                        <label for="total_share">{{ __('Share Amount: ') }}</label><br>
+                                        <label for="total_share">{{ __('Total: ') }}</label> --}}
+                            </div>
+                        </div>
+
+                        <div class="col-12 d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary me-1 mb-1">{{ __('Submit') }}</button>
+                            <button type="reset" class="btn btn-light-secondary me-1 mb-1">{{ __('Reset') }}</button>
                         </div>
                     </form>
                 </div>
@@ -360,6 +400,14 @@
         altFormat: "d/m/Y",
         dateFormat: "Y-m-d",
     });
+
+    function change_payment_type() {
+        $('#payment_details').hide();
+        var payment_type = $('input[name="payment_type"]:checked').val();
+        if (payment_type == 'cheque') {
+            $('#payment_details').show();
+        }
+    }
 
 </script>
 @endpush
