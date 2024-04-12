@@ -157,6 +157,7 @@ class MemberController extends Controller
         $input['minimum_share'] = $request->minimum_share;
         $input['password'] = Hash::make($request->password);
         $input['is_member'] = '1';
+        $input['is_member'] = '1';
         $files = ['aadhar_card', 'profile_picture', 'pan_card', 'department_id_proof', 'signature', 'witness_signature'];
 
         foreach ($files as $key => $value) {

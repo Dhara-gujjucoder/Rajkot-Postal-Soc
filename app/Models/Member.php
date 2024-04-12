@@ -29,6 +29,11 @@ class Member extends Model
         'parmenant_address',
         'salary',
         'da',
+        'member_fee',
+        'share_amt',
+        'total',
+        'payment_type',
+        'cheque_no',
         'nominee_name',
         'nominee_relation',
         'registration_no',
@@ -121,13 +126,13 @@ class Member extends Model
     /* Attribute for get purchased_share sum of amount */
     public function getPurchasedShareAttribute()
     {
-        return MemberShareDetail::where('member_id', $this->id)->where('is_purchase',1)->withSum('share','share_amount')->get();
+        return MemberShareDetail::where('member_id', $this->id)->where('is_purchase', 1)->withSum('share', 'share_amount')->get();
     }
 
     /* Attribute for get sold_share sum of amount */
     public function getSoldShareAttribute()
     {
-        return MemberShareDetail::where('member_id', $this->id)->where('is_sold',1)->withSum('share','share_amount')->get();
+        return MemberShareDetail::where('member_id', $this->id)->where('is_sold', 1)->withSum('share', 'share_amount')->get();
     }
 
     /* Relationship for get member all fixed_saving */
@@ -158,4 +163,3 @@ class Member extends Model
         return $fixed_saving;
     }
 }
-
