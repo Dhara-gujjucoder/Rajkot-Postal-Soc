@@ -29,7 +29,7 @@ trait UpdateMemberFixedSaving
         // ->where('fixed_amount', '<=', 0)->get()->all();
         // dd(  $remaining_entries);
         // for ($i = 0; $i < $remaining; $i++) {
-          
+
         //     MemberFixedSaving::create([
         //         'ledger_account_id' => $member->fixed_saving_ledger_account->id ?? 0,
         //         'member_id' => $member->id,
@@ -41,11 +41,13 @@ trait UpdateMemberFixedSaving
         //     $remaining_entries[$i]->status = 0;
         //     $remaining_entries[$i]->save();
         // }
-        $member->fixed_saving_ledger_account->update(['current_balance' => $member->fixed_saving()->withoutGlobalScope('bulk_entry')->sum('fixed_amount')]);
+        $member->fixed_saving_ledger_account->update(['current_balance' => $member->fixed_saving_ledger_account->opening_balance + $member->fixed_saving()->sum('fixed_amount')]);
+
+        // $member->fixed_saving_ledger_account->update(['current_balance' => $member->fixed_saving()->withoutGlobalScope('year')->withoutGlobalScope('bulk_entry')->sum('fixed_amount')]);
 
         // dump($total,$saving,$remaining);
         // dd($saving,$remaining,$total);
-        // 12 - 12 == 
+        // 12 - 12 ==
         // if (($total - $saving_count) ==  $remaining) {
         //     $amt_total = 0;
         //     for ($i = 0; $i < ($remaining - 1); $i++) {

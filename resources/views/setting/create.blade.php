@@ -147,28 +147,32 @@
                                     </div>
                                 </div>
                             </div>
-                            {{-- <div class="card">
+                             <div class="card">
                                 <div class="card-header justify-content-between">
-                                    <h4 class="card-title"><b>{{ __('Loan Setting') }}</b></h4>
+                                    <h4 class="card-title"><b>{{ __('Member Setting') }}</b></h4>
                                 </div>
                                 <div class="card-body">
 
                                     <div class="form-group mb-3 row">
-                                        <label class="col-2 col-form-label">{{ __('Loan Interest').' (%)' }} </label>
+                                        <label class="col-2 col-form-label">{{ __('Registration Fee') }} </label>
 
                                         <div class="col-5">
-                                            <input type="number" name="loan_interest"
-                                                class="form-control @error('loan_interest') is-invalid @enderror" placeholder="{{__('Loan Interest')}}"
-                                                value="{{ old('loan_interest', isset($setting->loan_interest) ? $setting->loan_interest : '') }}">
-                                            @error('loan_interest')
+                                            <input type="number" name="registration_fee"
+                                                class="form-control @error('registration_fee') is-invalid @enderror" placeholder="{{__('Registration Fees')}}"
+                                                value="{{ old('registration_fee', isset($setting->registration_fee) ? $setting->registration_fee : '') }}">
+                                            @error('registration_fee')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
                                                 </div>
                                             @enderror
                                         </div>
                                     </div>
-
-                                    <div class="form-group mb-3 row">
+                                    <div class="col">
+                                        <button type="submit" class="btn btn-primary me-1 mb-1">{{ __('Save')}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                                   {{-- <div class="form-group mb-3 row">
                                         <label class="col-2 col-form-label">{{ __('Monthly Saving') }}</label>
                                         <div class="col-5">
                                             <input type="number" name="monthly_saving"

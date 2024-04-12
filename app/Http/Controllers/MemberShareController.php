@@ -163,7 +163,7 @@ class MemberShareController extends Controller
         $import = new MemberShareImport;
 
         Excel::import($import, $request->file('member_share'));
-        dd($import->not_insert);
+        // dd($import->not_insert);
 
 
         return redirect()->route('member_share.index')
