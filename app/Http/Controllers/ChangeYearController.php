@@ -34,7 +34,7 @@ class ChangeYearController extends Controller
                         $ledger_entry->account_name = $member->name . '-' . $group->ledger_group;
                         $ledger_entry->member_id =  $member->id;
                         $ledger_entry->opening_balance = $old_ledger_entry->current_balance;
-                        $ledger_entry->current_balance = 0;
+                        $ledger_entry->current_balance = $ledger_entry->opening_balance;
                         $ledger_entry->type  = 'DR';
                         // dd($year_id);
                         $ledger_entry->year_id = $year_id;

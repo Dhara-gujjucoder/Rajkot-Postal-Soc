@@ -132,7 +132,12 @@ class DoubleEntryController extends Controller
                             'is_double_entry' => 1
                             // 'created_date' => $end_date->format('Y-m-d'),
                         ]);
-                        $member->fixed_saving_ledger_account->update(['current_balance' => $member->fixed_saving_ledger_account->current_balance + $meta_entry->amount]);
+                        $member_fixed_saving = $member->fixed_saving_ledger_account->opening_balance + $member->fixed_saving()->sum('fixed_amount');
+
+                        $member->fixed_saving_ledger_account->update(['current_balance' => $member_fixed_saving]);
+
+                        // $member->fixed_saving_ledger_account->update(['current_balance' => $member->fixed_saving_ledger_account->current_balance + $meta_entry->amount]);
+
                     // }
                     // dd($ledger);
                 }

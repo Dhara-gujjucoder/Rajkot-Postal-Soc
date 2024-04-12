@@ -143,7 +143,7 @@
                                 </div>
                             </div>
 
-                            <input type="hidden" class="form-control" id="month" name="month" value="{{ date('m-d-Y', strtotime(currentYear()->start_month . '-01-' . currentYear()->start_year)) }}">
+                            <input type="hidden" class="form-control" id="month" name="month" value="{{ date('Y-m-d') }}">
 
                             <input type="hidden" class="form-control" id="total_share_amt" name="total_share_amt" value="{{ old('total_share_amt') }}">
                             <input type="hidden" class="form-control" id="remaining_share_amount" name="remaining_share_amount" value="{{ old('remaining_share_amount') }}">
@@ -443,6 +443,7 @@
         if (remaining_loan_amount > 0) {
             total += remaining_loan_amount;
         }
+        // total = total-($('#fixed_saving').val()+$('#total_share_amt').val());
         $('#total_required_amt').val(total);
         $('#total_amt').attr('min', total);
         total += Number($('#stamp_duty').val());

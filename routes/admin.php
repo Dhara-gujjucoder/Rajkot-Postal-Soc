@@ -59,8 +59,8 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
 
 
     //***** Excel *****
-    Route::get('/import/saving', [App\Http\Controllers\MemberFixedSavingController::class, 'all_share'])->name('all_share.import');            //******//
-    Route::post('/import/saving', [App\Http\Controllers\MemberFixedSavingController::class, 'import_all_share'])->name('all_share.import');    //******//
+    Route::get('/import/saving', [App\Http\Controllers\MemberFixedSavingController::class, 'all_saving'])->name('all_share.import');            //******//
+    Route::post('/import/saving', [App\Http\Controllers\MemberFixedSavingController::class, 'import_all_saving'])->name('all_share.import');    //******//
 
     Route::get('/import/member-share', [App\Http\Controllers\MemberShareController::class, 'member_share'])->name('member_share.import');
     Route::post('/import/member-share', [App\Http\Controllers\MemberShareController::class, 'import_member_share'])->name('member_share.import');

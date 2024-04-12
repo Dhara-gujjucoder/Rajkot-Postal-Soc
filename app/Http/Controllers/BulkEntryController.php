@@ -204,7 +204,7 @@ class BulkEntryController extends Controller
                         'year_id' => $this->current_year->id,
                         'status' => 1
                     ]);
-                    $member_fixed_saving = $member->fixed_saving()->sum('fixed_amount');
+                    $member_fixed_saving = $member->fixed_saving_ledger_account->opening_balance + $member->fixed_saving()->sum('fixed_amount');
                     $member->fixed_saving_ledger_account->update(['current_balance' => $member_fixed_saving]);
                 }
             }
@@ -355,7 +355,7 @@ class BulkEntryController extends Controller
                     'year_id' => $this->current_year->id,
                     'status' => 1
                 ]);
-                $member_fixed_saving = $member->fixed_saving()->sum('fixed_amount');
+                $member_fixed_saving = $member->fixed_saving_ledger_account->opening_balance + $member->fixed_saving()->sum('fixed_amount');
 
                 $member->fixed_saving_ledger_account->update(['current_balance' => $member_fixed_saving]);
             }

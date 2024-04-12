@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Member;
 use App\Models\AccountType;
 use App\Models\LedgerGroup;
+use App\Models\BalanceSheet;
 use Illuminate\Http\Request;
 use App\Models\FinancialYear;
 use App\Models\LedgerAccount;
@@ -97,6 +98,7 @@ class LedgerAccountController extends Controller
             'type' => 'required',
             'form_type' => 'required'
         ]);
+
         $input = $request->all();
         $input['created_by'] = Auth::user()->id;
         $input['year_id'] = FinancialYear::where('is_current', 1)->pluck('id')->first();
@@ -104,6 +106,16 @@ class LedgerAccountController extends Controller
             $input['is_member_account'] = 1;
         }else{
             $input['is_member_account'] = 0;
+
+            // if($request->ledger_group_id == 7){
+            //     $balanceSheet = new BalanceSheet();
+            //     $balanceSheet->ledger_ac_id = $value->id;
+            //     $balanceSheet->ledger_ac_name = $value->account_name;
+            //     $balanceSheet->balance = 0;
+            //     $balanceSheet->year_id = $this->current_year->id;
+            //     $balanceSheet->save();
+            // }
+
         }
         LedgerAccount::create($input);
         return redirect()->route('ledger_account.index')

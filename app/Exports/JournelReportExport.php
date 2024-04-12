@@ -65,7 +65,6 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
 
     public function title(): string
     {
-
         return date('M-Y', strtotime('01-' . $this->month));
     }
 

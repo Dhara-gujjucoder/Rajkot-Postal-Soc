@@ -65,6 +65,7 @@ class MemberImport implements ToModel, WithStartRow,WithMultipleSheets,WithLimit
                     $ledger_entry->account_name = $user->name . '-' . $group->ledger_group;
                     $ledger_entry->member_id =  $member2->id;
                     $ledger_entry->opening_balance = 0;
+                    $ledger_entry->current_balance = 0;
                     $ledger_entry->type  = 'DR';
                     $ledger_entry->year_id = 1;
                     $ledger_entry->created_by = 1;

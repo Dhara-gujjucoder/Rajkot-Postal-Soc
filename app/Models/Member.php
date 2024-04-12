@@ -133,7 +133,7 @@ class Member extends Model
     /* Relationship for get member all fixed_saving */
     public function fixed_saving()
     {
-        return $this->hasMany(MemberFixedSaving::class, 'member_id', 'id')->where('status', 1);
+        return $this->hasMany(MemberFixedSaving::class, 'member_id', 'id')->where('status', 1)->withoutGlobalScope('bulk_entry');
     }
 
     /* Relationship with current loan */

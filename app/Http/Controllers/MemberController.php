@@ -404,7 +404,7 @@ class MemberController extends Controller
             $shares = $member->shares()->get();
             foreach ($shares as $share) {
 
-        $share->status = 0;
+                $share->status = 0;
                 $share->save();
 
                 $share_detail_entry = new MemberShareDetail();
@@ -424,7 +424,7 @@ class MemberController extends Controller
 
     /**
      * Display the specified resource.
-    */
+     */
 
     public function getmember(Member $member)
     {

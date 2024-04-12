@@ -94,19 +94,19 @@ class MemberFixedSavingController extends Controller
 
     //*************** E X C E L  S H E E T S [0]***************
 
-    public function all_share(){
+    public function all_saving(){
         return view('member_fixed_saving.import', [
             'page_title' => __('Import Fixed Saving')
         ]);
     }
-    public function import_all_share(Request $request): RedirectResponse
+    public function import_all_saving(Request $request): RedirectResponse
     {
         $import = new MemberSavingImport;
 
         Excel::import($import, $request->file('excel_file'));
         // dd($import->not_insert);
-        return redirect()->route('member_fixed_saving.index')
-            ->withSuccess(__('All Share Imported successfully.'));
+        return redirect()->route('home')
+            ->withSuccess(__('All Saving Imported successfully.'));
     }
 
     // END

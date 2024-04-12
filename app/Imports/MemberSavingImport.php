@@ -72,8 +72,8 @@ class MemberSavingImport implements ToModel, WithStartRow, WithLimit, WithMultip
                     } else {
                         $this->not_insert[] = $row[1];
                     }
-                    $member->fixed_saving_ledger_account->update(['opening_balance' =>   $row[5], 'current_balance' => $row[19] - $row[5]]);
-                    // $end_date->modify('+1 month');
+                    // $member->fixed_saving_ledger_account->update(['opening_balance' =>   $row[5], 'current_balance' => $row[19] - $row[5]]);
+                    $member->fixed_saving_ledger_account->update(['opening_balance' =>   $row[5], 'current_balance' =>$row[19]]);
                 }
             } else {
                 $this->not_insert[] = $row;

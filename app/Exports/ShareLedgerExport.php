@@ -16,9 +16,9 @@ class ShareLedgerExport implements FromCollection, WithHeadings, WithMapping, Wi
     public $index = 0, $total_row = 0, $ob = 0, $pshare = 0, $sshare = 0;
     public function collection()
     {
-        $data = Member::withTrashed()->orderBy('uid', 'ASC')->active()->get();
+        $data = Member::withTrashed()->orderBy('uid', 'ASC')->get();
         $this->total_row = count($data) + 1;
-        $data->push($data[0]);
+        $data->push([]);
         return $data;
     }
 
@@ -30,23 +30,27 @@ class ShareLedgerExport implements FromCollection, WithHeadings, WithMapping, Wi
 
     public function map($member): array
     {
+        if (!is_array($member)) {
 
-        if ($member->share_ledger_account !== null) {
-            $this->ob = $member->share_ledger_account->sum('opening_balance');
-        } else {
-            $this->ob = '';
-        }
+            if ($member->share_ledger_account !== null) {
+                $this->ob += $member->share_ledger_account->opening_balance;
+                // dd($this->ob);
+            } else {
+                // dump($member);
+                $this->ob += 0;
+            }
 
-        if ($member->purchased_share !== null ) {
-            $this->pshare += $member->purchased_share->sum('share_sum_share_amount');
-        } else {
-            $this->pshare = '';
-        }
+            if ($member->purchased_share !== null) {
+                $this->pshare += $member->purchased_share->sum('share_sum_share_amount');
+            } else {
+                $this->pshare = '';
+            }
 
-        if ( $member->sold_share !== null) {
-            $this->sshare += $member->sold_share->sum('share_sum_share_amount');
-        } else {
-            $this->sshare = '';
+            if ($member->sold_share !== null) {
+                $this->sshare += $member->sold_share->sum('share_sum_share_amount');
+            } else {
+                $this->sshare = '';
+            }
         }
 
         // $this->ob =  $member->share_ledger_account->sum('opening_balance');
@@ -59,10 +63,10 @@ class ShareLedgerExport implements FromCollection, WithHeadings, WithMapping, Wi
         $this->pshare = (int) $this->pshare;
         $this->sshare = (int) $this->sshare;
 
-        $row2 = [
-            '', 'TOTAL:', $this->ob, $this->pshare, $this->sshare, ($this->ob + $this->pshare) - $this->sshare, ''
-        ];
         if ($this->index ==  $this->total_row) {
+            $row2 = [
+                '', 'TOTAL:', $this->ob, $this->pshare, $this->sshare, ($this->ob + $this->pshare) - $this->sshare, ''
+            ];
             return [[], $row2];
         } else {
 
@@ -73,7 +77,8 @@ class ShareLedgerExport implements FromCollection, WithHeadings, WithMapping, Wi
 
             $balance = '';
             if ($member->share_ledger_account !== null && $member->purchased_share !== null && $member->sold_share !== null) {
-                $balance = $opening_balance + $purchased_share_amount - $sold_share_amount;
+                // $balance = $opening_balance + $purchased_share_amount - $sold_share_amount;
+                $balance = $member->share_ledger_account->current_balance;
             }
 
             return [

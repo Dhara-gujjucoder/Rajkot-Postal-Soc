@@ -88,7 +88,7 @@ class MemberShareImport implements ToModel, WithStartRow, WithLimit, WithMultipl
                     // dd($member->share_total_price);
             $member->save();
 
-            $member->share_ledger_account->update([ 'opening_balance' =>$opening_bal ?? '']);
+            $member->share_ledger_account->update(['opening_balance' =>$opening_bal ?? '','current_balance' =>$row[8]]);
 
         }
         else{

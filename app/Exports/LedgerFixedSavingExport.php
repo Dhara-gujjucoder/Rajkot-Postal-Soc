@@ -76,10 +76,11 @@ class LedgerFixedSavingExport implements FromCollection, WithMapping, ShouldAuto
                 ->where('month', $value->month)->where('is_double_entry', 1)->get();
 
             if ($double_entry_data->isNotEmpty()) {
+                // dd($double_entry_data);
                 $entry[] = [
-                    $value->month, '', $value->double_entry->particular ?? '', '', $value->double_entry->amount, $total + $value->double_entry->amount,
+                    $value->month, '', ($value->double_entry->particular ?? ''), '', ($value->double_entry->amount ?? 0), $total + ($value->double_entry->amount ?? 0),
                 ];
-                $total = $total + $value->double_entry->amount;
+                $total = $total + ($value->double_entry->amount ?? 0);
             }
         }
 
