@@ -24,7 +24,6 @@ class ChangeYearController extends Controller
                 $group = LedgerGroup::where('id', $i)->first();
                 $old_ledger_entry = LedgerAccount::where('member_id', $member->id)->where('ledger_group_id', $i)->first();
 
-
                 $ledger_entry = LedgerAccount::withoutGlobalScope('year')->where('year_id', $year_id)->where('member_id', $member->id)->where('ledger_group_id', $i)->first();
 
                     if (!$ledger_entry) {
@@ -74,6 +73,7 @@ class ChangeYearController extends Controller
             $balanceSheet->year_id = $year_id;
             $balanceSheet->save();
         }
+
 
         // return redirect()->route('home');
 

@@ -29,6 +29,7 @@ class LedgerAccountController extends Controller
     /**
      * Display a listing of the resource.
      */
+
     public function index(Request $request)
     {
         $user = Auth::user();
@@ -76,6 +77,7 @@ class LedgerAccountController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+
     public function create()
     {
         return view('ledger_account.create', [
@@ -106,25 +108,26 @@ class LedgerAccountController extends Controller
             $input['is_member_account'] = 1;
         }else{
             $input['is_member_account'] = 0;
-
-            // if($request->ledger_group_id == 7){
-            //     $balanceSheet = new BalanceSheet();
-            //     $balanceSheet->ledger_ac_id = $value->id;
-            //     $balanceSheet->ledger_ac_name = $value->account_name;
-            //     $balanceSheet->balance = 0;
-            //     $balanceSheet->year_id = $this->current_year->id;
-            //     $balanceSheet->save();
-            // }
-
         }
-        LedgerAccount::create($input);
+
+        $ledger_account = LedgerAccount::create($input);
+        // dd($ledger_account->opening_balance);
+        if($request->ledger_group_id == 7){
+            $balanceSheet = new BalanceSheet();
+            $balanceSheet->ledger_ac_id = $ledger_account->id;
+            $balanceSheet->ledger_ac_name = $ledger_account->account_name;
+            $balanceSheet->balance = $ledger_account->opening_balance;
+            $balanceSheet->year_id = $this->current_year->id;
+            $balanceSheet->save();
+        }
+
         return redirect()->route('ledger_account.index')
             ->withSuccess(__('New Ledger Account is added successfully.'));
     }
 
     /**
      * Display the specified resource.
-     */
+    */
     public function show(string $id)
     {
         //
@@ -132,7 +135,8 @@ class LedgerAccountController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     */
+    */
+
     public function edit(string $id)
     {
         $ledger_account = LedgerAccount::findOrFail($id);

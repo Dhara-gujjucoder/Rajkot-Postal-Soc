@@ -13,24 +13,55 @@ Loan Module
         b. if still loan amount is remaining than that amount is divided into loan EMIs
 
 2) Loan Close or Settlement
-    --> loan settlement amount is entered across loan _master
+    --> loan settlement amount is entered across loan_master
     --> change status as 3 (settled)
 
 
 
-trunk :
+after all "db trunk" process :
 users           --> Done  php artisan db:seed SuperAdminSeeder
 member          --> Done
 ledger account  --> Done
 fixed saving    --> Done
 share & detail  --> Done
-bulk entry      -->
-loan master     -->
-laon emi        -->
-balance sheet   -->
+<!-- bulk entry      fixed saving commented rakkhvano thase  -->
+loan master     --> Done
+laon emi        --> Done
+balance sheet   --> Done
 double entry    -->
-receipt         -->
+<!-- receipt         -->  -->
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://www.google.com/maps/place/SHASHWAT+WORLD+THE+COMMERCIAL+SPACE/@22.236206,70.8162963,15z/data=!4m6!3m5!1s0x3959b55cf04f7e1b:0x406c21c4c0c23a4e!8m2!3d22.236206!4d70.8162963!16s%2Fg%2F11p15rxqjh?hl=en-GB&entry=ttu

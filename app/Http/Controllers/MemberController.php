@@ -63,6 +63,7 @@ class MemberController extends Controller
         // $data['departments'] = 1;
         $data['departments'] = Department::get();
         $data['members'] = Member::orderBy('uid', 'DESC')->get();
+
         if ($request->ajax()) {
             //   dd($request->all());
             $data = User::usermember()->with('member'); //->orderBy('id', 'DESC')

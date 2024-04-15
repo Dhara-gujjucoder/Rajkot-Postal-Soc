@@ -97,7 +97,7 @@ class LoanMasterController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->remaining_loan_amount);
+
         $request->validate([
             'loan_id' => 'required',
             'emi_amount' => 'required',
@@ -124,7 +124,7 @@ class LoanMasterController extends Controller
         $loan_master->start_month = $request->emi_month[0];
         $loan_master->end_month = Arr::last($request->emi_month);
         $loan_master->status = 1;
-        $loan_master->principal_amt = LoanCalculationMatrix::find($request->loan_id)->first()->amount;
+        $loan_master->principal_amt = LoanCalculationMatrix::find($request->loan_id)->amount;
         $loan_master->save();
 
         //settle old loan

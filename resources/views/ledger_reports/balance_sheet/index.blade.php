@@ -17,27 +17,31 @@
 
                 <div class="@cannot('edit-balance_sheet') col-md-12 @else col-md-11 @endcannot">
                         <div class="mb-3 form-group opening_balance">
-                            <label for="email">
+                            <label>
                                 <span>{{ __('Total Saving') }}:</span>
                                 <b>{{ 0 }}</b>
                                 {{-- <b>{{ $user->fixed_saving_ledger_account->opening_balance }}</b> --}}
                             </label>
-                            <label for="email">
+                            <label>
                                 <span>{{ __('Total Interest') }}:</span>
                                 {{ 0 }}
                                 {{-- <b>{{ $user->share_ledger_account->opening_balance }}</b> --}}
                             </label>
-                            <label for="email">
+                            <label>
                                 <span>{{ __('Total Share') }}:</span>
                                 {{ 0 }}
                                 {{-- <b>{{ $user->loan_ledger_account->opening_balance }}</b> --}}
                             </label>
-                            <label for="email">
+                            <label>
                                 <span>{{ __('Balance') }}:</span>
                                 {{ 0 }}
+
+                                {{-- <a href="https://maps.app.goo.gl/L3nmhnZg3mJgZzZP8" target="__blank">New</a> --}}
                                 {{-- <b>{{ $user->loan_ledger_account->opening_balance }}</b> --}}
                             </label>
+
                         </div>
+
                     </div>
 
                 </div>
@@ -55,7 +59,7 @@
                         </thead>
                         <tbody>
                             @php
-                                $totalBalance = 0; 
+                                $totalBalance = 0;
                             @endphp
 
                             @foreach ($balance_sheet as $key => $sheet)
@@ -65,7 +69,7 @@
                                     <td>{{ $sheet->balance }}</td>
                                 </tr>
                                 @php
-                                    $totalBalance += $sheet->balance; 
+                                    $totalBalance += $sheet->balance;
                                 @endphp
                             @endforeach
                                 <tr>

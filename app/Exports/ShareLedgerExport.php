@@ -13,7 +13,7 @@ use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 
 class ShareLedgerExport implements FromCollection, WithHeadings, WithMapping, WithStyles, WithStrictNullComparison
 {
-    public $index = 0, $total_row = 0, $ob = 0, $pshare = 0, $sshare = 0;
+    public $index = 0, $total_row = 0, $ob = 0, $pshare = 0, $sshare = 0,$cur_balance = 0;
     public function collection()
     {
         $data = Member::withTrashed()->orderBy('uid', 'ASC')->get();
@@ -34,6 +34,7 @@ class ShareLedgerExport implements FromCollection, WithHeadings, WithMapping, Wi
 
             if ($member->share_ledger_account !== null) {
                 $this->ob += $member->share_ledger_account->opening_balance;
+                $this->cur_balance += $member->share_ledger_account->current_balance;
                 // dd($this->ob);
             } else {
                 // dump($member);
@@ -62,10 +63,10 @@ class ShareLedgerExport implements FromCollection, WithHeadings, WithMapping, Wi
         $this->ob = (int) $this->ob;
         $this->pshare = (int) $this->pshare;
         $this->sshare = (int) $this->sshare;
-
+        $this->cur_balance = (int) $this->cur_balance;
         if ($this->index ==  $this->total_row) {
             $row2 = [
-                '', 'TOTAL:', $this->ob, $this->pshare, $this->sshare, ($this->ob + $this->pshare) - $this->sshare, ''
+                '', 'TOTAL:', $this->ob, $this->pshare, $this->sshare,  $this->cur_balance, ''
             ];
             return [[], $row2];
         } else {

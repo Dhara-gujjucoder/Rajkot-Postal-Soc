@@ -34,8 +34,9 @@ class MemberImportController extends Controller
     */
     public function store(Request $request): RedirectResponse
     {
-        Excel::import(new MemberImport, $request->file('memberexcel'));
-
+        $import = new MemberImport;
+       Excel::import($import, $request->file('memberexcel'));
+       dd($import->not_insert);
         return redirect()->route('members.index')
             ->withSuccess(__('New member is added successfully.'));
     }

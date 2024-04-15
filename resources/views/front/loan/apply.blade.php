@@ -136,41 +136,45 @@
                     </div>
                 </div>
                 <br>
-                @if (!$loan)
+                @if (!$old_loans)
                 @else
                     <div class="desh-listbox skybluebg-box wow fadeInRight" data-wow-delay="0.2s">
                         <div class="dash-box-title">{{ __('Your Old Loan Detail') }}</div>
                     </div>
                     <div class="wow fadeInLeft" data-wow-delay="0.2s">
                         <div class="loan-table">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        {{-- <th>{{ __('No.')}}</th> --}}
-                                        <th>{{ __('Loan No') }}</th>
-                                        {{-- <th>Month</th> --}}
-                                        <th>{{ __('Principal') }}</th>
-                                        <th>{{ __('EMI Amount') }}</th>
-                                        <th>{{ __('Payment Type') }}</th>
-                                        <th>{{ __('Status') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($old_loans as $key => $emi)
+                            @if (!empty($old_loans))
+                                <table class="table table-bordered">
+                                    <thead>
                                         <tr>
-                                            {{-- <td data-label="No.">{{ $key+1 }}</td> --}}
-                                            <td data-label="Loan No">{{ $emi->loan_no }}</td>
-                                            {{-- <td data-label="Month">{{ date('d-M-Y',strtotime($emi->month)) }}</td> --}}
-                                            <td data-label="Principal">{{ $emi->principal_amt }}</td>
-                                            <td data-label="EMI Amount">{{ $emi->emi_amount }}</td>
-                                            <td data-label="Payment Type">{{ $emi->payment_type }}</td>
-                                            <td data-label="Status">
-                                                <a href="{{ route('user.loan.old_loan', ['loan_id' => $emi->id]) }}"><button class="btn-primary"> {{ __('View') }}</button></a>
-                                            </td>
+                                            {{-- <th>{{ __('No.')}}</th> --}}
+                                            <th>{{ __('Loan No') }}</th>
+                                            {{-- <th>Month</th> --}}
+                                            <th>{{ __('Principal') }}</th>
+                                            <th>{{ __('EMI Amount') }}</th>
+                                            <th>{{ __('Payment Type') }}</th>
+                                            <th>{{ __('Status') }}</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($old_loans as $key => $emi)
+                                            <tr>
+                                                {{-- <td data-label="No.">{{ $key+1 }}</td> --}}
+                                                <td data-label="Loan No">{{ $emi->loan_no }}</td>
+                                                {{-- <td data-label="Month">{{ date('d-M-Y',strtotime($emi->month)) }}</td> --}}
+                                                <td data-label="Principal">{{ $emi->principal_amt }}</td>
+                                                <td data-label="EMI Amount">{{ $emi->emi_amount }}</td>
+                                                <td data-label="Payment Type">{{ $emi->payment_type }}</td>
+                                                <td data-label="Status">
+                                                    <a href="{{ route('user.loan.old_loan', ['loan_id' => $emi->id]) }}"><button class="btn-primary"> {{ __('View') }}</button></a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                @else
+                                {{ 'no any old loan' }}
+                            @endif
                         </div>
                     </div>
                 @endif
