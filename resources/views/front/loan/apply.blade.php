@@ -43,7 +43,7 @@
                 <div class="row wow fadeInUp" data-wow-delay="0.2s">
                     <div class="col-md-6">
                         <div class="dashboard-detail-data">
-                            <label class="col-form-label"><strong>{{ __('Name') }} :</strong></label>
+                            <label class="col-form-label"><strong>{{ __('Name 0111') }} :</strong></label>
                             <div class="col-form-info">{{ $user->name }}</div>
                         </div>
                     </div>
