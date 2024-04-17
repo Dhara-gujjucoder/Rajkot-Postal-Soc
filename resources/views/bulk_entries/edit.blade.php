@@ -50,8 +50,8 @@
                                             <div class="col-md-3 col-3 col-lg-2">
                                                 <b class="p-1 ">&nbsp;</b>
                                             </div>
-                                            <div class="col-md-1 col-1"> <b
-                                                    class="p-1 ">{{ __('Loan Settlement') }}</b>
+                                            <div class="col-md-1 col-1">
+                                                <b class="p-1 ">{{ __('Loan Settlement') }}</b>
                                             </div>
                                             <div class="col-md-2 col-2">
                                                 <b class="p-1 ">{{ __('Principal') }}</b>
@@ -89,7 +89,7 @@
                                     <div class="row">
                                         <div class="col-md-3 col-3 col-lg-2">
                                             <div class="form-group">
-                                                <label for="first-particular-column">{{ $member->user->name }} 
+                                                <label for="first-particular-column">{{ $member->user->name }}
                                                     @if ($member->loan)
                                                     <div class="ctooltip text-danger">&nbsp;<i
                                                             class="bi bi-info-circle-fill"></i>

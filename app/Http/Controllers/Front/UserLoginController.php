@@ -56,7 +56,7 @@ class UserLoginController extends Controller
                 $q->select(DB::raw(1))
                     ->from('members')
                     ->where('members.status',1)
-                    ->whereIn('members.id',[220,221])
+                    ->whereIn('members.registration_no',['01110111','00007777'])
                     ->whereColumn('members.user_id', 'users.id')
                     ->where('members.registration_no', $request->registration_no);
 

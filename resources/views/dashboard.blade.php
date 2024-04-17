@@ -18,6 +18,7 @@
                                     <h6 class="text-muted font-semibold">{{__('Members')}}</h6>
                                     <h6 class="font-extrabold mb-0">{{$total_members}}</h6>
                                 </div>
+
                             </div>
                         </div>
                     </div>

@@ -47,7 +47,6 @@ class LoanController extends Controller
         return redirect()->back()->withSuccess(__('Thank you for your request of loan, we will contact you soon.'));
     }
 
-
     public function apply()
     {
         $data['page_title'] = __('Loan Apply');
