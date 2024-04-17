@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class LoanEMI extends Model
 {
+
     use HasFactory;
     protected $table = 'loan_emis';
     protected $fillable = [
