@@ -14,11 +14,9 @@ use Illuminate\Support\Collection;
 
 
 if (!function_exists('Setting')) {
-
-    function getSetting()
-    {
+    function getSetting(){
         $setting = Setting::first();
-        return ($setting);
+        return $setting;
     }
 }
 
@@ -148,14 +146,14 @@ if (!function_exists('getLedgerGroupDropDown')) {
             $merged_collection = new Collection();
             // dd($all_year);
             // foreach ($all_year as $key => $yearvalue) {
-                $months = collect(getMonthsOfYear(currentYear()->id));
-                $merged_collection = $merged_collection->merge($months);
+            $months = collect(getMonthsOfYear(currentYear()->id));
+            $merged_collection = $merged_collection->merge($months);
             // }
             // dd($merged_collection);
             foreach ($merged_collection->pluck('value') as $key => $value) {
-                $date = Carbon::parse('01-'.$value);
+                $date = Carbon::parse('01-' . $value);
 
-                if($date->lessThan(date('d-m-Y'))){
+                if ($date->lessThan(date('d-m-Y'))) {
                     $final[] = $date->format('m-Y');
                 }
             }
@@ -163,15 +161,15 @@ if (!function_exists('getLedgerGroupDropDown')) {
             // dd($merged_collection->whereIn('value',$final));
             // $required_amount = count($final)*current_fixed_saving()->monthly_saving;
             // dd($final);
-            $member_fixed_Saving = MemberFixedSaving::where('member_id', $member_id)->whereIn('month',$final);
+            $member_fixed_Saving = MemberFixedSaving::where('member_id', $member_id)->whereIn('month', $final);
             // $nil_entries =  $member_fixed_Saving->where('fixed_amount',0)->count();
             $saving_amount = $member_fixed_Saving->withoutGlobalScope('bulk_entry')->sum('fixed_amount');
             // dd($member_fixed_Saving->get());
-            $required_amount = $member_fixed_Saving->groupBy('month')->get(['month'])->count()*current_fixed_saving()->monthly_saving;
-        //    dd( $saving_amount);
+            $required_amount = $member_fixed_Saving->groupBy('month')->get(['month'])->count() * current_fixed_saving()->monthly_saving;
+            //    dd( $saving_amount);
             // $member = Member::find($member_id);
             // $count = count(getMonthsOfYear(currentYear()->id));
-            return  $required_amount-$saving_amount > 0 ? $required_amount-$saving_amount : 0;
+            return  $required_amount - $saving_amount > 0 ? $required_amount - $saving_amount : 0;
         }
     }
 }

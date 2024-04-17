@@ -27,7 +27,8 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('bulk_entries.store') }}" method="post" enctype="multipart/form-data" id="bulkform">
+                    <form action="{{ route('bulk_entries.store') }}" method="post" enctype="multipart/form-data"
+                        id="bulkform">
                         @csrf
                         <div class="w-100 float-start mb-5">
                             <div class="row mb-1">
@@ -153,14 +154,15 @@
                                                 value="{{ $member->user_id }}" placeholder="{{ __('particular') }}">
                                         </div>
                                     </div>
-
                                     <div class="col-md-1 col-1">
-                                        <input class="form-check-input" type="checkbox"
-                                            name="is_loan_settle_{{ $member->user_id }}" value="1"
-                                            id="is_loan_settle_{{ $member->user_id }}"
-                                            {{ old('is_loan_settle_' . $member->user_id) ? 'checked' : '' }}>
+                                        @if ($member->loan)
+                                            <input class="form-check-input" type="checkbox"
+                                                name="is_loan_settle_{{ $member->user_id }}" value="1"
+                                                id="is_loan_settle_{{ $member->user_id }}"
+                                                onclick="if(this.checked){getLoan({{ $member->id }})}"
+                                                {{ old('is_loan_settle_' . $member->user_id) ? 'checked' : '' }}>
+                                        @endif
                                     </div>
-
                                     <div class="col-md-2 col-2">
                                         <div class="form-group">
                                             <input type="number" step="any"
@@ -169,7 +171,7 @@
                                                 oninput="calculate_total()"
                                                 name="principal_{{ $department->id }}_{{ $member->user_id }}"
                                                 value="{{ old('principal', $member->principal) }}"
-                                                placeholder="{{ __('Principal') }}">
+                                                placeholder="{{ __('Principal') }}" readonly>
                                             @if ($errors->has('principal'))
                                                 <span class="text-danger">{{ $errors->first('principal') }}</span>
                                             @endif
@@ -183,7 +185,10 @@
                                                 oninput="calculate_total()"
                                                 name="interest_{{ $department->id }}_{{ $member->user_id }}"
                                                 value="{{ old('interest', $member->interest) }}"
-                                                placeholder="{{ __('Interest') }}">
+                                                placeholder="{{ __('Interest') }}" readonly>
+                                                <input type="hidden"
+                                                name="emi_id_{{ $department->id }}_{{ $member->user_id }}"
+                                                value="{{ $member->emi_id }}">
                                             @if ($errors->has('interest'))
                                                 <span class="text-danger">{{ $errors->first('interest') }}</span>
                                             @endif
@@ -313,7 +318,7 @@
                                         class="form-control @error('amount') is-invalid @enderror"
                                         id="exact_amount_{{ $department->id }}"
                                         name="exact_amount_{{ $department->id }}"
-                                        value="{{ old('exact_amount_' . $department->id, 0) }}"
+                                        value="{{ old('exact_amount_'.$department->id, 0) }}"
                                         placeholder="{{ __('Exact amount') }}">
                                 </div>
                                 <div class="col-md-2 col-2">
@@ -321,7 +326,7 @@
                                         class="form-control @error('cheque_no') is-invalid @enderror"
                                         id="cheque_no_{{ $department->id }}"
                                         name="cheque_no_{{ $department->id }}"
-                                        value="{{ old('cheque_no_' . $department->id) }}"
+                                        value="{{ old('cheque_no_'.$department->id) }}"
                                         placeholder="{{ __('Cheque No.') }}">
                                 </div>
                                 <div class="col-md-1 col-1">
@@ -329,7 +334,7 @@
                                         class="form-control @error('principal_total') is-invalid @enderror"
                                         id="summary_principal_total_{{ $department->id }}"
                                         name="summary_principal_total_{{ $department->id }}"
-                                        value="{{ old('principal_total', $department->principal_total) }}"
+                                        value="{{ old('summary_principal_total_'.$department->id, $department->principal_total) }}"
                                         placeholder="{{ __('Principal') }}">
                                 </div>
                                 <div class="col-md-1 col-2">
@@ -337,7 +342,7 @@
                                         class="form-control @error('interest') is-invalid @enderror"
                                         id="summary_interest_total_{{ $department->id }}"
                                         name="summary_interest_total_{{ $department->id }}"
-                                        value="{{ old('summary_interest_total_', $department->interest_total) }}"
+                                        value="{{ old('summary_interest_total_'.$department->id, $department->interest_total) }}"
                                         placeholder="{{ __('Interest') }}">
                                 </div>
                                 <div class="col-md-1 col-1">
@@ -345,7 +350,7 @@
                                         class="form-control @error('fixed') is-invalid @enderror"
                                         id="summary_fixed_total_{{ $department->id }}"
                                         name="summary_fixed_total_{{ $department->id }}"
-                                        value="{{ old('summary_fixed', $department->fixed_total) }}"
+                                        value="{{ old('summary_fixed_total_'.$department->id, $department->fixed_total) }}"
                                         placeholder="{{ __('Fixed Saving') }}">
                                 </div>
                                 <div class="col-md-1 col-1">
@@ -353,7 +358,7 @@
                                         class="form-control @error('ms_total') is-invalid @enderror"
                                         id="summary_ms_total_{{ $department->id }}"
                                         name="summary_ms_total_{{ $department->id }}"
-                                        value="{{ old('ms_total', $department->ms_total) }}"
+                                        value="{{ old('summary_ms_total_'.$department->id, $department->ms_total) }}"
                                         placeholder="{{ __('MS') }}">
                                 </div>
                                 <div class="col-md-2 col-2">
@@ -361,7 +366,7 @@
                                         class="form-control @error('total_amount_') is-invalid @enderror"
                                         id="summary_total_amount_total_{{ $department->id }}"
                                         name="summary_total_amount_total_{{ $department->id }}"
-                                        value="{{ old('total_amount', $department->total_amount_total) }}"
+                                        value="{{ old('summary_total_amount_total_'.$department->id, $department->total_amount_total) }}"
                                         placeholder="{{ __('Total') }}">
                                 </div>
                             </div>
@@ -455,6 +460,51 @@
                                             <span class="d-none d-sm-block">{{ __('Yes') }}</span>
                                         </button>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade text-left" id="loan_settle" tabindex="-1"
+                            aria-labelledby="myModalLabel1" style="display: none;" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+                                <div class="modal-content">
+                                    <form id="loan_close">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="myModalLabel1">{{ __('Loan Settlement') }}
+                                            </h5>
+                                            <button type="button" class="close rounded-pill" data-bs-dismiss="modal"
+                                                aria-label="Close">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="feather feather-x">
+                                                    <line x1="18" y1="6" x2="6"
+                                                        y2="18">
+                                                    </line>
+                                                    <line x1="6" y1="6" x2="18"
+                                                        y2="18">
+                                                    </line>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <table class="table table-bordered">
+                                                <input type="hidden" id="loan_id">
+                                                <tbody id="loan_details_settle">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn" data-bs-dismiss="modal">
+                                                <i class="bx bx-x d-block d-sm-none"></i>
+                                                <span class="d-none d-sm-block">{{ __('Cancel') }}</span>
+                                            </button>
+                                            <button type="button" class="btn btn-primary ms-1"
+                                                onclick="close_loan()">
+                                                <i class="bx bx-check d-block d-sm-none"></i>
+                                                <span class="d-none d-sm-block">{{ __('Close Loan') }}</span>
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -559,6 +609,147 @@
             $('#smr_' + ledger3 + 'total').text(totals[ledger3 + 'final'].toFixed(0));
         });
 
+    }
+
+    function getLoan(member_id) {
+
+            $('#loader').show();
+            var url = "{{ route('member.get', ':id') }}";
+            url = url.replace(':id', member_id);
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                url: url,
+                type: 'GET',
+                dataType: 'JSON',
+                success: function(data) {
+                    if (data.success == true) {
+                        var member = data.member;
+                        var member_loan = member.loan;
+                        console.log(member_loan);
+                        var html = `<tr>
+                                    <td><b>{{ __('Loan A/c') }}</b></td>
+                                    <td>` + member_loan.loan_no + `</td>
+                                    <td><b>{{ __('Amount') }}</b></td>
+                                    <td>&#8377; ` + member_loan.principal_amt + `</td>
+                                    <td><b>{{ __('EMI Amount') }}</b></td>
+                                    <td>&#8377; ` + member_loan.emi_amount + `</td>
+                                </tr>
+    
+                                <tr>
+                                    <td><b>{{ __('Paid Loan') }}</b></td>
+                                    <td>&#8377; ` + (member_loan.principal_amt - member.loan_remaining_amount) + `</td>
+                                    <td><b>{{ __('Paid EMI') }}</b></td>
+                                    <td>` + ((member_loan.loan_emis.length)) +
+                            `</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>    <td colspan="6">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"> <b>{{ __('Remaining Loan') }}</b></td>
+                                    <td colspan="4"><input type="number" class="form-control amount" name="amount_settle" placeholder="{{ __('Remaining Loan') }}" id="remaining_loan_settle" min="` +
+                            member.loan_remaining_amount + `"  value="` +
+                            member.loan_remaining_amount + `"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><b>{{ __('Payment Type') }}</b></td>
+                                    <td colspan="4"><input class="form-check-input payment_type" type="radio" name="payment_type"
+                                        id="cash" checked="" value="cash"
+                                        {{ old('payment_type') == 'cash' ? 'checked' : '' }}
+                                        onchange="change_payment_type()">
+                                    <label class="form-check-label" for="cash">
+                                        {{ __('Cash') }}
+                                    </label>
+                                    <input class="form-check-input payment_type" type="radio" name="payment_type"
+                                        id="cheque" value="cheque" onchange="change_payment_type()"
+                                        {{ old('payment_type') == 'cheque' ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="cheque">
+                                        {{ __('Cheque') }}
+                                    </label></td></tr>
+                                    <tr>
+                                    <td colspan="6"><div id="payment_details"
+                                    style="display: {{ old('payment_type') == 'cheque' ? 'block' : 'none' }};">
+                                    
+                                    <div class="mb-3 row">
+                                        <label for="amount"
+                                            class="col-md-2 col-form-label text-md-end text-start">{{ __('Cheque No.(RDC Bank)') }}</label>
+                                        <div class="col-md-10">
+                                            <input type="number"
+                                                class="form-control cheque_no"
+                                                id="cheque_no" name="cheque_no" value="{{ old('cheque_no') }}"
+                                                placeholder="{{ __('Cheque No.') }}">
+                                        </div>
+                                    </div>
+                                </div></td>
+                                </tr>
+                                `;
+                        $('#loan_details_settle').html(html);
+                        $('#loan_settle').modal('show');
+                        $('#loan_id').val(member_loan.id);
+                        // console.log(remaining_share);
+                        $('#loader').hide();
+                        $('#remaining_loan').focus();
+    
+                    }
+                }
+            });
+    }
+
+    function change_payment_type() {
+        $('#payment_details').hide();
+        var payment_type = $('input[name="payment_type"]:checked').val();
+        if (payment_type == 'cheque') {
+            $('#payment_details').show();
+        }
+    }
+
+    function close_loan() {
+        var loan_id = $('#loan_id').val();
+        var amount = $('#remaining_loan_settle').val();
+        var bank_name = $('#bank_name').val();
+        var cheque_no = $('#cheque_no').val();
+        var payment_type = $('input[name=payment_type]:checked').val()
+        $(document).find('.is-invalid').removeClass('is-invalid');
+        $(document).find('.text-danger').remove();
+
+
+        var url = "{{ route('loan.destroy', ':id') }}";
+        url = url.replace(':id', loan_id);
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            url: url,
+            type: 'DELETE',
+            dataType: 'json',
+            data: {
+                "amount": amount,
+                "bank_name": bank_name,
+                "cheque_no": cheque_no,
+                "payment_type": payment_type
+            },
+            success: function(data) {
+                show_success(data.msg);
+                // table.ajax.reload();
+                location.reload();
+                $("#loan_settle").modal('hide');
+
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                var err = eval("(" + xhr.responseText + ")");
+                $.each(xhr.responseJSON.errors, function(field_name, error) {
+                    if (field_name == 'amount') {
+                        field_name = 'amount_settle';
+                    }
+                    $(document).find('[name=' + field_name + ']').addClass("is-invalid");
+                    $(document).find('[name=' + field_name + ']').after(
+                        '<span class="text-danger">' + error + '</span>');
+                });
+            }
+        });
     }
 </script>
 @endpush

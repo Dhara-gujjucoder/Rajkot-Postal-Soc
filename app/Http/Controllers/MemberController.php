@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Member;
 use Illuminate\View\View;
 use App\Models\Department;
+use App\Models\LoanMaster;
 use App\Models\AccountType;
 use App\Models\LedgerGroup;
 use App\Models\MemberShare;
@@ -418,6 +419,11 @@ class MemberController extends Controller
             }
             $member->update(['total_share' => 0]);
             $member->share_ledger_account()->update(['current_balance' => 0]);
+
+            $old_loan = LoanMaster::where('member_id', $member->id)->active()->first();
+            $old_loan->update(['status' => 3,'loan_settlment_month' => date('d-m-Y')]);
+            $old_loan->loan_emis()->where('status',1)->update(['status' => 3]);
+            $member->loan_ledger_account->update(['current_balance' => 0]);
         }
 
         $member->update(['status' => 2]);
