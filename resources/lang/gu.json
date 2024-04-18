@@ -395,10 +395,13 @@
    "Current Loan": "વર્તમાન લોન",
    "Paid Loan":"ચુકવેલ લોન",
    "Loan Closed SucccessFully":"લોન સફળતાપૂર્વક બંધ છે",
+   "Loan Paid SucccessFully":"લોન સફળતાપૂર્વક ચૂકવવામાં આવી",
    "Member Resigned SuccessFully":"સભ્યએ સફળતાપૂર્વક રાજીનામું આપ્યું",
    "Your Old Loan Detail": "તમારી જૂની લોનની વિગતો",
    "Loan No" : "લોન નં",
    "Paid": "ચૂકવેલ",
+   "Pay":"ચૂકવો",
+   "Loan Payment":"લોન ચુકવણી",
    "Pending": "બાકી છે",
    "Resignation":"રાજીનામું",
    "Resign":"રાજીનામું",
@@ -406,8 +409,9 @@
    "Cancel":"રદ કરો",
    "Loan Settlement amount":"લોન સેટલમેન્ટ રકમ",
    "Fixed Saving Amount":"સ્થિર બચત રકમ",
+   "Guarantor 1 field is required" : "બાંયધરી આપનાર 1 ફીલ્ડ જરૂરી છે",
+   "Guarantor 2 field is required" : "બાંયધરી આપનાર 2 ફીલ્ડ જરૂરી છે",
    "The :attribute must be greater than :value.":":attribute :value કરતાં મોટી હોવી જોઈએ.",
    "This member is already exist as guarantor in following loan account.": "આ સભ્ય પહેલાથી જ નીચેના લોન ખાતામાં બાંયધરી આપનાર તરીકે અસ્તિત્વમાં છે."
-
 
 }

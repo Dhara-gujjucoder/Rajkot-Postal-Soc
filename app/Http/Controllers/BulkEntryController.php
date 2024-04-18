@@ -218,10 +218,10 @@ class BulkEntryController extends Controller
                         $emi = LoanEMI::find($loan_emi_id);
                         if($emi){
                             $emi->update(['status' => 2]);
+                            $member->loan_ledger_account->update(['current_balance' => ($member->loan_ledger_account->current_balance - $emi->emi)]);
                         }
                     }
 
-                    $member->loan_ledger_account->update(['current_balance' => ($member->loan_ledger_account->current_balance - $emi->emi)]);
 
                 }
             }
