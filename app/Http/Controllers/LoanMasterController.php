@@ -126,13 +126,16 @@ class LoanMasterController extends Controller
         $loan_master->status = 1;
         $loan_master->principal_amt = LoanCalculationMatrix::find($request->loan_id)->amount;
         $loan_master->save();
-
+        
         //settle old loan
         if ($request->remaining_loan_amount > 0) {
             $loan_master->is_old_loan_settled = 1;
             $loan_master->save();
             $this->settle_old_loan($member->id);
         }
+        
+        // set member's current balance to loan principal amt
+        $member->loan_ledger_account->update(['current_balance' => $loan_master->principal_amt]);
 
         //update share
         if ($request->remaining_share > 0) {
@@ -170,6 +173,8 @@ class LoanMasterController extends Controller
         $old_loan = LoanMaster::where('member_id', $member_id)->active()->first();
         $old_loan->update(['status' => 3,'loan_settlment_month' => date('d-m-Y')]);
         $old_loan->loan_emis()->where('status',1)->update(['status' => 3]);
+        $member = Member::find($member_id);
+        $member->loan_ledger_account->update(['current_balance' => 0]);
     }
 
 
