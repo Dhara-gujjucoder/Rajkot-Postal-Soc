@@ -90,22 +90,24 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
         $member = Member::whereMonth('created_at', $month)->whereYear('created_at', $year);
         $member_fee = $member->sum('member_fee');
         $member_share = $member->sum('share_amt');
-        // dd($member);
+        // dd($member_fee);
 
         $rdb_bank_total = 0;
 
-        if ($bulk_master) {
-            $fixed_saving = $bulk_master->fixed_saving_total;
-            $loan_interest = $bulk_master->interest_total;
-            $loan_principal = $bulk_master->principal_total;
-            $ms_total = $bulk_master->ms_total;
-            $rdb_bank_name = $bulk_master->rdc_ledger_account->account_name;
-            $rdb_bank_total = $bulk_master->total + ($member_fee + $member_share);
+        $fixed_saving = $bulk_master->fixed_saving_total ?? 0;
+        $loan_interest = $bulk_master->interest_total ?? 0;
+        $loan_principal = $bulk_master->principal_total ?? 0;
+        $ms_total = $bulk_master->ms_total ?? 0;
+        $rdb_bank_name = $bulk_master->rdc_ledger_account->account_name ?? '';
+        $rdb_bank_total = ($bulk_master->total ?? 0) + ($member_fee + $member_share);
 
+        if ($bulk_master) {
             $entry[] = ['', 'FIXED SAVING (RECEIPT)', $fixed_saving, $rdb_bank_name, $rdb_bank_total];  //$t
             $entry[] = ['', 'LOAN INTEREST INCOME', $loan_interest, '', ''];
             $entry[] = ['', 'LOAN PRINCIPAL', $loan_principal, '', ''];
             $entry[] = ['', 'MS', $ms_total, '', ''];
+        }
+        if($member_fee || $member_share){
             $entry[] = ['', 'Member Fee', $member_fee, '', ''];
             $entry[] = ['', 'Member Share Amount', $member_share, '', ''];
         }
@@ -204,20 +206,27 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
 
             $bulk_master = BulkMaster::where('month', $double_entry['date'])
                 ->first();
-
+                // dump( $row);
             if (!$bulk_master) {
                 $row = $row - 6;
+            }else{
+                $row = $row - 2;
             }
-
+            // dump( $row);
             foreach ($double_entry['data'] as $key => $value) {
                 $credit_entry = $value->meta_entry()->where('type', 'credit')->get();
                 $debit_entry = $value->meta_entry()->where('type', 'debit')->get();
                 $count = max($credit_entry->count(), $debit_entry->count());
                 $row += $count;
             }
-
-            // dd($row);
-
+            $date = explode('-', $double_entry['date']);
+            $month = $date[0];
+            $year = $date[1];
+            if(Member::whereMonth('created_at', $month)->whereYear('created_at', $year)->get()->count()){
+                $row = $row+2;
+                // dd($row );
+            }
+            // dd('d' );
             $sheet->getStyle('B' . ($row - 3) . ':E' . ($row - 3))->applyFromArray($substyle);
             $sheet->getStyle('B' . ($row - 3) . ':E' . ($row - 3))->applyFromArray([
                 'borders' => [
