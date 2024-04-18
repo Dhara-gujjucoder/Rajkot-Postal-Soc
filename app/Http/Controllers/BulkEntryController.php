@@ -213,7 +213,7 @@ class BulkEntryController extends Controller
 
                     //********* for loan entry***********//
                     $loan_emi_id = $request->{'emi_id_' . $department->id . '_' . $member->user_id};
-                    $emi = $request->{'interest_' . $department->id . '_' . $member->user_id}; 
+                    $emi = $request->{'interest_' . $department->id . '_' . $member->user_id};
                     if($loan_emi_id && $emi){
                         $emi = LoanEMI::find($loan_emi_id);
                         if($emi){

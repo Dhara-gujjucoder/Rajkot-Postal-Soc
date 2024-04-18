@@ -13,7 +13,7 @@ use App\Models\MemberFixedSaving;
 use Illuminate\Support\Collection;
 
 
-if (!function_exists('Setting')) {
+if (!function_exists('getSetting')) {
     function getSetting(){
         $setting = Setting::first();
         return $setting;

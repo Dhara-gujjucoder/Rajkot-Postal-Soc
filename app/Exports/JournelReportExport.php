@@ -6,6 +6,7 @@ use App\Models\Member;
 use App\Models\BulkEntry;
 use App\Models\LoanMaster;
 use App\Models\BulkEntryMaster;
+use App\Models\MasterDoubleEntry;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithStyles;
@@ -32,7 +33,7 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
     public function collection()
     {
         $this->data = BulkEntryMaster::where('month', $this->month)->orderBy('id', 'desc')->get();
-// dd($this->month);
+        // dd($this->month);
         $this->settlement = LoanMaster::where('loan_settlment_month', 'like', '%' . $this->month)->get();
         $total = [];
 
@@ -124,22 +125,41 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
 
             // $other_expanse =
             // dd($this->month);
-            $date = explode('-', $this->month);
-            $month = $date[0];
-            $year = $date[1];
+            $member_date = explode('-', $this->month);
+            $month = $member_date[0];
+            $year = $member_date[1];
             $member = Member::whereMonth('created_at', $month)->whereYear('created_at', $year);
             $member_fee = $member->sum('member_fee');
             $member_share = $member->sum('share_amt');
+
+            $double_entry_date = explode('-', $this->month);
+            $double_entry_month = $double_entry_date[0];
+            $double_entry_year = $double_entry_date[1];
+            // dd($double_entry_month . '-' . $double_entry_year);
+            $double_entry = MasterDoubleEntry::whereMonth('date', $double_entry_month)->whereYear('date', $double_entry_year)->get();
+
             array_push(
                 $entry,
                 [],
                 [],
                 [],
                 ['', '', '', 'Other Expanses'],
-             );
+            );
+            $entry[] = ['', '', '', '', '', 'Credit', 'Debit', '', '', ''];
+            $entry[] = ['', '', '', 'Member Fee', '', $member_fee, '0', '', '', ''];
+            $entry[] = ['', '', '', 'Member Share Amount', '', $member_share, '0', '', '', ''];
+
+            $credit = 0;
+            $debit = 0;
+
+            foreach ($double_entry as $key => $value) {
+                $credit += $value->credit_amount;
+                $debit += $value->debit_amount;
+
+                $entry[] = ['', '', '', $value->description, '',$value->credit_amount, $value->debit_amount, '', '', ''];
+            }
             $entry[] = [];
-            $entry[] = ['', '', '', 'Member Fee', $member_fee, '', '', '', '', ''];
-            $entry[] = ['', '', '', 'Member Share Amount', $member_share, '', '', '', '', ''];
+            $entry[] = ['', '', '', '', 'TOTAL: ', ($member_fee + $member_share) + ($credit), $debit, '', '', ''];
 
 
             array_push(
@@ -305,6 +325,7 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                     $line_of_total = $rowTotal + 1;
 
 
+                    // dd($line_of_total);
 
                     if ($record['loan_settlment']->count()) {
 
@@ -364,10 +385,21 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                             ],
                         ]);
 
-                        // *******for Summery style*********
+                        // *******for Other Expanses*********
                         $sheet->getStyle('D' . ($line_of_total + 9) . ':E' . ($line_of_total + 9))->applyFromArray($substyle);
-                        $sheet->getStyle('B' . ($line_of_total + 10) . ':J' . ($line_of_total + 10))->applyFromArray($substyle);
-                        $sheet->getStyle('B' . ($line_of_total + 10) . ':J' . ($line_of_total + 10))->applyFromArray([
+                        $sheet->getStyle('D' . ($line_of_total + 10) . ':J' . ($line_of_total + 10))->applyFromArray($substyle);
+                        $sheet->getStyle('D' . ($line_of_total + 10) . ':J' . ($line_of_total + 10))->applyFromArray([
+                            'borders' => [
+                                'bottom' => [
+                                    'borderStyle' => Border::BORDER_THIN,
+                                ],
+                                'top' => [
+                                    'borderStyle' => Border::BORDER_THIN,
+                                ]
+                            ],
+                        ]);
+                        $sheet->getStyle('E' . ($line_of_total + 14) . ':J' . ($line_of_total + 14))->applyFromArray($substyle);
+                        $sheet->getStyle('E' . ($line_of_total + 14) . ':J' . ($line_of_total + 14))->applyFromArray([
                             'borders' => [
                                 'bottom' => [
                                     'borderStyle' => Border::BORDER_THIN,
@@ -379,8 +411,20 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                         ]);
                         //add hear
                         // dd($line_of_total);
-                        $sheet->getStyle('E' . ($line_of_total + 18) . ':J' . ($line_of_total + 18))->applyFromArray($substyle);
-                        $sheet->getStyle('E' . ($line_of_total + 18) . ':J' . ($line_of_total + 18))->applyFromArray([
+                        $sheet->getStyle('D' . ($line_of_total + 18) . ':E' . ($line_of_total + 18))->applyFromArray($substyle);
+                        $sheet->getStyle('D' . ($line_of_total + 19) . ':J' . ($line_of_total + 19))->applyFromArray($substyle);
+                        $sheet->getStyle('D' . ($line_of_total + 19) . ':J' . ($line_of_total + 19))->applyFromArray([
+                            'borders' => [
+                                'bottom' => [
+                                    'borderStyle' => Border::BORDER_THIN,
+                                ],
+                                'top' => [
+                                    'borderStyle' => Border::BORDER_THIN,
+                                ]
+                            ],
+                        ]);
+                        $sheet->getStyle('E' . ($line_of_total + 22) . ':J' . ($line_of_total + 22))->applyFromArray($substyle);
+                        $sheet->getStyle('E' . ($line_of_total + 22) . ':J' . ($line_of_total + 22))->applyFromArray([
                             'borders' => [
                                 'bottom' => [
                                     'borderStyle' => Border::BORDER_THIN,
@@ -392,14 +436,14 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                         ]);
                     }
                     // dump('ss'.$line_of_total);
-                        // dd($line_of_total);
+                    // dd($line_of_total);
 
                     if (count($record['department_total']) && count($record['loan_settlment'])) {
 
                         $sheet->getStyle('D' . ($line_of_total + 4) . ':E' . ($line_of_total + 4))->applyFromArray($substyle);
                         // $sheet->mergeCells('B' . ($line_of_total+4) . ':D' . ($line_of_total+4));
-                        $sheet->getStyle('F' . ($line_of_total + 5) . ':J' . ($line_of_total + 5))->applyFromArray($substyle);
-                        $sheet->getStyle('B' . ($line_of_total + 5) . ':J' . ($line_of_total + 5))->applyFromArray([
+                        $sheet->getStyle('D' . ($line_of_total + 5) . ':J' . ($line_of_total + 5))->applyFromArray($substyle);
+                        $sheet->getStyle('D' . ($line_of_total + 5) . ':J' . ($line_of_total + 5))->applyFromArray([
                             'borders' => [
                                 'bottom' => [
                                     'borderStyle' => Border::BORDER_THIN,
@@ -411,10 +455,12 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                         ]);
 
                         /*this is for loan settlement style*/
+
                         // dd($line_of_total , 2 , count($record['department_total']));
                         $department_total = $line_of_total + 8 + count($record['department_total']);
-                        $sheet->getStyle('E' . ($department_total) . ':J' . ($department_total))->applyFromArray($substyle);
-                        $sheet->getStyle('E' . ($department_total) . ':J' . ($department_total))->applyFromArray([
+                        dd($department_total);
+                        $sheet->getStyle('E' . ($department_total + 2) . ':G' . ($department_total + 2))->applyFromArray($substyle);
+                        $sheet->getStyle('E' . ($department_total + 2) . ':G' . ($department_total + 2))->applyFromArray([
                             'borders' => [
                                 'bottom' => [
                                     'borderStyle' => Border::BORDER_THIN,
@@ -425,8 +471,6 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                             ],
                         ]);
                     }
-
-
                 }
             }
         }
