@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Models\Member;
 use App\Models\BulkEntry;
 use App\Models\BulkMaster;
 use App\Models\MasterDoubleEntry;
@@ -80,8 +81,16 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
             ['', 'CREDIT', 'RS.', 'DEBIT', 'RS.']
 
         ];
-
         $bulk_master = BulkMaster::where('month', $master_double_entry['date'])->first();
+        // dd($master_double_entry['date']);
+
+        $date = explode('-', $master_double_entry['date']);
+        $month = $date[0];
+        $year = $date[1];
+        $member = Member::whereMonth('created_at', $month)->whereYear('created_at', $year);
+        $member_fee = $member->sum('member_fee');
+        $member_share = $member->sum('share_amt');
+        // dd($member);
 
         $rdb_bank_total = 0;
 
@@ -91,12 +100,14 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
             $loan_principal = $bulk_master->principal_total;
             $ms_total = $bulk_master->ms_total;
             $rdb_bank_name = $bulk_master->rdc_ledger_account->account_name;
-            $rdb_bank_total = $bulk_master->total;
+            $rdb_bank_total = $bulk_master->total + ($member_fee + $member_share);
 
             $entry[] = ['', 'FIXED SAVING (RECEIPT)', $fixed_saving, $rdb_bank_name, $rdb_bank_total];  //$t
             $entry[] = ['', 'LOAN INTEREST INCOME', $loan_interest, '', ''];
             $entry[] = ['', 'LOAN PRINCIPAL', $loan_principal, '', ''];
-            $entry[] =   ['', 'MS', $ms_total, '', ''];
+            $entry[] = ['', 'MS', $ms_total, '', ''];
+            $entry[] = ['', 'Member Fee', $member_fee, '', ''];
+            $entry[] = ['', 'Member Share Amount', $member_share, '', ''];
         }
 
 
@@ -189,13 +200,13 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
                 ],
             ]);
 
-            $row = $row + 12;
+            $row = $row + 14;
 
             $bulk_master = BulkMaster::where('month', $double_entry['date'])
                 ->first();
 
             if (!$bulk_master) {
-                $row = $row - 4;
+                $row = $row - 6;
             }
 
             foreach ($double_entry['data'] as $key => $value) {

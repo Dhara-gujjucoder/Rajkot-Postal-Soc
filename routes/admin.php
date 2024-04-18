@@ -57,7 +57,6 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
     Route::get('/get/guarantor_count/{member}', [App\Http\Controllers\LoanMasterController::class, 'guarantor_count'])->name('guarantor_count.get');
 
 
-
     //***** Excel *****
     Route::get('/import/saving', [App\Http\Controllers\MemberFixedSavingController::class, 'all_saving'])->name('all_share.import');            //******//
     Route::post('/import/saving', [App\Http\Controllers\MemberFixedSavingController::class, 'import_all_saving'])->name('all_share.import');    //******//

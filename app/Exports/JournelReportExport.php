@@ -32,7 +32,7 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
     public function collection()
     {
         $this->data = BulkEntryMaster::where('month', $this->month)->orderBy('id', 'desc')->get();
-
+// dd($this->month);
         $this->settlement = LoanMaster::where('loan_settlment_month', 'like', '%' . $this->month)->get();
         $total = [];
 
@@ -120,6 +120,27 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
 
             $entry[] = [];
             $entry[] = ['', '', '', '', 'TOTAL: ', $loan_settlement_amt, '0', '0', '0', $loan_settlement_amt];
+
+
+            // $other_expanse =
+            // dd($this->month);
+            $date = explode('-', $this->month);
+            $month = $date[0];
+            $year = $date[1];
+            $member = Member::whereMonth('created_at', $month)->whereYear('created_at', $year);
+            $member_fee = $member->sum('member_fee');
+            $member_share = $member->sum('share_amt');
+            array_push(
+                $entry,
+                [],
+                [],
+                [],
+                ['', '', '', 'Other Expanses'],
+             );
+            $entry[] = [];
+            $entry[] = ['', '', '', 'Member Fee', $member_fee, '', '', '', '', ''];
+            $entry[] = ['', '', '', 'Member Share Amount', $member_share, '', '', '', '', ''];
+
 
             array_push(
                 $entry,
