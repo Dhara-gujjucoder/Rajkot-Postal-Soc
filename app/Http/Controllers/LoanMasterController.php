@@ -19,7 +19,7 @@ use App\Traits\UpdateMemberFixedSaving;
 
 class LoanMasterController extends Controller
 {
-    use UpdateMemberShare,UpdateMemberFixedSaving;
+    use UpdateMemberShare, UpdateMemberFixedSaving;
     /*check permission*/
     public function __construct()
     {
@@ -44,18 +44,18 @@ class LoanMasterController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $aa = '_settle';
-                    $action_btn ='';
+                    $action_btn = '';
                     $show_btn = '<a href="' . route('loan.show', $row->id) . '"
                     class="btn btn-outline-info btn-sm me-2"><i class="bi bi-eye"></i> ' . __('Show') . '</a>';
                     // $edit_btn = '<a href="' . route('loan.edit', $row->id) . '"
                     // class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square"></i>' . __('Edit') . '</a>';onclick="return confirm(`'.__('Do you want to delete this user?').'`);"
-                    $delete_btn = '<button type="button"  class="btn btn-outline-danger btn-sm me-2" onclick="load_member_details('.$row->member_id.',`_settle`)" data-bs-toggle="modal" data-bs-target="#loan_settle"><i class="bi bi-trash"></i>' . __('Close') . '</button>&nbsp;';
-                    $pay_loan_btn = '<button type="button" data-bs-toggle="modal" data-bs-target="#loan_pay" onclick="load_member_details('.$row->member_id.',`_pay`)"
+                    $delete_btn = '<button type="button"  class="btn btn-outline-danger btn-sm me-2" onclick="load_member_details(' . $row->member_id . ',`_settle`)" data-bs-toggle="modal" data-bs-target="#loan_settle"><i class="bi bi-trash"></i>' . __('Close') . '</button>&nbsp;';
+                    $pay_loan_btn = '<button type="button" data-bs-toggle="modal" data-bs-target="#loan_pay" onclick="load_member_details(' . $row->member_id . ',`_pay`)"
                     class="btn btn-outline-warning btn-sm me-2"><i class="bi bi-eye"></i> ' . __('Pay') . '</button>';
                     // (Auth::user()->can('view-ledger_account')) ? $action_btn.= $show_btn : '';
                     // (Auth::user()->can('edit-loan')) ? $action_btn .= $edit_btn : '';
                     (Auth::user()->can('view-loan')) ? $action_btn .= $show_btn : '';
-                    $action_btn .= ($row->getRawOriginal('status') == 1 ?  $pay_loan_btn: '');
+                    $action_btn .= ($row->getRawOriginal('status') == 1 ?  $pay_loan_btn : '');
                     (Auth::user()->can('delete-loan') && $row->getRawOriginal('status') == 1) ? $action_btn .= $delete_btn : '';
                     return $action_btn;
                 })
@@ -111,10 +111,12 @@ class LoanMasterController extends Controller
             'cheque_no' => 'required_if:payment_type,cheque',
             'gcheque_no' => 'required|numeric',
             'gbank_name' => 'string'
+        ], [
+            'g1_member_id.required' => __('Guarantor 1 field is required'),
+            'g2_member_id.required' => __('Guarantor 2 field is required'),
         ]);
         $loan_no = str_pad((LoanMaster::count()) + 1, 2, '0', STR_PAD_LEFT) . '/' . $this->current_year->start_year . '-' . $this->current_year->end_year;
         $member = Member::find($request->member_id);
-
         $loan_master = new LoanMaster;
         $loan_master->fill($request->all());
         $loan_master->ledger_account_id = $member->loan_ledger_account->id;
@@ -126,16 +128,15 @@ class LoanMasterController extends Controller
         $loan_master->status = 1;
         $loan_master->principal_amt = LoanCalculationMatrix::find($request->loan_id)->amount;
         $loan_master->save();
-        
+
         //settle old loan
         if ($request->remaining_loan_amount > 0) {
             $loan_master->is_old_loan_settled = 1;
             $loan_master->save();
             $this->settle_old_loan($member->id);
         }
-        
-        // set member's current balance to loan principal amt
-        $member->loan_ledger_account->update(['current_balance' => $loan_master->principal_amt]);
+
+
 
         //update share
         if ($request->remaining_share > 0) {
@@ -145,9 +146,10 @@ class LoanMasterController extends Controller
 
         //update fixed saving
         if ($request->remaining_fixed_saving > 0) {
-            $this->update_fixed_Saving($member, $request->remaining_fixed_saving,$loan_master->month);
+            $this->update_fixed_Saving($member, $request->remaining_fixed_saving, $loan_master->month);
         }
-
+        // set member's current balance to loan principal amt
+        $member->loan_ledger_account->update(['current_balance' => $loan_master->principal_amt]);
 
         foreach ($request->emi_month as $key => $value) {
             LoanEMI::create([
@@ -171,8 +173,8 @@ class LoanMasterController extends Controller
     public function settle_old_loan($member_id)
     {
         $old_loan = LoanMaster::where('member_id', $member_id)->active()->first();
-        $old_loan->update(['status' => 3,'loan_settlment_month' => date('d-m-Y')]);
-        $old_loan->loan_emis()->where('status',1)->update(['status' => 3]);
+        $old_loan->update(['status' => 3, 'loan_settlment_month' => date('d-m-Y')]);
+        $old_loan->loan_emis()->where('status', 1)->update(['status' => 3]);
         $member = Member::find($member_id);
         $member->loan_ledger_account->update(['current_balance' => 0]);
     }
@@ -212,18 +214,18 @@ class LoanMasterController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request,LoanMaster $loan)
+    public function destroy(Request $request, LoanMaster $loan)
     {
         // dd($request->amount<=$loan->member->loan_remaining_amount);
         $request->validate([
             'amount' => 'required',
-            'payment_type'=>'required',
+            'payment_type' => 'required',
             // 'bank_name' => 'required_if:payment_type,cheque',
             'cheque_no' => 'required_if:payment_type,cheque'
         ]);
-        if($request->amount < $loan->member->loan_remaining_amount){
+        if ($request->amount < $loan->member->loan_remaining_amount) {
             return response()->json([
-                'errors' => ['amount' => __('The :attribute must be greater than :value.',['attribute' =>'amount','value' => $loan->member->loan_remaining_amount])],
+                'errors' => ['amount' => __('The :attribute must be greater than :value.', ['attribute' => 'amount', 'value' => $loan->member->loan_remaining_amount])],
                 'message' => 'The given data was invalid.',
             ], 422);
         }
@@ -236,9 +238,6 @@ class LoanMasterController extends Controller
             $loan->payment_type = $request->payment_type;
             $loan->save();
             $this->settle_old_loan($loan->member_id);
-
-
-
         }
         if ($request->ajax()) {
             return response()->json(['success' => true, 'msg' => __('Loan Closed SucccessFully')]);
@@ -256,99 +255,98 @@ class LoanMasterController extends Controller
         return response()->json(['success' => true, 'guarantor_exist' => $guarantor_exist]);
     }
 
-     /**
+    /**
      * Partially Payment of loan
      */
-    public function partial_pay(Request $request,LoanMaster $loan)
+    public function partial_pay(Request $request, LoanMaster $loan)
     {
         // dd($request->all());
         $request->validate([
             'amount' => 'required',
-            'payment_type'=>'required',
+            'payment_type' => 'required',
             // 'bank_name' => 'required_if:payment_type,cheque',
             'cheque_no' => 'required_if:payment_type,cheque'
         ]);
         $member = $loan->member;
         if ($request->amount > 0) {
             //half payment
-           $loan_emi  = new LoanEMI();
-           $loan_emi->loan_master_id = $loan->id;
-           $loan_emi->month = date('m-Y');
-           $loan_emi->member_id = $loan->member_id;
-           $loan_emi->ledger_account_id = $member->loan_ledger_account->id;
-           $loan_emi->principal_amt =  $loan->principal_amt;
-           $loan_emi->interest= current_loan_interest()->loan_interest;
-           $loan_emi->interest_amt = 0;
-           $loan_emi->emi = 0;
-           $loan_emi->installment = $request->amount;
-           $loan_emi->rest_principal = $loan->member->loan_remaining_amount-$request->amount;
-           $loan_emi->status = 2;
-           $loan_emi->is_half_paid = 1;
-           $loan_emi->payment_month = date('d-m-Y');
-           $loan_emi->cheque_no = $request->cheque_no;
-           $loan_emi->payment_type = $request->payment_type;
-           $loan_emi->save();
+            $loan_emi  = new LoanEMI();
+            $loan_emi->loan_master_id = $loan->id;
+            $loan_emi->month = date('m-Y');
+            $loan_emi->member_id = $loan->member_id;
+            $loan_emi->ledger_account_id = $member->loan_ledger_account->id;
+            $loan_emi->principal_amt =  $loan->principal_amt;
+            $loan_emi->interest = current_loan_interest()->loan_interest;
+            $loan_emi->interest_amt = 0;
+            $loan_emi->emi = 0;
+            $loan_emi->installment = $request->amount;
+            $loan_emi->rest_principal = $loan->member->loan_remaining_amount - $request->amount;
+            $loan_emi->status = 2;
+            $loan_emi->is_half_paid = 1;
+            $loan_emi->payment_month = date('d-m-Y');
+            $loan_emi->cheque_no = $request->cheque_no;
+            $loan_emi->payment_type = $request->payment_type;
+            $loan_emi->save();
+            $member = Member::find($loan->member_id);
+            if ($loan->member->loan_remaining_amount - $request->amount) {
 
-            if($loan->member->loan_remaining_amount-$request->amount){
+                //all remaining emi Entries
 
-               //all remaining emi Entries
+                $emi_amount = $loan->emi_amount;
+                $loan_amt = $loan->member->loan_remaining_amount - $request->amount;
+                $loan_amount = $loan_amt;
+                $no_of_emi = ($loan_amt / $loan->emi_amount);
+                $emi_c = getLoanParam()[0];
+                $emi_d = getLoanParam()[1];
+                $rate = current_loan_interest()->loan_interest;
 
-               $emi_amount = $loan->emi_amount;
-               $loan_amt = $loan->member->loan_remaining_amount-$request->amount;
-               $loan_amount = $loan_amt;
-               $no_of_emi = ($loan_amt / $loan->emi_amount);
-               $emi_c = getLoanParam()[0];
-               $emi_d = getLoanParam()[1];
-               $rate = current_loan_interest()->loan_interest;
+                $dmonth = date('d-m-Y');
 
-               $dmonth = date('d-m-Y');
+                $member->loan_ledger_account->update(['current_balance' => $loan_amt]);
 
-               $member = Member::find($loan->member_id);
+                $loan->loan_emis()->pending()->delete();
 
-               $loan->loan_emis()->pending()->delete();
+                for ($i = 1; $i <= $no_of_emi; $i++) {
+                    $emi_interest = intval($loan_amt * $rate / 100 * $emi_c / $emi_d);
+                    $date = new DateTime($dmonth);
+                    $date->add(new DateInterval('P1M'));
+                    $dmonth = $date->format('d-m-Y');
 
-                   for ($i = 1; $i <= $no_of_emi; $i++) {
-                       $emi_interest = intval($loan_amt * $rate / 100 * $emi_c / $emi_d);
-                       $date = new DateTime($dmonth);
-                       $date->add(new DateInterval('P1M'));
-                       $dmonth = $date->format('d-m-Y');
-
-                       if ($loan_amt > 0) {
-                           if ($loan_amt < $emi_amount) {
-                               $emi_amount = $loan_amt;
-                           }
-                           // console.log($emi_amount, $emi_interest);
-                           $loan_amt = $loan_amt - $emi_amount;
-                           LoanEMI::create([
-                               'loan_master_id' => $loan->id,
-                               'month' => $date->format('m-Y'),
-                               'member_id' => $loan->member_id,
-                               'ledger_account_id' => $member->loan_ledger_account->id,
-                               'principal_amt' => $loan_amount,
-                               'interest' => current_loan_interest()->loan_interest,
-                               'interest_amt' => $emi_interest,
-                               'emi' => $emi_amount,
-                               'installment' => $emi_interest + $emi_amount,
-                               'rest_principal' => $loan_amt,
-                               'status' => 1,
-                           ]);
-                       }
-
-                   }
-
-            }else{
+                    if ($loan_amt > 0) {
+                        if ($loan_amt < $emi_amount) {
+                            $emi_amount = $loan_amt;
+                        }
+                        // console.log($emi_amount, $emi_interest);
+                        $loan_amt = $loan_amt - $emi_amount;
+                        LoanEMI::create([
+                            'loan_master_id' => $loan->id,
+                            'month' => $date->format('m-Y'),
+                            'member_id' => $loan->member_id,
+                            'ledger_account_id' => $member->loan_ledger_account->id,
+                            'principal_amt' => $loan_amount,
+                            'interest' => current_loan_interest()->loan_interest,
+                            'interest_amt' => $emi_interest,
+                            'emi' => $emi_amount,
+                            'installment' => $emi_interest + $emi_amount,
+                            'rest_principal' => $loan_amt,
+                            'status' => 1,
+                        ]);
+                    }
+                }
+            } else {
                 $loan->loan_emis()->pending()->delete();
                 $loan->bank_name = $request->bank_name;
                 $loan->cheque_no = $request->cheque_no;
                 $loan->payment_type = $request->payment_type;
                 $loan->status = 2;
                 $loan->save();
+                $member->loan_ledger_account->update(['current_balance' => 0]);
             }
         }
 
 
         if ($request->ajax()) {
-            return response()->json(['success' => true, 'msg' => __('Loan Closed SucccessFully')]);
+            return response()->json(['success' => true, 'msg' => __('Loan Paid SucccessFully')]);
         }
         return redirect()->route('loan.index')
             ->withSuccess(__('Loan is deleted successfully.'));

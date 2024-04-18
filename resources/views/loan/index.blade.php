@@ -307,48 +307,51 @@
         }
 
         function pay_loan() {
-            var loan_id = $('#loan_id').val();
-            var amount = $('#remaining_loan_pay').val();
-            var bank_name = $('#bank_name').val();
-            var cheque_no = $('#cheque_no').val();
-            var payment_type = $('input[name=payment_type]:checked').val()
-            $(document).find('.is-invalid').removeClass('is-invalid');
-            $(document).find('.text-danger').remove();
+            if(confirm(`{{__('Are you sure to pay?')}}`)){
 
-            var url = "{{ route('loan.partial_pay', ':id') }}";
-            url = url.replace(':id', loan_id);
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                url: url,
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    "amount": amount,
-                    "bank_name": bank_name,
-                    "cheque_no": cheque_no,
-                    "payment_type": payment_type
-                },
-                success: function(data) {
-                    show_success(data.msg);
-                    table.ajax.reload();
-                    $("#loan_settle").modal('hide');
-
-                },
-                error: function(xhr, ajaxOptions, thrownError) {
-                    var err = eval("(" + xhr.responseText + ")");
-                    
-                    $.each(xhr.responseJSON.errors, function(field_name, error) {
-                        if(field_name == 'amount'){
-                            field_name = 'amount_pay';
-                        }
-                        $(document).find('[name=' + field_name + ']').addClass("is-invalid");
-                        $(document).find('[name=' + field_name + ']').after(
-                            '<span class="text-danger">' + error + '</span>');
-                    });
-                }
-            });
+                var loan_id = $('#loan_id').val();
+                var amount = $('#remaining_loan_pay').val();
+                var bank_name = $('#bank_name').val();
+                var cheque_no = $('#cheque_no').val();
+                var payment_type = $('input[name=payment_type]:checked').val()
+                $(document).find('.is-invalid').removeClass('is-invalid');
+                $(document).find('.text-danger').remove();
+    
+                var url = "{{ route('loan.partial_pay', ':id') }}";
+                url = url.replace(':id', loan_id);
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    url: url,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        "amount": amount,
+                        "bank_name": bank_name,
+                        "cheque_no": cheque_no,
+                        "payment_type": payment_type
+                    },
+                    success: function(data) {
+                        show_success(data.msg);
+                        table.ajax.reload();
+                        $("#loan_pay").modal('hide');
+    
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        var err = eval("(" + xhr.responseText + ")");
+                        
+                        $.each(xhr.responseJSON.errors, function(field_name, error) {
+                            if(field_name == 'amount'){
+                                field_name = 'amount_pay';
+                            }
+                            $(document).find('[name=' + field_name + ']').addClass("is-invalid");
+                            $(document).find('[name=' + field_name + ']').after(
+                                '<span class="text-danger">' + error + '</span>');
+                        });
+                    }
+                });
+            }
         }
 
         function change_payment_type() {
