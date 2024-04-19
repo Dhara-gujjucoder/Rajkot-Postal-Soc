@@ -199,27 +199,31 @@ class BulkEntryController extends Controller
                         'total_amount' => $request->{'total_amount_' . $department->id . '_' . $member->user_id},
                         'status' => $request->status,
                     ]);
-                    //********* for fixed saving entry***********//
-                    // $fixed_saving_entry = MemberFixedSaving::create([
-                    //     'ledger_account_id' => $member->fixed_saving_ledger_account->id ?? 0,
-                    //     'member_id' => $member->id,
-                    //     'month' => $request->month,
-                    //     'fixed_amount' => $request->{'fixed_' . $department->id . '_' . $member->user_id},
-                    //     'year_id' => $this->current_year->id,
-                    //     'status' => 1
-                    // ]);
-                    // $member_fixed_saving = $member->fixed_saving_ledger_account->opening_balance + $member->fixed_saving()->sum('fixed_amount');
-                    // $member->fixed_saving_ledger_account->update(['current_balance' => $member_fixed_saving]);
+                    //effect on fixed saving and loan emi if bulk entry is in completed status
+                    if($bulk_master->getRawOriginal('status') == 2){
 
-                    //********* for loan entry***********//
-                    $loan_emi_id = $request->{'emi_id_' . $department->id . '_' . $member->user_id};
-                    $emi = $request->{'interest_' . $department->id . '_' . $member->user_id}; 
-                    if($loan_emi_id && $emi){
-                        $emi = LoanEMI::find($loan_emi_id);
-                        if($emi){
-                            $emi->update(['status' => 2]);
-                            $member->loan_ledger_account->update(['current_balance' => ($member->loan_ledger_account->current_balance - $emi->emi)]);
-                        }
+                        //********* for fixed saving entry***********//
+                          $fixed_saving_entry = MemberFixedSaving::create([
+                              'ledger_account_id' => $member->fixed_saving_ledger_account->id ?? 0,
+                              'member_id' => $member->id,
+                              'month' => $request->month,
+                              'fixed_amount' => $request->{'fixed_' . $department->id . '_' . $member->user_id},
+                              'year_id' => $this->current_year->id,
+                              'status' => 1
+                          ]);
+                          $member_fixed_saving = $member->fixed_saving_ledger_account->opening_balance + $member->fixed_saving()->sum('fixed_amount');
+                          $member->fixed_saving_ledger_account->update(['current_balance' => $member_fixed_saving]);
+      
+                          //********* for loan entry***********//
+                          $loan_emi_id = $request->{'emi_id_' . $department->id . '_' . $member->user_id};
+                          $emi = $request->{'interest_' . $department->id . '_' . $member->user_id}; 
+                          if($loan_emi_id && $emi){
+                              $emi = LoanEMI::find($loan_emi_id);
+                              if($emi){
+                                  $emi->update(['status' => 2]);
+                                  $member->loan_ledger_account->update(['current_balance' => ($member->loan_ledger_account->current_balance - $emi->emi)]);
+                              }
+                          }
                     }
 
 
@@ -281,10 +285,12 @@ class BulkEntryController extends Controller
             // dd($members);
             $members->map(function ($item, $subkey) use ($data, $department, $key) {
                 $prefill = BulkEntry::where('user_id', $item->user_id)->where('department_id', $department->id)->where('month', $data['previous_month'])->first();
+                $loan_emi = LoanEMI::where('member_id', $item->id)->where('month', $data['next_month'])->where('status', 1)->first();
+
+                $item->emi_id = $loan_emi->id ?? '';
                 foreach ($data['ledger_type'] as $skey => $value) {
                     // for prefill edit value
                     $item->{$value} = $prefill->{$value} ?? 0;
-
                     // for get department wise total
                     $data['departments'][$key]->{$value . '_total'} += $item->{$value};
                 }
@@ -365,15 +371,39 @@ class BulkEntryController extends Controller
                     'total_amount' => $request->{'total_amount_' . $department->id . '_' . $member->user_id},
                     'status' => $request->status
                 ]);
+                if($bulk_master->getRawOriginal('status') == 2){
+                    //********* for fixed saving entry***********//
+                      $fixed_saving_entry = MemberFixedSaving::create([
+                          'ledger_account_id' => $member->fixed_saving_ledger_account->id ?? 0,
+                          'member_id' => $member->id,
+                          'month' =>  $bulk_master->month,
+                          'fixed_amount' => $request->{'fixed_' . $department->id . '_' . $member->user_id},
+                          'year_id' => $this->current_year->id,
+                          'status' => 1
+                      ]);
+                      $member_fixed_saving = $member->fixed_saving_ledger_account->opening_balance + $member->fixed_saving()->sum('fixed_amount');
+                      $member->fixed_saving_ledger_account->update(['current_balance' => $member_fixed_saving]);
+  
+                      //********* for loan entry***********//
+                      $loan_emi_id = $request->{'emi_id_' . $department->id . '_' . $member->user_id};
+                      $emi = $request->{'interest_' . $department->id . '_' . $member->user_id}; 
+                      if($loan_emi_id && $emi){
+                          $emi = LoanEMI::find($loan_emi_id);
+                          if($emi){
+                              $emi->update(['status' => 2]);
+                              $member->loan_ledger_account->update(['current_balance' => ($member->loan_ledger_account->current_balance - $emi->emi)]);
+                          }
+                      }
+                }
 
-                $fixed_saving_entry = MemberFixedSaving::where('ledger_account_id', $member->fixed_saving_ledger_account->id)
-                    ->where('member_id', $member->id)->where('month', $bulk_entry_master[$key]->month)->update([
-                        'fixed_amount' => $request->{'fixed_' . $department->id . '_' . $member->user_id},
-                        // 'year_id' => $this->current_year->id,
-                        'status' => 1
-                    ]);
-                $member_fixed_saving = $member->fixed_saving_ledger_account->opening_balance + $member->fixed_saving()->sum('fixed_amount');
-                $member->fixed_saving_ledger_account->update(['current_balance' => $member_fixed_saving]);
+                // $fixed_saving_entry = MemberFixedSaving::where('ledger_account_id', $member->fixed_saving_ledger_account->id)
+                //     ->where('member_id', $member->id)->where('month', $bulk_entry_master[$key]->month)->update([
+                //         'fixed_amount' => $request->{'fixed_' . $department->id . '_' . $member->user_id},
+                //         // 'year_id' => $this->current_year->id,
+                //         'status' => 1
+                //     ]);
+                // $member_fixed_saving = $member->fixed_saving_ledger_account->opening_balance + $member->fixed_saving()->sum('fixed_amount');
+                // $member->fixed_saving_ledger_account->update(['current_balance' => $member_fixed_saving]);
             }
         }
         return redirect()->route('bulk_entries.index')

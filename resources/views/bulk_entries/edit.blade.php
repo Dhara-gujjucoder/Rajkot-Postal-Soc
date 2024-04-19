@@ -167,6 +167,9 @@
                                                     name="interest_{{ $department->id }}_{{ $member->user_id }}"
                                                     value="{{ old('interest', $member->interest) }}"
                                                     placeholder="{{ __('Interest') }}">
+                                                    <input type="hidden"
+                                                    name="emi_id_{{ $department->id }}_{{ $member->user_id }}"
+                                                    value="{{ $member->emi_id }}">
                                                 @if ($errors->has('interest'))
                                                     <span class="text-danger">{{ $errors->first('interest') }}</span>
                                                 @endif
