@@ -25,10 +25,17 @@ class LoanMaster extends Model
         'emi_amount',    'loan_settlement_amt', 'loan_settlment_month', 'is_old_loan_settled' , 'total_share_amt', 'stamp_duty', 'fixed_saving', 'total_amt', 'payment_type',    'bank_name',    'cheque_no',    'g1_member_id',    'g2_member_id',    'cheque_no', 'bank_name',
         'status','remaining_fixed_saving','remaining_share_amount','remaining_loan_amount','gcheque_no','gbank_name'
     ];
-
+    // 1 for active, 2 for complete 3 for settle or close
     public function scopeActive($query)
     {
         return $query->where('status', 1);
+    }
+
+    public function scopeRunningLoan($query)
+    {
+        return $query->whereHas('loan_emis', function ($q)  {
+            $q->pending();
+        });
     }
 
     protected function Status(): Attribute

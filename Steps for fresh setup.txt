@@ -1,0 +1,56 @@
+Steps for fresh setup
+
+
+1) trucate all following tables:
+TRUNCATE `balance_sheet`;
+TRUNCATE `bulk_entries`;
+TRUNCATE `bulk_entry_master`;
+TRUNCATE `bulk_master`;
+TRUNCATE `ledger_accounts`;
+TRUNCATE `loan_emis`;
+TRUNCATE `loan_master`;
+TRUNCATE `master_double_entry`;
+TRUNCATE `members`;
+TRUNCATE `member_fixed_saving`;
+TRUNCATE `member_resign`;
+TRUNCATE `member_share`;
+TRUNCATE `member_share_detail`;
+TRUNCATE `meta_double_entry`;
+TRUNCATE `model_has_permissions`;
+TRUNCATE `model_has_roles`;
+TRUNCATE `receipt`;
+TRUNCATE `users`;
+
+After trucate follow the below steps:
+1) php artisan db:seed SuperAdminSeeder (for admin user seeder)
+2) import member excel sheet (it also include users & ledger_accounts)
+
+
+3) import fixed saving  (please care in bulk entry for fixed saving which is already imported)
+4) import share  (it also includes share  detail)
+5) create 21 ledger account for fixed ledger entries  (set is_member_account = 0 )
+    you can run this query
+
+    INSERT INTO `ledger_accounts` (`id`, `ledger_group_id`, `account_name`, `member_id`, `opening_balance`, `current_balance`, `type`, `year_id`, `is_member_account`, `created_by`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, '10', 'RDC BANK Ledger', NULL, '0', '0', 'CR', '1', '0', '1', '1', '2024-03-15 04:54:12', '2024-03-15 04:54:12', NULL), (NULL, '7', 'Provision FB', NULL, '0', '0', 'CR', '1', '0', '1', '1', '2024-04-10 12:31:50', '2024-04-10 12:31:50', NULL), (NULL, '7', 'Provision member welfare', NULL, '0', '0', 'CR', '1', '0', '1', '1', '2024-04-10 12:33:14', '2024-04-10 12:33:14', NULL), (NULL, '7', 'Provision reserve fund', NULL, '0', '0', 'CR', '1', '0', '1', '1', '2024-04-10 12:33:49', '2024-04-10 12:33:49', NULL), (NULL, '7', 'Provision reserve Bonus', NULL, '0', '0', 'CR', '1', '0', '1', '1', '2024-04-10 12:34:03', '2024-04-10 12:34:03', NULL), (NULL, '7', 'Provision reserve charity', NULL, '0', '0', 'CR', '1', '0', '1', '1', '2024-04-10 12:34:20', '2024-04-10 12:34:20', NULL), (NULL, '7', 'Provision Dividend Equity fund', NULL, '0', '0', 'CR', '1', '0', '1', '1', '2024-04-10 12:34:36', '2024-04-10 12:34:36', NULL), (NULL, '7', 'Provision Federation fund', NULL, '0', '0', 'CR', '1', '0', '1', '1', '2024-04-10 12:34:50', '2024-04-10 12:34:50', NULL), (NULL, '5', 'Div. Equ. Fund A/c', NULL, '0', '0', 'CR', '1', '0', '1', '1', '2024-02-06 10:18:16', '2024-02-06 10:18:16', NULL), (NULL, '5', 'Federation Publicity Fund', NULL, '0', '0', 'CR', '1', '0', '1', '1', '2024-02-06 10:18:02', '2024-02-06 10:18:02', NULL), (NULL, '5', 'Bonus Fund A/c', NULL, '0', '0', 'CR', '1', '0', '1', '1', '2024-02-06 10:17:32', '2024-02-06 10:17:32', NULL), (NULL, '5', 'Charity Fund A/c', NULL, '0', '0', 'CR', '1', '0', '1', '1', '2024-02-06 10:17:17', '2024-02-06 10:17:17', NULL), (NULL, '5', 'Eduction Fund Tax', NULL, '0', '0', 'CR', '1', '0', '1', '1', '2024-02-06 10:17:03', '2024-02-06 10:17:03', NULL), (NULL, '5', 'Member Welfare Fund', NULL, '0', '0', 'CR', '1', '0', '1', '1', '2024-02-06 10:16:49', '2024-02-06 10:16:49', NULL), (NULL, '5', 'Reserve Fund A/c', NULL, '0', '0', 'CR', '1', '0', '1', '1', '2024-02-06 10:16:26', '2024-02-06 10:16:26', NULL), (NULL, '4', 'Annual Meeting Exp. A/c', NULL, '0', '0', 'CR', '1', '0', '1', '1', '2024-02-06 10:16:02', '2024-02-06 10:16:02', NULL), (NULL, '4', 'Audit Fee A/c', NULL, '0', '0', 'CR', '1', '0', '1', '1', '2024-02-06 10:15:47', '2024-02-06 10:15:47', NULL), (NULL, '4', 'Bank Charges A/c', NULL, '0', '0', 'CR', '1', '0', '1', '1', '2024-02-06 10:15:33', '2024-02-06 10:15:33', NULL), (NULL, '4', 'TA & Petrol Allowance A/c', NULL, '0', '0', 'CR', '1', '0', '1', '1', '2024-02-06 10:15:16', '2024-02-06 10:15:16', NULL), (NULL, '4', 'Stationery Exp A/c', NULL, '0', '0', 'CR', '1', '0', '1', '1', '2024-02-06 10:14:59', '2024-02-06 10:14:59', NULL), (NULL, '4', 'Cash A/c', NULL, '0', '0', 'CR', '1', '0', '1', '1', '2024-02-06 09:33:17', '2024-02-06 10:07:53', NULL);
+
+6) create balance sheet from ledger account which are from "Investments" from that fixed ledger account
+
+        $data['ledger_ac'] = LedgerAccount::where('ledger_group_id', 7)->where('status', 1)->get();
+        foreach ($data['ledger_ac'] as $key => $value) {
+            $balanceSheet = new BalanceSheet();
+            $balanceSheet->ledger_ac_id = $value->id;
+            $balanceSheet->ledger_ac_name = $value->account_name;
+            $balanceSheet->balance = 0;
+            $balanceSheet->year_id = $curent_year_id;
+            $balanceSheet->save();
+        }
+
+7) bulk entry (12 month entry for current year -> you can do it my software.)
+
+8) Test all the functionality like double entry, balance_sheet,loan etc...
+
+**********************************************************************************************************************************************
+<!-- bulk entry      fixed saving commented rakkhvano thase  -->
+double entry    -->
+<!-- receipt         -->  -->
+

@@ -38,16 +38,19 @@ class MemberSavingImport implements ToModel, WithStartRow, WithLimit, WithMultip
                 for ($j = 1; $j <= 12; $j++) {
                     // dump($row[$j+4]);
                     if (isset($row[$j + 5]) && $row[$j + 5] != "") { // row[6]
-
+                        // dd($j + 2);
                         // for ($i = 1; $i <= 5; $i++) {
                         $count = MemberFixedSaving::count() + 1;
                         $m = 0;
-                        if ($j + 2 == 13) {
+                        if ($j + 3 == 13) {
                             $m = '1';
-                        } elseif ($j + 2 == 14) {
+                        } elseif ($j + 3 == 14) {
                             $m = '2';
+                        } elseif ($j + 3 == 15) {
+                            $m = '3';
                         } else {
-                            $m = $j + 2;
+                            $m = $j + 3;
+
                         }
 
                         $current_year = currentYear()->start_year;
@@ -55,6 +58,7 @@ class MemberSavingImport implements ToModel, WithStartRow, WithLimit, WithMultip
                         $month = str_pad($m, 2, '0', STR_PAD_LEFT) . ($j > 10 ? '-' . $next_year : '-' . $current_year);
 
                         // $month = str_pad($m, 2, '0', STR_PAD_LEFT) . ($j > 10 ? '-2024' : '-2023');
+
 
                         $ledger = MemberFixedSaving::create([
                             'ledger_account_id' => $member->fixed_saving_ledger_account->id ?? 0,
@@ -66,14 +70,17 @@ class MemberSavingImport implements ToModel, WithStartRow, WithLimit, WithMultip
                             // 'created_date' => $end_date->format('Y-m-d'),
                         ]);
 
+
                         // $ob = $member->fixed_saving_ledger_account->opening_balance;
                         // }
-
+                        if(!$member->fixed_saving_ledger_account){
+                            dd($member);
+                        }
+                        $member->fixed_saving_ledger_account->update(['opening_balance' =>   $row[5], 'current_balance' =>$row[19]]);
                     } else {
                         $this->not_insert[] = $row[1];
                     }
                     // $member->fixed_saving_ledger_account->update(['opening_balance' =>   $row[5], 'current_balance' => $row[19] - $row[5]]);
-                    $member->fixed_saving_ledger_account->update(['opening_balance' =>   $row[5], 'current_balance' =>$row[19]]);
                 }
             } else {
                 $this->not_insert[] = $row;

@@ -29,12 +29,14 @@ class MemberShareImport implements ToModel, WithStartRow, WithLimit, WithMultipl
 
         if ($member) {
             $fn_month = 3;
-            $D = ($row[5] / 100) + (isset($row[6]) ? $row[6] / 100 : 0) ;
-            $curTime = date('2023-03-01');
+            $D = ($row[5] / 100);
+            $curTime = date('2022-03-01');
+            // dd($curTime);
+            // dd(date('Y-m-d H:i:s', strtotime($curTime)));
+            $this->total = $this->total + ($row[7] / 100);
 
-            $this->total = $this->total + ($row[7] / 100) ;
-
-            for ($d=1; $d<=$D; $d++) {
+            //for opening balance share
+            for ($d = 1; $d <= $D; $d++) {
                 $count = MemberShare::count() + 1;
                 $no = str_pad($count, 6, 0, STR_PAD_LEFT);
 
@@ -49,21 +51,48 @@ class MemberShareImport implements ToModel, WithStartRow, WithLimit, WithMultipl
                     // 'sold_on' => $curTime,
                 ]);
 
-                    $share_detail_entry = new MemberShareDetail();
-                    $share_detail_entry->member_share_id = $share_entry->id;
-                    $share_detail_entry->member_id = $share_entry->member_id;
-                    $share_detail_entry->year_id = currentYear()->id;
-                    $share_detail_entry->is_purchase = 1;
-                    $share_detail_entry->save();
+                $share_detail_entry = new MemberShareDetail();
+                $share_detail_entry->member_share_id = $share_entry->id;
+                $share_detail_entry->member_id = $share_entry->member_id;
+                $share_detail_entry->year_id = 0;
+                $share_detail_entry->is_purchase = 1;
+                $share_detail_entry->created_at = date('Y-m-d H:i:s', strtotime($curTime));
+                $share_detail_entry->save();
+            }
+
+
+            //for current year purchase share
+            $E = (isset($row[6]) ? $row[6] / 100 : 0);
+            for ($i = 1; $i <= $E; $i++) {
+                $count = MemberShare::count() + 1;
+                $no = str_pad($count, 6, 0, STR_PAD_LEFT);
+
+                $share_entry = MemberShare::create([
+                    'ledger_account_id' => $member->share_ledger_account->id ?? 0,
+                    'member_id' => $member->id,
+                    'share_code' => $no,
+                    'share_amount' => 100,
+                    'year_id' => 1,
+                    'status' => 1,
+                    'purchase_on' => $curTime,
+                    // 'sold_on' => $curTime,
+                ]);
+
+                $share_detail_entry = new MemberShareDetail();
+                $share_detail_entry->member_share_id = $share_entry->id;
+                $share_detail_entry->member_id = $share_entry->member_id;
+                $share_detail_entry->year_id = currentYear()->id;
+                $share_detail_entry->is_purchase = 1;
+                $share_detail_entry->save();
             }
 
             $sold = (isset($row[7]) ? $row[7] / 100 : 0);
 
-            if( $sold>0){
+            if ($sold > 0) {
                 $SoldTime = date("Y-m-d");
 
-                for ($f=1; $f<=$sold; $f++) {
-                    $membershare = MemberShare::where('member_id',$member->id)->where('status',1)->latest()->first();
+                for ($f = 1; $f <= $sold; $f++) {
+                    $membershare = MemberShare::where('member_id', $member->id)->where('status', 1)->latest()->first();
                     $membershare->status = 0;
                     $membershare->sold_on = $SoldTime;
                     $membershare->save();
@@ -77,22 +106,20 @@ class MemberShareImport implements ToModel, WithStartRow, WithLimit, WithMultipl
                 }
             }
 
-            $query = MemberShare::where('member_id', $member->id)->where('status',1);
+            $query = MemberShare::where('member_id', $member->id)->where('status', 1);
             $total_share = $query->count();
-                    // $share_total_price = $query->sum('share_amount');
-                    // dd($row[4]);
+            // $share_total_price = $query->sum('share_amount');
+            // dd($row[4]);
 
             $member->total_share = $total_share;
             $member->share_total_price = $row[8];
             $opening_bal = $row[5];
-                    // dd($member->share_total_price);
+            // dd($member->share_total_price);
             $member->save();
 
-            $member->share_ledger_account->update(['opening_balance' =>$opening_bal ?? '','current_balance' =>$row[8]]);
-
-        }
-        else{
-            $this->not_insert[] = 'notexist_'.$row[1];
+            $member->share_ledger_account->update(['opening_balance' => $opening_bal ?? '', 'current_balance' => $row[8]]);
+        } else {
+            $this->not_insert[] = 'notexist_' . $row[1];
         }
         return $member;
     }
