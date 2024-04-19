@@ -70,6 +70,8 @@ class MemberController extends Controller
 
         if ($request->ajax()) {
 
+
+
             //   dd($request->all());
             $data = User::usermember()->with('member'); //->orderBy('id', 'DESC')
             return DataTables::of($data)
