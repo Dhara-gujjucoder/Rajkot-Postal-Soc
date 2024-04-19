@@ -39,7 +39,7 @@ class LoanMasterController extends Controller
         $data['loans'] = LoanMaster::get();
         $data['page_title'] = __('Loan');
         if ($request->ajax()) {
-            $data = LoanMaster::where('year_id', $this->current_year->id);
+            $data = LoanMaster::runningLoan();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
@@ -136,8 +136,6 @@ class LoanMasterController extends Controller
             $this->settle_old_loan($member->id);
         }
 
-
-
         //update share
         if ($request->remaining_share > 0) {
             $no_of_share = $member->total_share + $request->remaining_share;
@@ -178,7 +176,6 @@ class LoanMasterController extends Controller
         $member = Member::find($member_id);
         $member->loan_ledger_account->update(['current_balance' => 0]);
     }
-
 
     public function show(string $id)
     {

@@ -14,7 +14,7 @@
                 <form method="post" action="{{ route('all_share_ledger_export') }}" id="export_share_ledger">
                     @csrf
                     <button type="submit" id="submitBtn" class="btn btn-outline-success btn-md float-start my-3">{{ __('All Export') }}</button>
-                    <div id="loading" style="display: none;" class="btn btn-outline-light btn-md float-start my-3">{{ __('Loading...') }}</div>
+                    <div id="loading" style="display: none;" class="btn btn-outline-light btn-md float-start my-3 disabled">{{ __('Loading...') }}</div>
                 </form>
             </div>
 

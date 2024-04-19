@@ -12,6 +12,7 @@ use App\Models\AccountType;
 use App\Models\LedgerGroup;
 use App\Models\MemberShare;
 use App\Models\ShareAmount;
+use App\Models\BalanceSheet;
 use App\Models\MemberResign;
 use Illuminate\Http\Request;
 use App\Models\LedgerAccount;
@@ -59,6 +60,8 @@ class MemberController extends Controller
 
     public function index(Request $request)
     {
+
+
         // dd($request->all());
         $data['page_title'] = __('View Members');
         // $data['departments'] = 1;
@@ -66,6 +69,7 @@ class MemberController extends Controller
         $data['members'] = Member::orderBy('uid', 'DESC')->get();
 
         if ($request->ajax()) {
+
             //   dd($request->all());
             $data = User::usermember()->with('member'); //->orderBy('id', 'DESC')
             return DataTables::of($data)

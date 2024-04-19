@@ -16,6 +16,7 @@ use App\Models\MemberFixedSaving;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\BulkEntry as ExportsBulkEntry;
+use App\Models\LoanMaster;
 
 class BulkEntryController extends Controller
 {
@@ -37,6 +38,23 @@ class BulkEntryController extends Controller
      */
     public function index()
     {
+
+        // $entries = BulkEntry::where('month','04-2024')->get();
+        // foreach($entries as $entry){
+        //     $member = Member::find( $entry->member_id);
+        //     $fixed_saving_entry = MemberFixedSaving::create([
+        //                 'ledger_account_id' => $member->fixed_saving_ledger_account->id ?? 0,
+        //                 'member_id' => $member->id,
+        //                 'month' => '04-2024',
+        //                 'fixed_amount' => $entry->fixed,
+        //                 'year_id' => $this->current_year->id,
+        //                 'status' => 1
+        //             ]);
+        //             $member_fixed_saving = $member->fixed_saving_ledger_account->opening_balance + $member->fixed_saving()->sum('fixed_amount');
+        //             $member->fixed_saving_ledger_account->update(['current_balance' => $member_fixed_saving]);
+        // }
+
+
         $user = Auth::user();
         $months = getMonthsOfYear($this->current_year->id);
         $data['bulk_entries'] = BulkMaster::orderBy('id', 'desc')->get();
@@ -60,8 +78,9 @@ class BulkEntryController extends Controller
         $data['total']['total_amount'] = 0;
 
         $data['months'] = getMonthsOfYear($this->current_year->id);
-        $data['previous_month'] = BulkEntryMaster::get()->last()->month ?? (currentYear()->start_month - 1) . '-' . currentYear()->start_year;
-        // dd($data['previous_month']);
+        // dd(date('m-Y',strtotime('01-'.(currentYear()->start_month - 1) . '-' . currentYear()->start_year)));
+        $data['previous_month'] = BulkEntryMaster::get()->last()->month ??
+        date('m-Y', strtotime('01-'.(currentYear()->start_month - 1) . '-' . currentYear()->start_year));
         $data['next_month'] = date('m-Y', strtotime(date('01-' . $data['previous_month']) . " +1 month"));
         foreach ($data['months'] as $key => $month) {
             $entry = BulkMaster::where('month', $month['value'])->first();
@@ -83,10 +102,12 @@ class BulkEntryController extends Controller
                 $item->principal = $loan_emi->emi ?? 0;
                 $item->emi_id = $loan_emi->id ?? '';
                 $item->interest = $loan_emi->interest_amt ?? 0;
-                $item->fixed = MemberFixedSaving::where('member_id', $item->id)->where('month', $data['next_month'])->where('status', 1)->first()->fixed_amount ?? 0;
-                if ($item->id == 201) {
-                    // dd($item->fixed);
+                $item->fixed = $prefill->fixed ?? 0;
+                $fixed_saving = MemberFixedSaving::where('member_id', $item->id)->where('month', $data['next_month'])->where('status', 1)->first();
+                if($fixed_saving){
+                    $item->fixed = $fixed_saving->fixed_amount;
                 }
+
                 $item->ms =  0;
                 $item->total_amount += $item->principal + $item->interest + $item->fixed + $item->ms;
                 // $department->{$value . '_total'} += $item->{$value};
@@ -214,11 +235,19 @@ class BulkEntryController extends Controller
                     //********* for loan entry***********//
                     $loan_emi_id = $request->{'emi_id_' . $department->id . '_' . $member->user_id};
                     $emi = $request->{'interest_' . $department->id . '_' . $member->user_id};
+                    $member = Member::find($member->id);
+
                     if($loan_emi_id && $emi){
                         $emi = LoanEMI::find($loan_emi_id);
                         if($emi){
                             $emi->update(['status' => 2]);
                             $member->loan_ledger_account->update(['current_balance' => ($member->loan_ledger_account->current_balance - $emi->emi)]);
+                        }
+                        if($member->loan && $member->loan_remaining_amount == 0){
+                            $loan = LoanMaster::find($member->loan->id);
+                            $loan->status = 2;
+                            $loan->save();
+                            $member->loan_ledger_account->update(['current_balance' => 0]);
                         }
                     }
 

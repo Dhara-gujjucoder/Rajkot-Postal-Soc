@@ -16,6 +16,7 @@ class MemberShareDetail extends Model
         'year_id',
         'is_purchase',
         'is_sold',
+        'created_at',
     ];
 
     protected static function booted(): void

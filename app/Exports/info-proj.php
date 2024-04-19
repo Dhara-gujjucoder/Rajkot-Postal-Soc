@@ -24,15 +24,32 @@ member          --> Done
 ledger account  --> Done
 fixed saving    --> Done
 share & detail  --> Done
+loan master     -->
+laon emi        -->
 <!-- bulk entry      fixed saving commented rakkhvano thase  -->
-loan master     --> Done
-laon emi        --> Done
 balance sheet   --> Done
+bulk entry --> Done 12 monthmate  joje account balance a srkhu aave che ne 1 loan padi deje tara user ni
 double entry    -->
 <!-- receipt         -->  -->
 
 
+<------- 04/18/2024 -------->
 
+1) Journel Report
+	-->added Other Expanse
+		- Member Fee
+		- Member Share
+		- Double Entry data
+2) Tarij Report
+	- Member Fee   -->   count added in RDC bank
+	- Member Share -->   count added in RDC bank
+
+
+
+tomorrow ==> 19/2024
+1 bulk entry for imported
+2 share purchase date
+3 for loan import
 
 
 
