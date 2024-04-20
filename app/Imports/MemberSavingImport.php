@@ -74,7 +74,7 @@ class MemberSavingImport implements ToModel, WithStartRow, WithLimit, WithMultip
                         // $ob = $member->fixed_saving_ledger_account->opening_balance;
                         // }
                         if(!$member->fixed_saving_ledger_account){
-                            dd($member);
+                            // dd($member);
                         }
                         $member->fixed_saving_ledger_account->update(['opening_balance' =>   $row[5], 'current_balance' =>$row[19]]);
                     } else {

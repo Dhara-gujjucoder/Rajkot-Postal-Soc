@@ -27,7 +27,9 @@ After trucate follow the below steps:
 
 
 3) import fixed saving  (please care in bulk entry for fixed saving which is already imported)
+
 4) import share  (it also includes share  detail)
+
 5) create 21 ledger account for fixed ledger entries  (set is_member_account = 0 )
     you can run this query
 
@@ -72,25 +74,3 @@ WHERE month = '04-2023' AND year_id = 2023;
 
 
 
-
-        if ($bulk_master && ($member_fee || $member_share)) {
-
-            $rdb_bank_name = $bulk_master->rdc_ledger_account->account_name ?? '';
-            $rdb_bank_total = ($bulk_master->total ?? 0) + ($member_fee + $member_share);
-
-            $entry[] = ['', 'FIXED SAVING (RECEIPT)', $fixed_saving, $rdb_bank_name, $rdb_bank_total];  //$t
-            $entry[] = ['', 'LOAN INTEREST INCOME', $loan_interest, '', ''];
-            $entry[] = ['', 'LOAN PRINCIPAL', $loan_principal, '', ''];
-            $entry[] = ['', 'MS', $ms_total, '', ''];
-            $entry[] = ['', 'Member Fee', $member_fee, '', ''];
-            $entry[] = ['', 'Member Share Amount', $member_share, '', ''];
-
-        } else {
-            $rdb_bank_name  = $bulk_master->rdc_ledger_account->account_name ?? '';
-            $rdb_bank_total = $member_fee + $member_share;
-        }
-
-        if (!$bulk_master && ($member_fee || $member_share)) {
-            $entry[] = ['', 'Member Fee', $member_fee, $rdb_bank_name, $rdb_bank_total];
-            $entry[] = ['', 'Member Share Amount', $member_share, '', ''];
-        }
