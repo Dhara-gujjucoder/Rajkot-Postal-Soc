@@ -54,3 +54,43 @@ After trucate follow the below steps:
 double entry    -->
 <!-- receipt         -->  -->
 
+
+
+
+
+
+
+
+
+UPDATE bulk_master
+SET status = 5
+WHERE month = '04-2023' AND year_id = 2023;
+
+
+
+
+
+
+
+
+        if ($bulk_master && ($member_fee || $member_share)) {
+
+            $rdb_bank_name = $bulk_master->rdc_ledger_account->account_name ?? '';
+            $rdb_bank_total = ($bulk_master->total ?? 0) + ($member_fee + $member_share);
+
+            $entry[] = ['', 'FIXED SAVING (RECEIPT)', $fixed_saving, $rdb_bank_name, $rdb_bank_total];  //$t
+            $entry[] = ['', 'LOAN INTEREST INCOME', $loan_interest, '', ''];
+            $entry[] = ['', 'LOAN PRINCIPAL', $loan_principal, '', ''];
+            $entry[] = ['', 'MS', $ms_total, '', ''];
+            $entry[] = ['', 'Member Fee', $member_fee, '', ''];
+            $entry[] = ['', 'Member Share Amount', $member_share, '', ''];
+
+        } else {
+            $rdb_bank_name  = $bulk_master->rdc_ledger_account->account_name ?? '';
+            $rdb_bank_total = $member_fee + $member_share;
+        }
+
+        if (!$bulk_master && ($member_fee || $member_share)) {
+            $entry[] = ['', 'Member Fee', $member_fee, $rdb_bank_name, $rdb_bank_total];
+            $entry[] = ['', 'Member Share Amount', $member_share, '', ''];
+        }

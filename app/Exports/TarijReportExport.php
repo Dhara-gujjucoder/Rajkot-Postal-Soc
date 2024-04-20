@@ -5,6 +5,7 @@ namespace App\Exports;
 use App\Models\Member;
 use App\Models\BulkEntry;
 use App\Models\BulkMaster;
+use App\Models\LedgerAccount;
 use App\Models\MasterDoubleEntry;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Style\Border;
@@ -98,19 +99,46 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
         $loan_interest = $bulk_master->interest_total ?? 0;
         $loan_principal = $bulk_master->principal_total ?? 0;
         $ms_total = $bulk_master->ms_total ?? 0;
-        $rdb_bank_name = $bulk_master->rdc_ledger_account->account_name ?? '';
-        $rdb_bank_total = ($bulk_master->total ?? 0) + ($member_fee + $member_share);
 
-        if ($bulk_master) {
-            $entry[] = ['', 'FIXED SAVING (RECEIPT)', $fixed_saving, $rdb_bank_name, $rdb_bank_total];  //$t
+        // $rdb_bank_name = $bulk_master->rdc_ledger_account->account_name ?? '';
+        // $rdb_bank_total = ($bulk_master->total ?? 0) + ($member_fee + $member_share);
+
+        // if ($bulk_master) {
+        //     $entry[] = ['', 'FIXED SAVING (RECEIPT)', $fixed_saving, $rdb_bank_name, $rdb_bank_total];  //$t
+        //     $entry[] = ['', 'LOAN INTEREST INCOME', $loan_interest, '', ''];
+        //     $entry[] = ['', 'LOAN PRINCIPAL', $loan_principal, '', ''];
+        //     $entry[] = ['', 'MS', $ms_total, '', ''];
+        // }
+        // if($member_fee || $member_share){
+        //     $entry[] = ['', 'Member Fee', $member_fee, '', ''];
+        //     $entry[] = ['', 'Member Share Amount', $member_share, '', ''];
+        // }
+
+
+
+        $rdb_bank_name = LedgerAccount::where('ledger_group_id',10)->first();
+        if ($bulk_master && ($member_fee || $member_share)) {
+
+            $rdb_bank_total = ($bulk_master->total ?? 0) + ($member_fee + $member_share);
+
+            $entry[] = ['', 'FIXED SAVING (RECEIPT)', $fixed_saving, $rdb_bank_name->account_name, $rdb_bank_total];  //$t
             $entry[] = ['', 'LOAN INTEREST INCOME', $loan_interest, '', ''];
             $entry[] = ['', 'LOAN PRINCIPAL', $loan_principal, '', ''];
             $entry[] = ['', 'MS', $ms_total, '', ''];
-        }
-        if($member_fee || $member_share){
             $entry[] = ['', 'Member Fee', $member_fee, '', ''];
             $entry[] = ['', 'Member Share Amount', $member_share, '', ''];
+
+        } else {
+
+            // dd($rdb_bank_name->account_name);
+            $rdb_bank_total = $member_fee + $member_share;
         }
+
+        if (!$bulk_master && ($member_fee || $member_share)) {
+            $entry[] = ['', 'Member Fee', $member_fee, $rdb_bank_name->account_name, $rdb_bank_total];
+            $entry[] = ['', 'Member Share Amount', $member_share, '', ''];
+        }
+
 
 
         $credit_total = 0;
@@ -183,7 +211,7 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
             ],
         ];
         foreach ($data as $key => $double_entry) {
-
+            // dd($double_entry);
             // if (isset($double_entry['data']) &&  !$double_entry['data']->isEmpty()) {
 
             $sheet->getStyle('B' . $row . ':E' . $row)->applyFromArray($style);
@@ -201,17 +229,25 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
                     ]
                 ],
             ]);
-
             $row = $row + 14;
 
+            // dump( $row);
             $bulk_master = BulkMaster::where('month', $double_entry['date'])
                 ->first();
-                // dump( $row);
+            // dd($bulk_master );
+
+            if($double_entry['data']->isEmpty() && !$bulk_master) {
+
+            }elseif($double_entry['data']->isEmpty()) {
+                $row = $row - 4;
+            }
+
             if (!$bulk_master) {
                 $row = $row - 6;
             }else{
                 $row = $row - 2;
             }
+            // dump( $row);
             // dump( $row);
             foreach ($double_entry['data'] as $key => $value) {
                 $credit_entry = $value->meta_entry()->where('type', 'credit')->get();
@@ -219,6 +255,7 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
                 $count = max($credit_entry->count(), $debit_entry->count());
                 $row += $count;
             }
+
             $date = explode('-', $double_entry['date']);
             $month = $date[0];
             $year = $date[1];
@@ -226,7 +263,7 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
                 $row = $row+2;
                 // dd($row );
             }
-            // dd('d' );
+            // dd( $row);
             $sheet->getStyle('B' . ($row - 3) . ':E' . ($row - 3))->applyFromArray($substyle);
             $sheet->getStyle('B' . ($row - 3) . ':E' . ($row - 3))->applyFromArray([
                 'borders' => [

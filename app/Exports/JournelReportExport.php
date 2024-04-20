@@ -185,7 +185,6 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                 array_push($entry, ['', '', '', $value[0], '', $value[2], $value[3], $value[4], $value[5], $value[1]]);
             }
             array_push($entry, ['', '', '', 'LOAN SETTLEMENT Pri.', '', $loan_settlement_amt, '0', '0', '0', $loan_settlement_amt]);
-
             $entry[] = [];
             $entry[] = ['', '', '', '', 'TOTAL: ', $pri + $loan_settlement_amt,  $int, $fix, $m_s, $total + $loan_settlement_amt];
 
