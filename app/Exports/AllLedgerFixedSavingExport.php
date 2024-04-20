@@ -167,9 +167,9 @@ class AllLedgerFixedSavingExport implements FromCollection, WithMapping, ShouldA
                     // dd($double_entry_data);
                     // dd($value->double_entry);
                     $entry[] = [
-                        $value->month, '', $value->double_entry->particular ?? '', '', $value->double_entry->amount ?? 0, $total + ($value->double_entry->amount??0),
+                        $value->month, '', $value->double_entry->particular ?? '', '', $value->double_entry->amount ?? 0, $total,
                     ];
-                    $total = $total + ($value->double_entry->amount ?? 0);
+                    $total = $total;
                 }
             }
 

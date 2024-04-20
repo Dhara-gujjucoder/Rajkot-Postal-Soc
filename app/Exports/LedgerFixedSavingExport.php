@@ -78,7 +78,7 @@ class LedgerFixedSavingExport implements FromCollection, WithMapping, ShouldAuto
             if ($double_entry_data->isNotEmpty()) {
                 // dd($double_entry_data);
                 $entry[] = [
-                    $value->month, '', ($value->double_entry->particular ?? ''), '', ($value->double_entry->amount ?? 0), $total + ($value->double_entry->amount ?? 0),
+                    $value->month, '', ($value->double_entry->particular ?? ''), '', ($value->double_entry->amount ?? 0), $total,
                 ];
                 $total = $total;
                 // $total = $total + ($value->double_entry->amount ?? 0);
