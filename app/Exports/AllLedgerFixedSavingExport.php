@@ -270,7 +270,6 @@ class AllLedgerFixedSavingExport implements FromCollection, WithMapping, ShouldA
                         ]
                     ],
                 ]);
-
                 $sheet->getStyle('A' . $sheet->getHighestRow() . ':' . $sheet->getHighestColumn() . $sheet->getHighestRow())->getFont()->setBold(true);
             }
         }

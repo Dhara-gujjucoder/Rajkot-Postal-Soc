@@ -106,7 +106,7 @@ class MemberShareController extends Controller
         // dd(currentYear()->id);
         $data['page_title'] = __('Member Shares');
         $data['shares'] = MemberShare::get();
-        $data['active_share'] = MemberShare::where('status',1);
+        $data['active_share'] = MemberShare::where('status',1)->where('year_id',currentYear()->id);
         $data['active_share_count'] = $data['active_share']->count();
         $data['share_amount'] = $data['active_share']->sum('share_amount');
         $data['members'] = Member::withTrashed()->orderBy('uid', 'ASC')->get();
