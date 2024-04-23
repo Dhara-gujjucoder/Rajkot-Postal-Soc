@@ -46,7 +46,7 @@
                                                     {{ __('Edit') }}</a>
                                                 @endif
                                             @endcan
-                                            @can('export-bulk_entries')
+                                            @can('export-bulk_entries-report')
                                                 <a href="{{ route('bulk_entries.export', $entry->id) }}"
                                                     class="btn btn-outline-info btn-sm"><i class="bi bi-file-earmark-excel"></i>
                                                     {{ __('Export') }}</a>
