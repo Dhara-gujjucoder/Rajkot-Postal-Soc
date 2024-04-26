@@ -19,6 +19,17 @@ class FinancialYear extends Model
         'is_current',
         'is_active',
         'status',
+
+        'total_saving',
+        'total_interest',
+        'total_share',
+        'total_share_amount',
+        'balance',
+
+        // Total Saving
+        // Total Interest
+        // Total Share
+        // Balance = Total Saving + Total Interest + Total Share
     ];
 
     // protected static function booted()

@@ -15,6 +15,7 @@ use App\Http\Controllers\BulkEntryController;
 use App\Http\Controllers\ChangeYearController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\LoanMasterController;
+use App\Http\Controllers\MemberLoanController;
 use App\Http\Controllers\TempReportController;
 use App\Http\Controllers\DoubleEntryController;
 use App\Http\Controllers\LedgerEntryController;
@@ -44,6 +45,8 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
 
     /** other routes */
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    // Route::get('/loan/{id}', [HomeController::class, 'show'])->name('show');
+
     Route::get('/general/setting/{setting}', [App\Http\Controllers\SettingController::class, 'create'])->name('setting.create');
     Route::post('/general/setting/{setting}', [App\Http\Controllers\SettingController::class, 'store'])->name('setting.update');
     Route::get('/users/profile/{user}', [App\Http\Controllers\UserController::class, 'profile'])->name('users.profile');
@@ -58,6 +61,9 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
 
 
     //***** Excel *****
+    Route::get('/import/loan', [MemberLoanController::class, 'loan'])->name('loan.import');            //******//
+    Route::post('/import/loan', [MemberLoanController::class, 'import_loan'])->name('loan.import');    //******//
+
     Route::get('/import/saving', [App\Http\Controllers\MemberFixedSavingController::class, 'all_saving'])->name('all_share.import');            //******//
     Route::post('/import/saving', [App\Http\Controllers\MemberFixedSavingController::class, 'import_all_saving'])->name('all_share.import');    //******//
 

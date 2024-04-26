@@ -10,7 +10,7 @@
 
                 <div class="form"></div>
             @can('create-bulk_entries')
-                <a href="{{ route('bulk_entries.create') }}" class="btn btn-outline-success btn-md  float-end my-3"><i
+                <a href="{{ route('bulk_entries.create') }}" class="btn btn-outline-success btn-md float-end my-3"><i
                     class="bi bi-plus-circle"></i> {{ __('Add New Bulk Entry') }}
                 </a>
             @endcan

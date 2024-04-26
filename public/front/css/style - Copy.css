@@ -451,9 +451,6 @@ input[type=range]::-moz-range-thumb {
 .loan-table table td {border-top: 1px solid #ddd;}
 .loan-table  table th{ }
 
-
-
-
 @media screen and (max-width:767px){ table{  border: 0; }
 .loan-table table caption{ }
 .loan-table table {border: none;}
@@ -484,4 +481,3 @@ table .btn-primary {
 .back-btn-contain .btn.btn-primary {
   padding: 8px 14px;
 }
-

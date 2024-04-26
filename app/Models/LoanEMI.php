@@ -14,7 +14,7 @@ class LoanEMI extends Model
     protected $table = 'loan_emis';
     protected $fillable = [
         'loan_master_id',    'month',    'member_id',  'ledger_account_id',  'principal_amt',
-        'interest',    'interest_amt',    'emi',  'installment',    'rest_principal',    'status',
+        'interest',    'interest_amt',    'emi',  'principal',    'rest_principal',    'status',
         'is_half_paid','payment_month','cheque_no','payment_type'
     ];
 

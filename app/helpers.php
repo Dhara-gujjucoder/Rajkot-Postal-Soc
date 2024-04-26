@@ -8,9 +8,11 @@ use App\Models\LedgerGroup;
 use App\Models\ShareAmount;
 use App\Models\LoanInterest;
 use App\Models\FinancialYear;
+use App\Models\LedgerAccount;
 use App\Models\MonthlySaving;
 use App\Models\MemberFixedSaving;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 
 if (!function_exists('getSetting')) {
@@ -133,7 +135,8 @@ if (!function_exists('getLedgerGroupDropDown')) {
         function loan_remaining_amount($member_id)
         {
             // dd($member_id);
-            return LoanEMI::where('member_id', $member_id)->pending()->sum('emi');
+            return LedgerAccount::where('member_id',$member_id)->where('ledger_group_id',3)->first()->current_balance;
+            // return LoanEMI::where('member_id', $member_id)->pending()->orderBy('id','ASC')->first()->rest_principal ?? 0;
         }
     }
 
@@ -161,12 +164,13 @@ if (!function_exists('getLedgerGroupDropDown')) {
             // dd($merged_collection->whereIn('value',$final));
             // $required_amount = count($final)*current_fixed_saving()->monthly_saving;
             // dd($final);
-            $member_fixed_Saving = MemberFixedSaving::where('member_id', $member_id)->whereIn('month', $final);
+            // DB::enableQueryLog();
+            $member_fixed_Saving = MemberFixedSaving::where('member_id', $member_id);
             // $nil_entries =  $member_fixed_Saving->where('fixed_amount',0)->count();
-            $saving_amount = $member_fixed_Saving->withoutGlobalScope('bulk_entry')->sum('fixed_amount');
-            // dd($member_fixed_Saving->get());
+            $saving_amount = $member_fixed_Saving->sum('fixed_amount');
+            // dd($saving_amount);
+            // dd(DB::getQueryLog());
             $required_amount = $member_fixed_Saving->groupBy('month')->get(['month'])->count() * current_fixed_saving()->monthly_saving;
-            //    dd( $saving_amount);
             // $member = Member::find($member_id);
             // $count = count(getMonthsOfYear(currentYear()->id));
             return  $required_amount - $saving_amount > 0 ? $required_amount - $saving_amount : 0;

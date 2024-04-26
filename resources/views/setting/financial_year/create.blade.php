@@ -25,6 +25,7 @@
                                 <div class="form-group">
                                     <label for="first-title-column">{{ __('Title') }}<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" value="{{ old('title') }}" placeholder="{{ __('Title') }}">
+
                                     @if ($errors->has('title'))
                                         <span class="text-danger">{{ $errors->first('title') }}</span>
                                     @endif

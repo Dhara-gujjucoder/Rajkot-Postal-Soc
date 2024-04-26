@@ -45,7 +45,7 @@ class MemberFixedSaving extends Model
         static::addGlobalScope('bulk_entry', function (Builder $builder) {
             $builder->where('is_double_entry',0);
         });
-       
+
     }
 }
 

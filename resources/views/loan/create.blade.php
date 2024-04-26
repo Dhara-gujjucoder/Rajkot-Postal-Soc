@@ -349,7 +349,7 @@
         var emi_d = '{{ getLoanParam()[1] }}';
         var rate = Number('{{ current_loan_interest()->loan_interest }}');
         rate = 9.5;
-        var emi_html = `<table class="table table-borderd"><tr><th>No.</th><th>Month</th><th>EMI amount (&#8377;)</th><th>Interest (&#8377;)</th><th>Principal (&#8377;)</th><th>Payment (&#8377;)</th></tr>`;
+        var emi_html = `<table class="table table-borderd"><tr><th>No.</th><th>Month</th><th>Rest Principal (&#8377;)</th><th>Principal (&#8377;)</th><th>Interest (&#8377;)</th><th>EMI amount (&#8377;)</th></tr>`;
         // console.log(emi_amount, minimum_emi, loan_amount);
         if (emi_amount < minimum_emi || emi_amount > loan_amount) {
             $('#emi_amount').val(minimum_emi);
@@ -377,9 +377,9 @@
                         emi_amount = loan_amt
                     }
                     console.log(emi_amount, emi_interest);
-                    loan_amt = loan_amt - emi_amount;
-                    emi_html += `<tr><td>` + index + `</td><input type="hidden" value="` + ((display_month + 1).toString().padStart(2, '0') + '-' + year) + `" name="emi_month[]"><td>` + dmonth + `</td><input type="hidden" value="` + emi_amount + `" name="emi_amt[]"><td>` + emi_amount + `</td><input type="hidden" value="` + emi_interest.toFixed(0) + `" name="emi_interest[]"><td>` + emi_interest.toFixed(0) + `</td><input type="hidden" value="` + loan_amt + `" name="rest_principal[]"><td>` + loan_amt + `</td><input type="hidden" value="` + (emi_interest + emi_amount).toFixed(0) +
-                        `" name="installment[]"><td>` + (emi_interest + emi_amount).toFixed(0) + `</td></tr>`;
+                    loan_amt = (loan_amt - (emi_amount - emi_interest)).toFixed(0);
+                    emi_html += `<tr><td>` + index + `</td><input type="hidden" value="` + ((display_month + 1).toString().padStart(2, '0') + '-' + year) + `" name="emi_month[]"><td>` + dmonth + `</td><input type="hidden" value="` + loan_amt + `" name="rest_principal[]"><td>` + loan_amt + `</td><input type="hidden" value="` + (emi_amount - emi_interest).toFixed(0) +
+                        `" name="principal[]"><td>` + (emi_amount - emi_interest).toFixed(0) + `</td><input type="hidden" value="` + emi_interest.toFixed(0) + `" name="emi_interest[]"><td>` + emi_interest.toFixed(0) + `</td><input type="hidden" value="` + emi_amount + `" name="emi_amt[]"><td>` + emi_amount + `</td></tr>`;
                 }
                 display_month++;
             }

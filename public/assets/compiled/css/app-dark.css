@@ -1646,3 +1646,14 @@ html[data-bs-theme=dark] .dataTable-input{ background-color: #1b1b29;border-colo
 html[data-bs-theme=dark] .dataTable-input:focus{ background-color: #1b1b29;border-color: #4b4b68;color: #c2c2d9;}
 html[data-bs-theme=dark] .is-valid ~ .valid-feedback,html[data-bs-theme=dark] .is-valid ~ .valid-tooltip,html[data-bs-theme=dark] .was-validated :valid ~ .valid-feedback,html[data-bs-theme=dark] .was-validated :valid ~ .valid-tooltip{ display: block;}
 html[data-bs-theme=dark] .is-invalid ~ .invalid-feedback,html[data-bs-theme=dark] .is-invalid ~ .invalid-tooltip,html[data-bs-theme=dark] .was-validated :invalid ~ .invalid-feedback,html[data-bs-theme=dark] .was-validated :invalid ~ .invalid-tooltip{ display: block;}
+
+
+html[data-bs-theme=dark] .table-whitebg table, 
+html[data-bs-theme=dark] .table-whitebg table th, 
+html[data-bs-theme=dark] .table-whitebg table td {background-color: #151521 !important; border-color: #3f3f3f;}
+html[data-bs-theme=dark] .table-whitebg table th {color: #fff !important; background-color: #1e1e2d !important;}
+html[data-bs-theme=dark] .table-whitebg .table:not(.table-borderless) thead th, 
+html[data-bs-theme=dark] .table-whitebg .dataTable-table:not(.table-borderless) thead th {border-color: #3f3f3f !important;}
+
+html[data-bs-theme="dark"] .table-whitebg .dataTable-table:not(.table-borderless) thead th, 
+html[data-bs-theme="dark"] .table-whitebg .table:not(.table-borderless) thead th {border-color: #3f3f3f !important;}

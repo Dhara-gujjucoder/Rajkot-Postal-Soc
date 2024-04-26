@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\FinancialYear;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ChangeYearController;
+use App\Models\BulkMaster;
+use App\Models\MemberShare;
 
 class FinancialYearController extends Controller
 {
@@ -30,12 +32,25 @@ class FinancialYearController extends Controller
 
     public function create()
     {
+        // dd(currentYear()->id);
         $data['page_title'] = __('Add New Financial Year');
         return view('setting.financial_year.create', $data);
     }
 
     public function store(Request $request)
     {
+        // dd(currentYear()->id);
+        $bulk_entry = BulkMaster::where('year_id',currentYear()->id);
+        $saving = $bulk_entry->sum('fixed_saving_total');
+        $interest = $bulk_entry->sum('interest_total');
+
+        $active_share = MemberShare::where('status',1)->where('year_id',currentYear()->id);
+        $active_share_count = $active_share->count();
+        $share_amount = $active_share->sum('share_amount');
+        $total =  $saving + $interest + $share_amount;
+        // dd( 'saving-->' . $saving . 'active_share_count-->' . $active_share_count .  'share_amount-->' . $share_amount);
+
+
         $request->validate([
             'title' => 'required',
             'start_year' => 'required',
@@ -44,21 +59,32 @@ class FinancialYearController extends Controller
             'end_month' => 'required',
         ]);
         $input = $request->all();
-        $input['is_current'] = 0;
-        // if ($request->is_current == 1) {
-        //     FinancialYear::query()->where('is_current', 1)->update(['is_current' => 0]);
-        //     $input['is_current'] = 0;
+        $input['total_saving'] = $saving ?? '0';
+        $input['total_interest'] = $interest ?? '0';
+        $input['total_share'] = $active_share_count ?? '0';
+        $input['total_share_amount'] = $share_amount ?? '0';
+        $input['balance'] = $total ?? '0';
+
+
+
+
+
+        // $input['is_current'] = 0;
+        //     // if ($request->is_current == 1) {
+        //     //     FinancialYear::query()->where('is_current', 1)->update(['is_current' => 0]);
+        //     //     $input['is_current'] = 0;
+        //     // }
+        // if ($request->is_active == 1) {
+        //     FinancialYear::query()->where('is_active', 1)->update(['is_active' => 0]);
+        //     $input['is_active'] = 1;
         // }
-        if ($request->is_active == 1) {
-            FinancialYear::query()->where('is_active', 1)->update(['is_active' => 0]);
-            $input['is_active'] = 1;
-        }
+
         $year = FinancialYear::create($input);
 
 
-        /*for create finaciayal year records*/
-        $printReport = new ChangeYearController;
-        $printReport->change_year($year->id);
+        // /*for create finaciayal year records*/
+        // $printReport = new ChangeYearController;
+        // $printReport->change_year($year->id);
         /* end for create finaciayal year records*/
 
 

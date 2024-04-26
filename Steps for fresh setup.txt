@@ -72,5 +72,9 @@ WHERE month = '04-2023' AND year_id = 2023;
 
 
 
+ALTER TABLE `financial_year` ADD `total_saving` DOUBLE NULL DEFAULT NULL AFTER `status`, ADD `total_interest` DOUBLE NULL DEFAULT NULL AFTER `total_saving`, ADD `total_share` DOUBLE NULL DEFAULT NULL AFTER `total_interest`, ADD `total_share_amount` DOUBLE NULL DEFAULT NULL AFTER `total_share`, ADD `balance` DOUBLE NULL DEFAULT NULL AFTER `total_share_amount`;
 
 
+
+
+"principal"  <====change column name in table `loan_emis`

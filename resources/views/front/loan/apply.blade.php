@@ -126,7 +126,7 @@
                                             <td data-label="EMI Amount">{{ $emi->emi }}</td>
                                             <td data-label="Interest">{{ $emi->interest_amt }}</td>
                                             <td data-label="Principal">{{ $emi->rest_principal }}</td>
-                                            <td data-label="Payment">{{ $emi->installment }}</td>
+                                            <td data-label="Payment">{{ $emi->principal }}</td>
                                             <td data-label="Status">{{ $emi->status }}</td>
                                         </tr>
                                     @endforeach
@@ -136,8 +136,7 @@
                     </div>
                 </div>
                 <br>
-                @if (!$old_loans)
-                @else
+                @if ($old_loans)
                     <div class="desh-listbox skybluebg-box wow fadeInRight" data-wow-delay="0.2s">
                         <div class="dash-box-title">{{ __('Your Old Loan Detail') }}</div>
                     </div>

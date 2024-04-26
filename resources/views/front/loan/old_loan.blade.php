@@ -63,7 +63,7 @@
                                                 <td data-label="EMI Amount">{{ $emi->emi }}</td>
                                                 <td data-label="Interest">{{ $emi->interest_amt }}</td>
                                                 <td data-label="Principal">{{ $emi->rest_principal }}</td>
-                                                <td data-label="Payment">{{ $emi->installment }}</td>
+                                                <td data-label="Payment">{{ $emi->principal }}</td>
                                                 <td data-label="Status">{{ $emi->status }}</td>
                                             </tr>
                                         @endforeach

@@ -20,19 +20,20 @@
                     <div class="mb-3 form-group opening_balance">
                         <label for="email">
                             <span>{{ __('Total Saving') }}:</span>
-                            <b>{{ 0 }}</b> {{-- <b>{{ $user->fixed_saving_ledger_account->opening_balance }}</b> --}}
+                            <b>{{ $balance_financial_year->total_saving }}</b>
+
                         </label>
                         <label for="email">
                             <span>{{ __('Total Interest') }}:</span>
-                            {{ 0 }} {{-- <b>{{ $user->share_ledger_account->opening_balance }}</b> --}}
+                            <b>{{ $balance_financial_year->total_interest }}</b>
                         </label>
                         <label for="email">
                             <span>{{ __('Total Share') }}:</span>
-                            {{ 0 }} {{-- <b>{{ $user->loan_ledger_account->opening_balance }}</b> --}}
+                            <b>{{ $balance_financial_year->total_share }}({{ $balance_financial_year->total_share_amount }})</b>
                         </label>
                         <label for="email">
                             <span>{{ __('Balance') }}:</span>
-                            {{ 0 }} {{-- <b>{{ $user->loan_ledger_account->opening_balance }}</b> --}}
+                            <b>{{ $balance_financial_year->balance }}</b>
                         </label>
                     </div>
 

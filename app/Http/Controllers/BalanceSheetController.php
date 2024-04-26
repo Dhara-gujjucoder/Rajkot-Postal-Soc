@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BalanceSheet;
+use App\Models\FinancialYear;
 use Illuminate\Http\Request;
 use App\Models\LedgerAccount;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,8 @@ class BalanceSheetController extends Controller
         $data['page_title'] = __('Create Balance SHEET');
         $data['ledger_ac'] = LedgerAccount::where('ledger_group_id', 7)->where('status', 1)->get();
 
+
+
         return view('ledger_reports.balance_sheet.create', $data);
     }
 
@@ -21,6 +24,8 @@ class BalanceSheetController extends Controller
     {
         $data['page_title'] = __('Edit Balance SHEET');
         $data['balance_sheet'] = BalanceSheet::where('year_id', $this->current_year->id)->get();
+        $data['balance_financial_year'] = FinancialYear::where('id',currentYear()->id)->first();
+
         return view('ledger_reports.balance_sheet.edit', $data);
     }
 
@@ -68,10 +73,11 @@ class BalanceSheetController extends Controller
         //             $balanceSheet->year_id = $this->current_year->id;
         //             $balanceSheet->save();
         //         }
+        /*******/
 
-                /*******/
         $data['page_title'] = __('Balance SHEET');
         $data['balance_sheet'] = BalanceSheet::where('year_id', $this->current_year->id)->get();
+        $data['balance_financial_year'] = FinancialYear::where('id',currentYear()->id)->first();
         return view('ledger_reports.balance_sheet.index', $data);
     }
 

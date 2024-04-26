@@ -84,7 +84,6 @@ class LoanMasterController extends Controller
 
     public function create()
     {
-
         $data['members'] = Member::with('shares')->get();
         // foreach ($data['members'] as $key => $value) {
         //     $value->fixed_saving_ledger_account()->update(['current_balance' => $value->fixed_saving()->sum('fixed_amount') ?? 0]);
@@ -159,7 +158,7 @@ class LoanMasterController extends Controller
                 'interest' => current_loan_interest()->loan_interest,
                 'interest_amt' => $request->emi_interest[$key],
                 'emi' => $request->emi_amt[$key],
-                'installment' => $request->installment[$key],
+                'principal' => $request->principal[$key],
                 'rest_principal' => $request->rest_principal[$key],
                 'status' => 1,
             ]);
@@ -177,11 +176,14 @@ class LoanMasterController extends Controller
         $member->loan_ledger_account->update(['current_balance' => 0]);
     }
 
-    public function show(string $id)
+    public function show(string $id,Request $request)
     {
+        // dd($request->all());
         $loan = LoanMaster::findOrFail($id);
+
         return view('loan.show', [
             'loan' => $loan,
+            'loan_show_dashboard' => $request->loan_show_dashboard,
             'page_title' => __('View Loan')
         ]);
     }
@@ -276,7 +278,7 @@ class LoanMasterController extends Controller
             $loan_emi->interest = current_loan_interest()->loan_interest;
             $loan_emi->interest_amt = 0;
             $loan_emi->emi = 0;
-            $loan_emi->installment = $request->amount;
+            $loan_emi->principal = $request->amount;
             $loan_emi->rest_principal = $loan->member->loan_remaining_amount - $request->amount;
             $loan_emi->status = 2;
             $loan_emi->is_half_paid = 1;
@@ -314,7 +316,7 @@ class LoanMasterController extends Controller
                             $emi_amount = $loan_amt;
                         }
                         // console.log($emi_amount, $emi_interest);
-                        $loan_amt = $loan_amt - $emi_amount;
+                        $loan_amt = intval($loan_amt - ($emi_amount - $emi_interest));
                         LoanEMI::create([
                             'loan_master_id' => $loan->id,
                             'month' => $date->format('m-Y'),
@@ -324,7 +326,7 @@ class LoanMasterController extends Controller
                             'interest' => current_loan_interest()->loan_interest,
                             'interest_amt' => $emi_interest,
                             'emi' => $emi_amount,
-                            'installment' => $emi_interest + $emi_amount,
+                            'principal' => $emi_amount - $emi_interest,
                             'rest_principal' => $loan_amt,
                             'status' => 1,
                         ]);

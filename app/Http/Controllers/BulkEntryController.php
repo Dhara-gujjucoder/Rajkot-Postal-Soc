@@ -99,7 +99,7 @@ class BulkEntryController extends Controller
                 // dump($item->id);
                 // dd($data['next_month']);
                 $loan_emi = LoanEMI::where('member_id', $item->id)->where('month', $data['next_month'])->where('status', 1)->first();
-                $item->principal = $loan_emi->emi ?? 0;
+                $item->principal = $loan_emi->principal ?? 0;
                 $item->emi_id = $loan_emi->id ?? '';
                 $item->interest = $loan_emi->interest_amt ?? 0;
                 $item->fixed = $prefill->fixed ?? 0;
@@ -242,7 +242,7 @@ class BulkEntryController extends Controller
                               $emi = LoanEMI::find($loan_emi_id);
                               if($emi){
                                   $emi->update(['status' => 2]);
-                                  $member->loan_ledger_account->update(['current_balance' => ($member->loan_ledger_account->current_balance - $emi->emi)]);
+                                  $member->loan_ledger_account->update(['current_balance' => ($member->loan_ledger_account->current_balance - $emi->principal)]);
                               }
                           }
                     }
@@ -413,7 +413,7 @@ class BulkEntryController extends Controller
                           $emi = LoanEMI::find($loan_emi_id);
                           if($emi){
                               $emi->update(['status' => 2]);
-                              $member->loan_ledger_account->update(['current_balance' => ($member->loan_ledger_account->current_balance - $emi->emi)]);
+                              $member->loan_ledger_account->update(['current_balance' => ($member->loan_ledger_account->current_balance - $emi->principal)]);
                           }
                       }
                 }

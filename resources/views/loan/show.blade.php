@@ -129,26 +129,30 @@
                         <div class="col-md-12" style="line-height: 35px;">
                             <div class="table-responsive">
                                 <table class="table table-borderd">
+                                    @php
+                                        $emis = $loan_show_dashboard ? $loan->loan_emis()->pending()->get() : $loan->loan_emis;
+                                                //url pass in dashboard                               //url pass in controller
+                                    @endphp
                                     <thead>
                                         <tr>
-                                            <th>No.</th>
-                                            <th>Month</th>
-                                            <th>EMI amount</th>
-                                            <th>Interest</th>
-                                            <th>Principal</th>
-                                            <th>Payment</th>
-                                            <th>Status</th>
+                                            <th>{{ __('No.')}}</th>
+                                            <th>{{ __('Month')}}</th>
+                                            <th>{{ __('EMI amount')}}</th>
+                                            <th>{{ __('Interest')}}</th>
+                                            <th>{{ __('Principal')}}</th>
+                                            <th>{{ __('Rest Principal')}}</th>
+                                            <th>{{ __('Status')}}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($loan->loan_emis as $key => $emi)
+                                        @foreach ($emis as $key => $emi)
                                             <tr>
                                                 <td>{{ $key+1 }}</td>
                                                 <td>{{ date('M-Y',strtotime('01-'.$emi->month)) }}</td>
                                                 <td>{{ $emi->emi }}</td>
                                                 <td>{{ $emi->interest_amt }}</td>
+                                                <td>{{ $emi->principal }}</td>
                                                 <td>{{ $emi->rest_principal }}</td>
-                                                <td>{{ $emi->installment }}</td>
                                                 <td>{{ $emi->status }}</td>
                                             </tr>
                                         @endforeach
