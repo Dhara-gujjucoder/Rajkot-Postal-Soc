@@ -50,8 +50,8 @@ class HomeController extends Controller
 
         $data['bulk_entries'] = BulkMaster::where('status', 1)->orderBy('id', 'ASC')->get();
 
-        // $data['loans'] = LoanMaster::active()->latest()->take(10)->get();
-        $data['loans'] = LoanMaster::get();
+        $data['loans'] = LoanMaster::active()->latest()->take(10)->get();
+        // $data['loans'] = LoanMaster::get();
 
         // dd($this->current_year);
         return view('dashboard', $data);
