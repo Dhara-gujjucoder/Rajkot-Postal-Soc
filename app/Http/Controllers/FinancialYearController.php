@@ -48,7 +48,7 @@ class FinancialYearController extends Controller
         $active_share_count = $active_share->count();
         $share_amount = $active_share->sum('share_amount');
         $total =  $saving + $interest + $share_amount;
-        // dd( 'saving-->' . $saving . 'active_share_count-->' . $active_share_count .  'share_amount-->' . $share_amount);
+        // dd( 'saving-->' . ($saving) . 'interest' . ($interest) . 'active_share_count-->' . ($active_share_count) .  'share_amount-->' . ($share_amount) . 'balance' . ($total));
 
 
         $request->validate([

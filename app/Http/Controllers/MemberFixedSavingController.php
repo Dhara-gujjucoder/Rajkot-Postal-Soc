@@ -104,7 +104,7 @@ class MemberFixedSavingController extends Controller
         $import = new MemberSavingImport;
 
         Excel::import($import, $request->file('excel_file'));
-        // dd($import->not_insert);
+        dd($import->not_insert);
         return redirect()->route('home')
             ->withSuccess(__('All Saving Imported successfully.'));
     }

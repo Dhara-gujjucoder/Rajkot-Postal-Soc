@@ -24,6 +24,7 @@
                                 <th>{{ __('Amount') }}</th>
                                 <th>{{ __('EMI Amount') }}</th>
                                 <th>{{ __('Status') }}</th>
+                                <th>{{ __('Temp Loan Status') }}</th>  {{-- only temporary add this column in db --}}
                                 <th>{{ __('Action') }} </th>
                             </tr>
                         </thead>
@@ -154,6 +155,10 @@
                     name: 'status'
                 },
                 {
+                    data: 'temp_loan_status',
+                    name: 'temp_loan_status'
+                },
+                {
                     data: 'action',
                     name: 'action',
                     orderable: false,
@@ -226,7 +231,7 @@
                                 <tr>
                                 <td colspan="6"><div id="payment_details"
                                 style="display: {{ old('payment_type') == 'cheque' ? 'block' : 'none' }};">
-                                
+
                                 <div class="mb-3 row">
                                     <label for="amount"
                                         class="col-md-2 col-form-label text-md-end text-start">{{ __('Cheque No.(RDC Bank)') }}</label>
@@ -269,7 +274,7 @@
             var payment_type = $('input[name=payment_type]:checked').val()
             $(document).find('.is-invalid').removeClass('is-invalid');
             $(document).find('.text-danger').remove();
-                    
+
 
             var url = "{{ route('loan.destroy', ':id') }}";
             url = url.replace(':id', loan_id);
@@ -316,7 +321,7 @@
                 var payment_type = $('input[name=payment_type]:checked').val()
                 $(document).find('.is-invalid').removeClass('is-invalid');
                 $(document).find('.text-danger').remove();
-    
+
                 var url = "{{ route('loan.partial_pay', ':id') }}";
                 url = url.replace(':id', loan_id);
                 $.ajax({
@@ -336,11 +341,11 @@
                         show_success(data.msg);
                         table.ajax.reload();
                         $("#loan_pay").modal('hide');
-    
+
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
                         var err = eval("(" + xhr.responseText + ")");
-                        
+
                         $.each(xhr.responseJSON.errors, function(field_name, error) {
                             if(field_name == 'amount'){
                                 field_name = 'amount_pay';

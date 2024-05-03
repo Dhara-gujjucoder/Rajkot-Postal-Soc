@@ -143,7 +143,7 @@
                                 </div>
                             </div>
 
-                            <input type="hidden" class="form-control" id="month" name="month" value="{{ date('Y-m-d') }}">
+                            <input type="hidden" class="form-control" id="month" name="month" value="{{ date('Y-m-d', strtotime('14-03-2024')) }}">
 
                             <input type="hidden" class="form-control" id="total_share_amt" name="total_share_amt" value="{{ old('total_share_amt') }}">
                             <input type="hidden" class="form-control" id="remaining_share_amount" name="remaining_share_amount" value="{{ old('remaining_share_amount') }}">
@@ -299,7 +299,7 @@
     $('input[name="loan_id"]:checked').trigger('change');
 
     function disableoption(input, member_id) {
-        console.log(input.attr('id'));
+        // console.log(input.attr('id'));
         $('#g2_member_id option').attr('disabled', false);
         $('#g2_member_id').select2();
         $('#g1_member_id option').attr('disabled', false);
@@ -317,7 +317,7 @@
             $('#g2_member_id option[value="' + member_id + '"]').attr('disabled', true);
             $('#g2_member_id').select2();
         } else if (input.attr('id') == 'g2_member_id') {
-            console.log(member_id);
+            // console.log(member_id);
             $('#g1_member_id option[value="' + member_id + '"]').attr('disabled', true);
             $('#g1_member_id').select2();
         }
@@ -348,7 +348,7 @@
         var emi_c = '{{ getLoanParam()[0] }}';
         var emi_d = '{{ getLoanParam()[1] }}';
         var rate = Number('{{ current_loan_interest()->loan_interest }}');
-        rate = 9.5;
+        // rate = 9.5;
         var emi_html = `<table class="table table-borderd"><tr><th>No.</th><th>Month</th><th>Rest Principal (&#8377;)</th><th>Principal (&#8377;)</th><th>Interest (&#8377;)</th><th>EMI amount (&#8377;)</th></tr>`;
         // console.log(emi_amount, minimum_emi, loan_amount);
         if (emi_amount < minimum_emi || emi_amount > loan_amount) {
@@ -359,11 +359,13 @@
             let display_month = dt.getMonth();
             let year = dt.getFullYear();
             let dmonth = '';
-
-            for (let index = 1; index <= no_of_emi; index++) {
-                var emi_interest = loan_amt * rate / 100 * emi_c / emi_d;
+            index = 1;
+            while (loan_amt > 0) {
+                // for (let index = 1; index <= no_of_emi; index++) {
+                var emi_interest = ((loan_amt * rate) / 100) * (emi_c / emi_d);
                 // var emi_interest = Number((loan_amt * (rate * 0.01))/no_of_emi);
-
+                console.log((loan_amt * rate) / 100);
+                console.log((emi_c / emi_d));
                 if (display_month === 12) {
                     display_month = 0;
                     year++;
@@ -374,14 +376,18 @@
                 dmonth = (dmonth + '-' + year);
                 if (loan_amt > 0) {
                     if (loan_amt < emi_amount) {
-                        emi_amount = loan_amt
+                        emi_amount = loan_amt;
+                        loan_amt = 0;
+                    } else {
+                        loan_amt = (loan_amt - (emi_amount - emi_interest)).toFixed(0);
+
                     }
-                    console.log(emi_amount, emi_interest);
-                    loan_amt = (loan_amt - (emi_amount - emi_interest)).toFixed(0);
+                    // console.log(emi_amount, emi_interest);
                     emi_html += `<tr><td>` + index + `</td><input type="hidden" value="` + ((display_month + 1).toString().padStart(2, '0') + '-' + year) + `" name="emi_month[]"><td>` + dmonth + `</td><input type="hidden" value="` + loan_amt + `" name="rest_principal[]"><td>` + loan_amt + `</td><input type="hidden" value="` + (emi_amount - emi_interest).toFixed(0) +
                         `" name="principal[]"><td>` + (emi_amount - emi_interest).toFixed(0) + `</td><input type="hidden" value="` + emi_interest.toFixed(0) + `" name="emi_interest[]"><td>` + emi_interest.toFixed(0) + `</td><input type="hidden" value="` + emi_amount + `" name="emi_amt[]"><td>` + emi_amount + `</td></tr>`;
                 }
                 display_month++;
+                index++;
             }
             emi_html += `</table>`;
             $('#emi_details').html(emi_html);

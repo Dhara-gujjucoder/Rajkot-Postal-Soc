@@ -22,6 +22,7 @@ TRUNCATE `receipt`;
 TRUNCATE `users`;
 
 After trucate follow the below steps:
+
 1) php artisan db:seed SuperAdminSeeder (for admin user seeder)
 2) import member excel sheet (it also include users & ledger_accounts)
 

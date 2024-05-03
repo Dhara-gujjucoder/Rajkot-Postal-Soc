@@ -175,7 +175,12 @@
                                     <td>{{ $loan->member->name }}</td>
                                     <td>{{ $loan->principal_amt }}</td>
                                     <td>{{ $loan->emi_amount }}</td>
-                                    <td>{{ date('M-Y', strtotime('01-' . $loan->loan_emis()->pending()->first()->month)) }}</td>
+                                    {{-- <td>{{ date('M-Y', strtotime('01-' . $loan->loan_emis()->pending()->first()->month))}}</td> --}}
+                                    <td>
+                                        @if ($loan->loan_emis()->pending()->first())
+                                            {{ date('M-Y', strtotime('01-' . $loan->loan_emis()->pending()->first()->month))}}
+                                        @endif
+                                    </td>
                                     <td>
                                         <a href="{{ route('loan.show', $loan->id) . '?loan_show_dashboard=1' }}" target="_blank" class="btn btn-outline-warning btn-sm"><i class="bi bi-eye"></i>
                                             {{ __('Show') }}

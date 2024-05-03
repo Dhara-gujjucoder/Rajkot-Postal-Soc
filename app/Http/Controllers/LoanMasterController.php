@@ -101,27 +101,33 @@ class LoanMasterController extends Controller
             'loan_id' => 'required',
             'emi_amount' => 'required',
             'member_id' => 'required',
-            'g1_member_id' => 'required',
-            'g2_member_id' => 'required',
+            // 'g1_member_id' => 'required',
+            // 'g2_member_id' => 'required',
             'stamp_duty' => 'required',
-            'g2_member_id' => 'required',
+            // 'g2_member_id' => 'required',
             'payment_type' => 'required',
             // 'bank_name' => 'required_if:payment_type,cheque',
             'cheque_no' => 'required_if:payment_type,cheque',
-            'gcheque_no' => 'required|numeric',
-            'gbank_name' => 'string'
+            // 'gcheque_no' => 'required|numeric',
+            // 'gbank_name' => 'string'
         ], [
-            'g1_member_id.required' => __('Guarantor 1 field is required'),
-            'g2_member_id.required' => __('Guarantor 2 field is required'),
+            // 'g1_member_id.required' => __('Guarantor 1 field is required'),
+            // 'g2_member_id.required' => __('Guarantor 2 field is required'),
         ]);
+
         $loan_no = str_pad((LoanMaster::count()) + 1, 2, '0', STR_PAD_LEFT) . '/' . $this->current_year->start_year . '-' . $this->current_year->end_year;
+
+        $yourDate = strtotime($request->month.' -1 month'); // substract 1 month from that date and converting it into timestamp
+        $desiredDate = date("Y-m-d", $yourDate);
+
+
         $member = Member::find($request->member_id);
         $loan_master = new LoanMaster;
         $loan_master->fill($request->all());
         $loan_master->ledger_account_id = $member->loan_ledger_account->id;
-        $loan_master->loan_no = $loan_no;
+        $loan_master->loan_no = $loan_no;                         // $loan_no
         $loan_master->year_id = $this->current_year->id;
-        $loan_master->month = $request->month;
+        $loan_master->month =  $desiredDate;                          //$request->month;
         $loan_master->start_month = $request->emi_month[0];
         $loan_master->end_month = Arr::last($request->emi_month);
         $loan_master->status = 1;
@@ -136,7 +142,7 @@ class LoanMasterController extends Controller
         }
 
         //update share
-        if ($request->remaining_share > 0) {
+        if ($request->remaining_share > 0) { //aa koy ma avayata ? remianing share ?
             $no_of_share = $member->total_share + $request->remaining_share;
             $this->update_member_share($member, $no_of_share);
         }
@@ -300,12 +306,14 @@ class LoanMasterController extends Controller
                 $rate = current_loan_interest()->loan_interest;
 
                 $dmonth = date('d-m-Y');
+                //  $dmonth = date('d-m-Y',strtotime('01-03-2024'));
 
                 $member->loan_ledger_account->update(['current_balance' => $loan_amt]);
 
                 $loan->loan_emis()->pending()->delete();
 
-                for ($i = 1; $i <= $no_of_emi; $i++) {
+                while($loan_amt > 0){
+                // for ($i = 1; $i <= $no_of_emi; $i++) {
                     $emi_interest = intval($loan_amt * $rate / 100 * $emi_c / $emi_d);
                     $date = new DateTime($dmonth);
                     $date->add(new DateInterval('P1M'));
@@ -314,9 +322,12 @@ class LoanMasterController extends Controller
                     if ($loan_amt > 0) {
                         if ($loan_amt < $emi_amount) {
                             $emi_amount = $loan_amt;
+                            $loan_amt = 0;
+                        }else{
+
+                            $loan_amt = intval($loan_amt - ($emi_amount - $emi_interest));
                         }
                         // console.log($emi_amount, $emi_interest);
-                        $loan_amt = intval($loan_amt - ($emi_amount - $emi_interest));
                         LoanEMI::create([
                             'loan_master_id' => $loan->id,
                             'month' => $date->format('m-Y'),

@@ -8,7 +8,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class MemberLoanController extends Controller
 {
-    //*************** E X C E L  S H E E T S [0]***************
+    //*************** E X C E L  S H E E T S [0] ***************
 
     public function loan(){
         return view('member_loan.import', [

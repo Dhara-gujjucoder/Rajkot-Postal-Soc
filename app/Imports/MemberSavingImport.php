@@ -98,6 +98,6 @@ class MemberSavingImport implements ToModel, WithStartRow, WithLimit, WithMultip
 
     public function limit(): int
     {
-        return 217;
+        return 215;
     }
 }

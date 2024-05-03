@@ -18,7 +18,7 @@ class MemberShareImport implements ToModel, WithStartRow, WithLimit, WithMultipl
 {
     public function startRow(): int
     {
-        return 3;
+        return 4;
     }
     public $not_insert = [];
     public $total = 0;
@@ -133,6 +133,6 @@ class MemberShareImport implements ToModel, WithStartRow, WithLimit, WithMultipl
 
     public function limit(): int
     {
-        return 219;
+        return 220;
     }
 }

@@ -91,14 +91,14 @@
                         <label for="email"
                             class="col-md-4 col-form-label text-md-end text-start"><strong>{{ __('Guarantor 1') }}:</strong></label>
                         <div class="col-md-6" style="line-height: 35px;">
-                            {{ $loan->guarantor1->name }}
+                            {{ $loan->guarantor1->name ?? ''}}
                         </div>
                     </div>
                     <div class="mb-3 row">
                         <label for="email"
                             class="col-md-4 col-form-label text-md-end text-start"><strong>{{ __('Guarantor 2') }}:</strong></label>
                         <div class="col-md-6" style="line-height: 35px;">
-                            {{ $loan->guarantor2->name }}
+                            {{ $loan->guarantor2->name ?? ''}}
                         </div>
                     </div>
                     <div class="mb-3 row">
