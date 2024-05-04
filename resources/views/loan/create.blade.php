@@ -143,7 +143,7 @@
                                 </div>
                             </div>
 
-                            <input type="hidden" class="form-control" id="month" name="month" value="{{ date('Y-m-d', strtotime('14-03-2024')) }}">
+                            <input type="hidden" class="form-control" id="month" name="month" value="{{ date('Y-m-d') }}">   {{-- , strtotime('14-03-2024') --}}
 
                             <input type="hidden" class="form-control" id="total_share_amt" name="total_share_amt" value="{{ old('total_share_amt') }}">
                             <input type="hidden" class="form-control" id="remaining_share_amount" name="remaining_share_amount" value="{{ old('remaining_share_amount') }}">

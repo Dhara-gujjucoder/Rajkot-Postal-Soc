@@ -87,15 +87,15 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
     Route::post('/journel-report-export',[JournelReportController::class,'journel_report_export'])->name('journel_report_export');
 
     Route::get('/tarij-report', [TarijReportController::class, 'index'])->name('ledger_reports.tarij_report.index');
-    Route::post('/tarij-report-export',[TarijReportController::class,'tarij_report_export'])->name('tarij_report_export');
+    Route::post('/tarij-report-export',[TarijReportController::class, 'tarij_report_export'])->name('tarij_report_export');
 
     //***** END Excel *****/
 
     Route::get('/get/member/history/{member}', [App\Http\Controllers\MemberController::class, 'getmember_history'])->name('member.history.get');
     Route::post('/member/resign/{member}',[MemberController::class,'resign'])->name('member.resign');
 
-    Route::post('/double_entries/confirm',[DoubleEntryController::class,'confirm'])->name('double_entries.confirm');
-    Route::post('/loan/partial_pay/{loan}',[LoanMasterController::class,'partial_pay'])->name('loan.partial_pay');
+    Route::post('/double_entries/confirm',[DoubleEntryController::class, 'confirm'])->name('double_entries.confirm');
+    Route::post('/loan/partial_pay/{loan}',[LoanMasterController::class, 'partial_pay'])->name('loan.partial_pay');
 
 
     /*all modules*/
