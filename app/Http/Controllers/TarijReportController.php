@@ -23,7 +23,9 @@ class TarijReportController extends Controller
 
         $month_from = $request->month_from;
         $month_to = $request->month_to;
-
-        return Excel::download(new TarijReportExport($month_from, $month_to), 'Tarij-Report '. $this->current_year->title.'.xlsx');
+        // dd($month_from,$month_to);
+        $excel = Excel::download(new TarijReportExport($month_from, $month_to), 'Tarij-Report '. $this->current_year->title.'.xlsx');
+        // dd($excel);
+        return $excel;
     }
 }

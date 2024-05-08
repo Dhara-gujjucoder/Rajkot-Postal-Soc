@@ -147,7 +147,7 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
                 if (in_array($id, $reg_members->pluck('id')->all())) {
                     $payment_type_status = $member->payment_type_status;
                 }
-                $entry[] = ['', $member->name . ' (Share)', $share_amt,  $payment_type_status, $member->total];
+                $entry[] = ['', $member->name . ' (Share)', $share_amt, $payment_type_status, $member->total];
                 $share_total += $share_amt;
             }
         }
