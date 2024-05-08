@@ -75,12 +75,14 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
             ['', date("M-Y", strtotime('01-' . $master_double_entry['date']))],
             [],
             ['', 'CREDIT', 'RS.', 'DEBIT', 'RS.']
-
         ];
+
         $bulk_master = BulkMaster::where('month', 'like', $master_double_entry['date'])->first();
         $date = explode('-', $master_double_entry['date']);
         $month = $date[0];
         $year = $date[1];
+        dump($date);
+
         $reg_members = Member::whereMonth('created_at', $month)->whereYear('created_at', $year)->withTrashed();
         $member_fee = $reg_members->sum('member_fee');
         $member_share = $reg_members->sum('share_amt');
@@ -109,6 +111,7 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
                 $principal_sum = $value->bulk_entries()->sum('principal');
                 $interest_sum = $value->bulk_entries()->sum('interest');
                 $ms_sum = $value->bulk_entries()->sum('ms');
+
                 if ($fixed_sum > 0 || $principal_sum > 0 || $interest_sum > 0) {
                     if ($fixed_sum > 0) {
                         $entry[] = ['', $value->department_name . '(Fixed saving)', $fixed_sum, $value->department_name . ' Chq.', $value->receipt->exact_amount];
@@ -125,9 +128,6 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
                 }
                 // $entry[] = [];
             }
-            // dd($bulk_masters->count());
-
-            // $entry[] = ['', 'MS', $ms_total, '', ''];
         }
 
         $all_member_shares = MemberShare::whereHas('share_detail', function ($user) use ($month, $year) {
@@ -143,8 +143,8 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
                 $share_amt = $all_member_shares->where('member_id', $id)->sum('share_amount') ?? 0;
                 $member = $all_member_shares->where('member_id', $id)->first()->member;
                 $payment_type_status = '';
-                // dd($reg_members->pluck('id')->all()); aama 2 reg avda mlse
-                if(in_array($id,$reg_members->pluck('id')->all())){
+                // dd($reg_members->pluck('id')->all());
+                if (in_array($id, $reg_members->pluck('id')->all())) {
                     $payment_type_status = $member->payment_type_status;
                 }
                 $entry[] = ['', $member->name . ' (Share)', $share_amt,  $payment_type_status, $member->total];
@@ -154,7 +154,7 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
 
         $rdb_bank_total = $member_fee + $share_total;
 
-        if($member_fee > 0 ){
+        if ($member_fee > 0) {
             $entry[] = ['', 'Member Fee', $member_fee, '', ''];
         }
 
@@ -192,8 +192,7 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
         $sheet->mergeCells('B2:E2');
         $sheet->mergeCells('B3:E3');
         $row = 2;
-
-        $style =[
+        $style = [
             'alignment' => [
                 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
                 'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
@@ -214,7 +213,9 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
             ],
         ];
 
-        foreach ($data as $key => $double_entry) {
+        foreach ($this->months as $key => $value) {
+
+            //style for first month heading
             $sheet->getStyle('B' . $row . ':E' . $row)->applyFromArray($style);
             $sheet->mergeCells('B' . $row . ':E' . $row);
             $sheet->mergeCells('B' . ($row + 1) . ':E' . ($row + 1));
@@ -230,107 +231,62 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
                     ]
                 ],
             ]);
+            $date = explode('-', $value);
+            $data[$key]['date'] = $value;
 
+            //add bulk counts
+            $bulk_masters = BulkEntryMaster::where('month', $value)->get();
+            foreach ($bulk_masters as $key => $value) {
+                $value->bulk_entries()->sum('fixed') > 0 ? $row++ : '';
+                $value->bulk_entries()->sum('principal') > 0 ? $row++ : '';
+                $value->bulk_entries()->sum('ms') > 0 ? $row++ : '';
+                $value->bulk_entries()->sum('interest') > 0 ? $row++ : '';
+            }
 
+            //add double entry counts from its max value meta entry
+            $master_double_entry = MasterDoubleEntry::query()
+                ->whereMonth('date', $date[0])->whereYear('date', $date[1])
+                ->get();
+            if ($master_double_entry) {
+
+                foreach ($master_double_entry as $key => $double_entry) {
+
+                    $credit_entry = $double_entry->meta_entry()->where('type', 'credit')->get();
+                    $debit_entry = $double_entry->meta_entry()->where('type', 'debit')->get();
+
+                    $count = max($credit_entry->count(), $debit_entry->count());
+                    $row += $count;
+                }
+                //decreaser 1 row if double entries bcs its overlap to left side
+                // $row = $row - 1;
+            }
+
+            //add share entry counts
+            $row += MemberShare::whereHas('share_detail', function ($user) use ($date) {
+                $user->where('is_purchase', 1)->whereMonth('created_at', $date[0])->whereYear('created_at', $date[1]);
+            })->get()->count();
+
+            //add member fee count if exist
+            if (Member::whereMonth('created_at', $date[0])->whereYear('created_at', $date[1])->withTrashed()->count()) {
+                $row += 1;
+            }
+
+            //add column margin of heading row
+            $row = $row + 4;
+
+            $sheet->getStyle('B' . ($row + 1) . ':E' . ($row + 1))->applyFromArray($substyle);
+            $sheet->getStyle('B' . ($row + 1) . ':E' . ($row + 1))->applyFromArray([
+                'borders' => [
+                    'bottom' => [
+                        'borderStyle' => Border::BORDER_THIN,
+                    ],
+                    'top' => [
+                        'borderStyle' => Border::BORDER_THIN,
+                    ]
+                ],
+            ]);
+            //add column margin of row of total
+            $row = $row + 4;
         }
-
     }
-
-
-    // public function styles(Worksheet $sheet)
-    // {
-    //     $data = $this->data;
-    //     // dd($data);
-    //     $sheet->mergeCells('B2:E2');
-    //     $sheet->mergeCells('B3:E3');
-    //     $row = 2;
-    //     $start = 2;
-    //     // $range = 'B6:E10';
-    //     $style = [
-    //         'alignment' => [
-    //             'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-    //             'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-    //             'wrapText' => true,
-    //         ],
-    //         'font' => [
-    //             'bold'  =>  true,
-    //             'size'  =>  14,
-    //         ],
-    //     ];
-    //     $substyle = [
-    //         'alignment' => [
-    //             // 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
-    //             'wrapText' => true,
-    //         ],
-    //         'font' => [
-    //             'bold' => true,
-    //         ],
-    //     ];
-    //     foreach ($data as $key => $double_entry) {
-    //         // dd($double_entry);
-    //         // if (isset($double_entry['data']) &&  !$double_entry['data']->isEmpty()) {
-
-    //         $sheet->getStyle('B' . $row . ':E' . $row)->applyFromArray($style);
-    //         $sheet->mergeCells('B' . $row . ':E' . $row);
-    //         $sheet->mergeCells('B' . ($row + 1) . ':E' . ($row + 1));
-    //         $sheet->getStyle('B' . ($row + 1) . ':E' . ($row + 1))->applyFromArray($style);
-    //         $sheet->getStyle('B' . ($row + 3) . ':E' . ($row + 3))->applyFromArray($substyle);
-    //         $sheet->getStyle('B' . ($row + 3) . ':E' . ($row + 3))->applyFromArray([
-    //             'borders' => [
-    //                 'bottom' => [
-    //                     'borderStyle' => Border::BORDER_THIN,
-    //                 ],
-    //                 'top' => [
-    //                     'borderStyle' => Border::BORDER_THIN,
-    //                 ]
-    //             ],
-    //         ]);
-    //         $row = $row + 14;
-
-    //         // dump( $row);
-    //         $bulk_master = BulkMaster::where('month', $double_entry['date'])
-    //             ->first();
-    //         // dd($bulk_master );
-
-    //         if ($double_entry['data']->isEmpty() && !$bulk_master) {
-    //         } elseif ($double_entry['data']->isEmpty()) {
-    //             $row = $row - 4;
-    //         }
-
-    //         if (!$bulk_master) {
-    //             $row = $row - 6;
-    //         } else {
-    //             $row = $row - 2;
-    //         }
-    //         // dump( $row);
-    //         // dump( $row);
-    //         foreach ($double_entry['data'] as $key => $value) {
-    //             $credit_entry = $value->meta_entry()->where('type', 'credit')->get();
-    //             $debit_entry = $value->meta_entry()->where('type', 'debit')->get();
-    //             $count = max($credit_entry->count(), $debit_entry->count());
-    //             $row += $count;
-    //         }
-
-    //         $date = explode('-', $double_entry['date']);
-    //         $month = $date[0];
-    //         $year = $date[1];
-    //         if (Member::whereMonth('created_at', $month)->whereYear('created_at', $year)->get()->count()) {
-    //             $row = $row + 2;
-    //             // dd($row );
-    //         }
-    //         // dd( $row);
-    //         $sheet->getStyle('B' . ($row - 3) . ':E' . ($row - 3))->applyFromArray($substyle);
-    //         $sheet->getStyle('B' . ($row - 3) . ':E' . ($row - 3))->applyFromArray([
-    //             'borders' => [
-    //                 'bottom' => [
-    //                     'borderStyle' => Border::BORDER_THIN,
-    //                 ],
-    //                 'top' => [
-    //                     'borderStyle' => Border::BORDER_THIN,
-    //                 ]
-    //             ],
-    //         ]);
-    //         // }
-    //     }
-    // }
 }
