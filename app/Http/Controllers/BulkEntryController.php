@@ -98,7 +98,7 @@ class BulkEntryController extends Controller
                 $prefill = BulkEntry::where('user_id', $item->user_id)->where('department_id', $department->id)->where('month', $data['previous_month'])->first();
                 // dump($item->id);
                 // dd($data['next_month']);
-                $loan_emi = LoanEMI::where('member_id', $item->id)->where('month', $data['next_month'])->where('status', 1)->first();
+                $loan_emi = LoanEMI::where('member_id', $item->id)->where('month', $data['next_month'])->first(); //->where('status', 1)
                 $item->principal = $loan_emi->principal ?? 0;
                 $item->emi_id = $loan_emi->id ?? '';
                 $item->interest = $loan_emi->interest_amt ?? 0;
@@ -192,6 +192,7 @@ class BulkEntryController extends Controller
                 ]);
                 $bulk_entry_master = BulkEntryMaster::create([
                     'department_id' => $department->id,
+                    'department_name'=> $department->department_name,
                     'bulk_master_id' =>  $bulk_master->id,
                     'year_id' => $this->current_year->id,
                     'month'    => $request->month,

@@ -15,6 +15,7 @@ class BulkEntryMaster extends Model
         'year_id',
         'bulk_master_id',
         'department_id',
+        'department_name',
         'rec_no',
         'receipt_id',
         'month',

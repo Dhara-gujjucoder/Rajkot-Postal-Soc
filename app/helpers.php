@@ -176,4 +176,12 @@ if (!function_exists('getLedgerGroupDropDown')) {
             return  $required_amount - $saving_amount > 0 ? $required_amount - $saving_amount : 0;
         }
     }
+    if (!function_exists('bank_ledger_name')) {
+        function bank_ledger_name()
+        {
+            $rdb_bank_name = LedgerAccount::where('ledger_group_id', 10)->first() ??'';
+            return $rdb_bank_name->account_name;
+        }
+    }
+
 }

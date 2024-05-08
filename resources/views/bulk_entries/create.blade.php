@@ -318,7 +318,7 @@
                                         class="form-control @error('amount') is-invalid @enderror"
                                         id="exact_amount_{{ $department->id }}"
                                         name="exact_amount_{{ $department->id }}"
-                                        value="{{ old('exact_amount_'.$department->id, 0) }}"
+                                        value="{{ old('exact_amount_'.$department->id, $department->total_amount_total) }}"
                                         placeholder="{{ __('Exact amount') }}">
                                 </div>
                                 <div class="col-md-2 col-2">
@@ -636,7 +636,7 @@
                                     <td><b>{{ __('EMI Amount') }}</b></td>
                                     <td>&#8377; ` + member_loan.emi_amount + `</td>
                                 </tr>
-    
+
                                 <tr>
                                     <td><b>{{ __('Paid Loan') }}</b></td>
                                     <td>&#8377; ` + (member_loan.principal_amt - member.loan_remaining_amount) + `</td>
@@ -672,7 +672,7 @@
                                     <tr>
                                     <td colspan="6"><div id="payment_details"
                                     style="display: {{ old('payment_type') == 'cheque' ? 'block' : 'none' }};">
-                                    
+
                                     <div class="mb-3 row">
                                         <label for="amount"
                                             class="col-md-2 col-form-label text-md-end text-start">{{ __('Cheque No.(RDC Bank)') }}</label>
@@ -692,7 +692,7 @@
                         // console.log(remaining_share);
                         $('#loader').hide();
                         $('#remaining_loan').focus();
-    
+
                     }
                 }
             });

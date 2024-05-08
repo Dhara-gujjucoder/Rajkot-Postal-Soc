@@ -81,9 +81,9 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
         $date = explode('-', $master_double_entry['date']);
         $month = $date[0];
         $year = $date[1];
-        $member = Member::whereMonth('created_at', $month)->whereYear('created_at', $year);
-        $member_fee = $member->sum('member_fee');
-        $member_share = $member->sum('share_amt');
+        $reg_members = Member::whereMonth('created_at', $month)->whereYear('created_at', $year)->withTrashed();
+        $member_fee = $reg_members->sum('member_fee');
+        $member_share = $reg_members->sum('share_amt');
 
         $rdb_bank_total = 0;
 
@@ -108,10 +108,10 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
                 $fixed_sum = $value->bulk_entries()->sum('fixed');
                 $principal_sum = $value->bulk_entries()->sum('principal');
                 $interest_sum = $value->bulk_entries()->sum('interest');
-
+                $ms_sum = $value->bulk_entries()->sum('ms');
                 if ($fixed_sum > 0 || $principal_sum > 0 || $interest_sum > 0) {
                     if ($fixed_sum > 0) {
-                        $entry[] = ['', $value->department->department_name . '(Fixed saving)', $fixed_sum, $value->department->department_name . ' Chq.', $value->receipt->exact_amount];
+                        $entry[] = ['', $value->department_name . '(Fixed saving)', $fixed_sum, $value->department_name . ' Chq.', $value->receipt->exact_amount];
                     }
                     if ($principal_sum > 0) {
                         $entry[] = ['', $value->department->department_name . '(Loan principal)', $principal_sum, '', ''];
@@ -119,12 +119,15 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
                     if ($interest_sum > 0) {
                         $entry[] = ['', $value->department->department_name . '(Loan interest)', $interest_sum, '', ''];
                     }
+                    if ($ms_sum > 0) {
+                        $entry[] = ['', $value->department->department_name . '(MS)', $ms_sum, '', ''];
+                    }
                 }
                 // $entry[] = [];
             }
             // dd($bulk_masters->count());
 
-            $entry[] = ['', 'MS', $ms_total, '', ''];
+            // $entry[] = ['', 'MS', $ms_total, '', ''];
         }
 
         $all_member_shares = MemberShare::whereHas('share_detail', function ($user) use ($month, $year) {
@@ -138,15 +141,22 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
 
             foreach ($members_ids as $key => $id) {
                 $share_amt = $all_member_shares->where('member_id', $id)->sum('share_amount') ?? 0;
-                $member_name = $all_member_shares->where('member_id', $id)->first()->member->name;
-                $entry[] = ['', $member_name . ' (Share)', $share_amt, '', ''];
+                $member = $all_member_shares->where('member_id', $id)->first()->member;
+                $payment_type_status = '';
+                // dd($reg_members->pluck('id')->all()); aama 2 reg avda mlse
+                if(in_array($id,$reg_members->pluck('id')->all())){
+                    $payment_type_status = $member->payment_type_status;
+                }
+                $entry[] = ['', $member->name . ' (Share)', $share_amt,  $payment_type_status, $member->total];
                 $share_total += $share_amt;
             }
         }
 
         $rdb_bank_total = $member_fee + $share_total;
 
-        $entry[] = ['', 'Member Fee', $member_fee, $rdb_bank_name->account_name, $rdb_bank_total];
+        if($member_fee > 0 ){
+            $entry[] = ['', 'Member Fee', $member_fee, '', ''];
+        }
 
         foreach ($master_double_entry['data'] as $key => $double_entry) {
 

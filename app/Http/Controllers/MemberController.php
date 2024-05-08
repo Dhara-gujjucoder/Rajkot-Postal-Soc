@@ -182,6 +182,13 @@ class MemberController extends Controller
         $input['user_id'] = $user->id;
         $input['uid'] = Member::latest()->pluck('uid')->first() ? Member::latest()->pluck('uid')->first() + 1 : 1;
         $input['status'] = 1;
+        if($input['payment_type'] == 'cheque'){
+
+            $input['payment_type_status'] =  bank_ledger_name().'(Fee+Share). cheque-'.$input['cheque_no'] ;
+        }else{
+            $input['payment_type_status'] =  'Cash(Fee+Share)';
+        }
+
         unset($input['name'], $input['email'], $input['search_terms'], $input['password'], $input['is_member']);
         $member = Member::create($input);
 

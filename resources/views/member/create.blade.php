@@ -435,7 +435,7 @@
                                 </div>
                             </div>
 
-                        
+
 
                         </div>
                         <div class="col-md-6 col-12">&nbsp;
@@ -522,6 +522,7 @@
     function change_payment_type() {
         $('#payment_details').hide();
         var payment_type = $('input[name="payment_type"]:checked').val();
+        // alert(payment_type);
         if (payment_type == 'cheque') {
             $('#payment_details').show();
         }
