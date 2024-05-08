@@ -117,13 +117,26 @@ class MemberShareController extends Controller
                 ->addIndexColumn()
                 ->filterColumn('member_id', function($query, $search) {
                     $query->where('member_id',$search);
+
                 })
+                // ->filterColumn('member_name', function($query, $search) {
+
+                //     $query->whereHas('member', function ($q) use ($search) {
+                //         $q->whereHas('user', function ($qu) use ($search) {
+                //             $qu->where('name', 'Like', '%' . $search . '%');
+                //         });
+                //     });
+                // })
                 ->filterColumn('status', function($query, $search) {
                     $query->where('status',$search);
                 })
 
                 ->addColumn('uid', function ($row) {
                     return $row->member->uid;
+                })
+
+                ->addColumn('member_name', function ($row) {
+                    return $row->member->fullname;
                 })
                 ->editColumn('member_id', function ($row) {
                     return $row->member->fullname;

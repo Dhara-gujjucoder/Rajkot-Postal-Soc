@@ -101,7 +101,7 @@
                     // Hide loading symbol after successful submission
                     $('#loading').hide();
                     $('#submitBtn').show();
-                    $('#month_from').val('');
+                    // $('#month_from').val('');
 
                     // Clear the form fields or do any other necessary actions
                     // $('#export_journel')[0].reset();

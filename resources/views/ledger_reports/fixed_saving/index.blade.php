@@ -17,7 +17,7 @@
                                 <label for="member_id_from" class="col-form-label">{{ __('Member From') }}</label>
                                 <div class="col-md-12">
                                     <select class="choices filter-input form-select" aria-label="Permissions"
-                                        id="member_id_from" data-column="3" name="member_id_from"
+                                        id="member_id_from" name="member_id_from"
                                         style="height: 210px;">
                                         <option value="">{{ __('Member From') }}</option>
                                         @forelse ($members as $key => $member)
@@ -34,7 +34,7 @@
                                 <label for="member_id_from" class="col-form-label">{{ __('Member To') }}</label>
                                 <div class="col-md-12">
                                     <select class="choices filter-input form-select" aria-label="Permissions"
-                                        id="member_id_to" data-column="3" name="member_id_to" style="height: 210px;">
+                                        id="member_id_to" name="member_id_to" style="height: 210px;">
                                         <option value="">{{ __('Member To') }}</option>
                                         @forelse ($members as $key => $member)
                                             <option value="{{ $member->uid }}"
@@ -53,7 +53,7 @@
                                 <label for="month_from" class="col-form-label">{{ __('Month From') }}</label>
                                 <div class="col-md-12">
                                     <select class="choices filter-input form-select" aria-label="Permissions"
-                                        id="month_from" data-column="3" name="month_from" style="height: 210px;">
+                                        id="month_from"  name="month_from" style="height: 210px;">
                                         <option value="">{{ __('Month From') }}</option>
                                         @php $months = getMonthsOfYear($current_year->id); @endphp
                                         @foreach ($months as $key => $month)
@@ -67,7 +67,7 @@
                                 <label for="month_to" class="col-form-label">{{ __('Month To') }}</label>
                                 <div class="col-md-12">
                                     <select class="choices filter-input form-select" aria-label="Permissions"
-                                        id="month_to" data-column="3" name="month_to" style="height: 210px;">
+                                        id="month_to"  name="month_to" style="height: 210px;">
                                         <option value="">{{ __('Month To') }}</option>
                                         @foreach ($months as $key => $month)
                                             <option value="{{ $key }}">{{ $month['month'] }}</option>
@@ -169,12 +169,13 @@
                     // Hide loading symbol after successful submission
                     $('#loading1').hide();
                     $('#submitBtn1').show();
-                    $('#month_from').val('');
+                    // $('#month_from').val('');
 
                 },
 
                 error: function(xhr) {
                     $('#loading1').hide();
+                    $('#submitBtn1').show();
                     // Handle errors if needed
                 }
             });

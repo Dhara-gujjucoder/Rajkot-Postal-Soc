@@ -54,7 +54,7 @@ class AllLedgerFixedSavingExport implements FromCollection, WithMapping, ShouldA
         $sorted = $rr->sortBy(function ($item, $key) {
             return $item;
         })->toArray();
-        // dd( $sorted);
+        // dd($sorted);
 
         $this->data = LedgerAccount::where('ledger_group_id', 1)
             ->when($this->from && $this->to, function ($q) use ($from, $to,$sorted) {

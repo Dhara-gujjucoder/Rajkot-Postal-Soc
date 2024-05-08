@@ -108,6 +108,13 @@
                     name: 'member_id',
                     searchable: true
                 },
+                // {
+                //     data: 'member_name',
+                //     name: 'member_name',
+                //     searchable: true,
+
+                //     visible:false,
+                // },
                 {
                     data: 'share_code',
                     name: 'share_code',
