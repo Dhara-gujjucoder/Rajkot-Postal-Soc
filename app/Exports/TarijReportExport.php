@@ -81,7 +81,7 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
         $date = explode('-', $master_double_entry['date']);
         $month = $date[0];
         $year = $date[1];
-        dump($date);
+        // dump($date);
 
         $reg_members = Member::whereMonth('created_at', $month)->whereYear('created_at', $year)->withTrashed();
         $member_fee = $reg_members->sum('member_fee');
