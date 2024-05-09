@@ -27,7 +27,7 @@ class AllLedgerFixedSavingExport implements FromCollection, WithMapping, ShouldA
         // dd(getMonthsOfYear(currentYear()->id));
         $result[] = '';
         $all_months = getMonthsOfYear(currentYear()->id);
-        // dump($all_months);
+        // dump($all_months[$month_from]['value']);
         foreach ($all_months as $key => $value) {
             if ($key <= $month_to && $key >= $month_from) {
                 $result[] = $value;
@@ -55,7 +55,8 @@ class AllLedgerFixedSavingExport implements FromCollection, WithMapping, ShouldA
             return $item;
         })->toArray();
         // dd($sorted);
-
+        // dump($this->month_from,$this->month_to);
+        // dd($this->mo/nth_from != null || $this->month_to != null);
         $this->data = LedgerAccount::where('ledger_group_id', 1)
             ->when($this->from && $this->to, function ($q) use ($from, $to,$sorted) {
                 $q->whereHas('member', function ($query) use ($from, $to,$sorted) {
@@ -73,16 +74,17 @@ class AllLedgerFixedSavingExport implements FromCollection, WithMapping, ShouldA
                 });
             })
 
-            ->when($this->month_from || $this->month_to, function ($q) use ($months,$all_months) {
+            ->when($this->month_from != null || $this->month_to != null, function ($q) use ($months,$all_months) {
                 $q->with(['member.fixed_saving' => function ($query) use ($months,$all_months) {
 
                     if ($this->month_from != null && $this->month_to != null) {
                         $query->whereIn('month', $months->toArray());
                     }
-                    elseif ($this->month_from && $this->month_to === null) {
+                    elseif ($this->month_from  != null && $this->month_to === null) {
+                        // dd( $all_months[$this->month_from]['value']);
                         $query->where('month', $all_months[$this->month_from]['value']);
                     }
-                    elseif ($this->month_from === null && $this->month_to) {
+                    elseif ($this->month_from === null && $this->month_to != null) {
                         $query->where('month', $all_months[$this->month_to]['value']);
                     }
                 }]);
@@ -156,7 +158,6 @@ class AllLedgerFixedSavingExport implements FromCollection, WithMapping, ShouldA
                 $total = $total + $value->fixed_amount;
 
                 $entry[] = [
-
                     $value->month, '', '', '', $value->fixed_amount, $total,
                 ];
 

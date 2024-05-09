@@ -90,10 +90,15 @@
 @push('script')
 <script>
     $(function() {
+
         var table = $('#table1').DataTable({
 
             // "iDisplayLength": 25,
-            "pageLength": 25,
+            "pageLength": 20,
+            // "lengthChange": false,
+            // "searching": false,
+            // "bFilter": false,
+
 
             processing: true,
             serverSide: true,
@@ -108,13 +113,6 @@
                     name: 'member_id',
                     searchable: true
                 },
-                // {
-                //     data: 'member_name',
-                //     name: 'member_name',
-                //     searchable: true,
-
-                //     visible:false,
-                // },
                 {
                     data: 'share_code',
                     name: 'share_code',
@@ -134,7 +132,8 @@
                 },
             ],
         });
-
+        $(".dataTables_filter").hide();
+        $(".dataTables_length").hide();
         // $('#table1_filter').after('<div class="ms-5">Total Active share</div>');
 
         $('#member_id').on('change', function() {
