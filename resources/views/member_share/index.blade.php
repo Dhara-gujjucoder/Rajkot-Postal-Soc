@@ -99,7 +99,6 @@
             // "searching": false,
             // "bFilter": false,
 
-
             processing: true,
             serverSide: true,
             ajax: "{{ route('member_share.index') }}",

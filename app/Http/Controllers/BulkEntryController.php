@@ -224,28 +224,28 @@ class BulkEntryController extends Controller
                     //effect on fixed saving and loan emi if bulk entry is in completed status
                     if($bulk_master->getRawOriginal('status') == 2){
 
-                        //********* for fixed saving entry***********//
-                        //   $fixed_saving_entry = MemberFixedSaving::create([
-                        //       'ledger_account_id' => $member->fixed_saving_ledger_account->id ?? 0,
-                        //       'member_id' => $member->id,
-                        //       'month' => $request->month,
-                        //       'fixed_amount' => $request->{'fixed_' . $department->id . '_' . $member->user_id},
-                        //       'year_id' => $this->current_year->id,
-                        //       'status' => 1
-                        //   ]);
-                        //   $member_fixed_saving = $member->fixed_saving_ledger_account->opening_balance + $member->fixed_saving()->sum('fixed_amount');
-                        //   $member->fixed_saving_ledger_account->update(['current_balance' => $member_fixed_saving]);
+                        // ********* for fixed saving entry***********//
+                          $fixed_saving_entry = MemberFixedSaving::create([
+                              'ledger_account_id' => $member->fixed_saving_ledger_account->id ?? 0,
+                              'member_id' => $member->id,
+                              'month' => $request->month,
+                              'fixed_amount' => $request->{'fixed_' . $department->id . '_' . $member->user_id},
+                              'year_id' => $this->current_year->id,
+                              'status' => 1
+                          ]);
+                          $member_fixed_saving = $member->fixed_saving_ledger_account->opening_balance + $member->fixed_saving()->sum('fixed_amount');
+                          $member->fixed_saving_ledger_account->update(['current_balance' => $member_fixed_saving]);
 
-                        //   //********* for loan entry***********//
-                        //   $loan_emi_id = $request->{'emi_id_' . $department->id . '_' . $member->user_id};
-                        //   $emi = $request->{'interest_' . $department->id . '_' . $member->user_id};
-                        //   if($loan_emi_id && $emi){
-                        //       $emi = LoanEMI::find($loan_emi_id);
-                        //       if($emi){
-                        //           $emi->update(['status' => 2]);
-                        //           $member->loan_ledger_account->update(['current_balance' => ($member->loan_ledger_account->current_balance - $emi->principal)]);
-                        //       }
-                        //   }
+                          //********* for loan entry***********//
+                          $loan_emi_id = $request->{'emi_id_' . $department->id . '_' . $member->user_id};
+                          $emi = $request->{'interest_' . $department->id . '_' . $member->user_id};
+                          if($loan_emi_id && $emi){
+                              $emi = LoanEMI::find($loan_emi_id);
+                              if($emi){
+                                  $emi->update(['status' => 2]);
+                                  $member->loan_ledger_account->update(['current_balance' => ($member->loan_ledger_account->current_balance - $emi->principal)]);
+                              }
+                          }
                     }
 
 
@@ -396,27 +396,27 @@ class BulkEntryController extends Controller
                 if($bulk_master->getRawOriginal('status') == 2){
                     // dd('d');
                     //********* for fixed saving entry***********//
-                    //   $fixed_saving_entry = MemberFixedSaving::create([
-                    //       'ledger_account_id' => $member->fixed_saving_ledger_account->id ?? 0,
-                    //       'member_id' => $member->id,
-                    //       'month' =>  $bulk_master->month,
-                    //       'fixed_amount' => $request->{'fixed_' . $department->id . '_' . $member->user_id},
-                    //       'year_id' => $this->current_year->id,
-                    //       'status' => 1
-                    //   ]);
-                    //   $member_fixed_saving = $member->fixed_saving_ledger_account->opening_balance + $member->fixed_saving()->sum('fixed_amount');
-                    //   $member->fixed_saving_ledger_account->update(['current_balance' => $member_fixed_saving]);
+                      $fixed_saving_entry = MemberFixedSaving::create([
+                          'ledger_account_id' => $member->fixed_saving_ledger_account->id ?? 0,
+                          'member_id' => $member->id,
+                          'month' =>  $bulk_master->month,
+                          'fixed_amount' => $request->{'fixed_' . $department->id . '_' . $member->user_id},
+                          'year_id' => $this->current_year->id,
+                          'status' => 1
+                      ]);
+                      $member_fixed_saving = $member->fixed_saving_ledger_account->opening_balance + $member->fixed_saving()->sum('fixed_amount');
+                      $member->fixed_saving_ledger_account->update(['current_balance' => $member_fixed_saving]);
 
-                    //   //********* for loan entry***********//
-                    //   $loan_emi_id = $request->{'emi_id_' . $department->id . '_' . $member->user_id};
-                    //   $emi = $request->{'interest_' . $department->id . '_' . $member->user_id};
-                    //   if($loan_emi_id && $emi){
-                    //       $emi = LoanEMI::find($loan_emi_id);
-                    //       if($emi){
-                    //           $emi->update(['status' => 2]);
-                    //           $member->loan_ledger_account->update(['current_balance' => ($member->loan_ledger_account->current_balance - $emi->principal)]);
-                    //       }
-                    //   }
+                      //********* for loan entry***********//
+                      $loan_emi_id = $request->{'emi_id_' . $department->id . '_' . $member->user_id};
+                      $emi = $request->{'interest_' . $department->id . '_' . $member->user_id};
+                      if($loan_emi_id && $emi){
+                          $emi = LoanEMI::find($loan_emi_id);
+                          if($emi){
+                              $emi->update(['status' => 2]);
+                              $member->loan_ledger_account->update(['current_balance' => ($member->loan_ledger_account->current_balance - $emi->principal)]);
+                          }
+                      }
                 }
 
             }

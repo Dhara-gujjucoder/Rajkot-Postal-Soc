@@ -62,7 +62,6 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
                 ->whereMonth('date', $date[0])->whereYear('date', $date[1])
                 ->get();
         }
-        // dd($data);
         $this->data = $data;
         return collect($this->data);
     }
@@ -81,7 +80,6 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
         $date = explode('-', $master_double_entry['date']);
         $month = $date[0];
         $year = $date[1];
-        // dump($date);
 
         $reg_members = Member::whereMonth('created_at', $month)->whereYear('created_at', $year)->withTrashed();
         $member_fee = $reg_members->sum('member_fee');
@@ -143,7 +141,7 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
                 $share_amt = $all_member_shares->where('member_id', $id)->sum('share_amount') ?? 0;
                 $member = $all_member_shares->where('member_id', $id)->first()->member;
                 $payment_type_status = '';
-                // dd($reg_members->pluck('id')->all());
+
                 if (in_array($id, $reg_members->pluck('id')->all())) {
                     $payment_type_status = $member->payment_type_status;
                 }
@@ -219,6 +217,7 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
             $sheet->getStyle('B' . $row . ':E' . $row)->applyFromArray($style);
             $sheet->mergeCells('B' . $row . ':E' . $row);
             $sheet->mergeCells('B' . ($row + 1) . ':E' . ($row + 1));
+
             $sheet->getStyle('B' . ($row + 1) . ':E' . ($row + 1))->applyFromArray($style);
             $sheet->getStyle('B' . ($row + 3) . ':E' . ($row + 3))->applyFromArray($substyle);
             $sheet->getStyle('B' . ($row + 3) . ':E' . ($row + 3))->applyFromArray([
@@ -233,38 +232,46 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
             ]);
             $date = explode('-', $value);
             $data[$key]['date'] = $value;
-
+            // dump($row);
             //add bulk counts
             $bulk_masters = BulkEntryMaster::where('month', $value)->get();
             foreach ($bulk_masters as $key => $value) {
                 $value->bulk_entries()->sum('fixed') > 0 ? $row++ : '';
+                $value->bulk_entries()->sum('interest') > 0 ? $row++ : '';
                 $value->bulk_entries()->sum('principal') > 0 ? $row++ : '';
                 $value->bulk_entries()->sum('ms') > 0 ? $row++ : '';
-                $value->bulk_entries()->sum('interest') > 0 ? $row++ : '';
             }
 
             //add double entry counts from its max value meta entry
             $master_double_entry = MasterDoubleEntry::query()
                 ->whereMonth('date', $date[0])->whereYear('date', $date[1])
                 ->get();
-            if ($master_double_entry) {
+                // dd($master_double_entry);
+            if ($master_double_entry->isNotEmpty()) {
 
                 foreach ($master_double_entry as $key => $double_entry) {
-
                     $credit_entry = $double_entry->meta_entry()->where('type', 'credit')->get();
                     $debit_entry = $double_entry->meta_entry()->where('type', 'debit')->get();
-
                     $count = max($credit_entry->count(), $debit_entry->count());
                     $row += $count;
                 }
                 //decreaser 1 row if double entries bcs its overlap to left side
                 // $row = $row - 1;
+                // dd('d');
             }
 
+            // dump( $row);
             //add share entry counts
-            $row += MemberShare::whereHas('share_detail', function ($user) use ($date) {
+            $member_share = MemberShare::whereHas('share_detail', function ($user) use ($date) {
                 $user->where('is_purchase', 1)->whereMonth('created_at', $date[0])->whereYear('created_at', $date[1]);
-            })->get()->count();
+            })->pluck('member_id')->all();
+
+
+            if ($member_share) {
+                $shares_array = array_unique($member_share);
+                // dd( $shares_array);
+                $row += count($shares_array);
+            }
 
             //add member fee count if exist
             if (Member::whereMonth('created_at', $date[0])->whereYear('created_at', $date[1])->withTrashed()->count()) {
@@ -273,6 +280,8 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
 
             //add column margin of heading row
             $row = $row + 4;
+
+            // dump( $row);
 
             $sheet->getStyle('B' . ($row + 1) . ':E' . ($row + 1))->applyFromArray($substyle);
             $sheet->getStyle('B' . ($row + 1) . ':E' . ($row + 1))->applyFromArray([
@@ -285,6 +294,7 @@ class TarijReportExport implements FromCollection, WithMapping, ShouldAutoSize, 
                     ]
                 ],
             ]);
+
             //add column margin of row of total
             $row = $row + 4;
         }

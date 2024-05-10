@@ -81,7 +81,7 @@ class MemberLoanImport implements ToModel, WithStartRow, WithLimit, WithMultiple
                                 'status'            => '1',
                             ]);
                         }
-                        if($row[$j]>0){
+                        if ($row[$j] > 0) {
 
                             LoanEMI::create([
                                 'loan_master_id'    => $loan_master->id,
@@ -101,6 +101,7 @@ class MemberLoanImport implements ToModel, WithStartRow, WithLimit, WithMultiple
                         // *********** PENDING LOAN EMI'S SET **********
 
                         if ($row[46] > 0 && $i == 11) {
+
                             $loan_amt    = intval($row[46]);
                             $emi_amount  = $row[10];
                             $loan_amount = $loan_amt;
@@ -109,6 +110,7 @@ class MemberLoanImport implements ToModel, WithStartRow, WithLimit, WithMultiple
                             $rate        = 9.5;
                             // $dmonth      = date('d-m-Y', strtotime('01-' . $month));
                             $smonth = '03-2024';
+                            $member->loan_ledger_account->update(['current_balance' => $loan_amt]);
                             while ($loan_amt > 0) {
 
                                 $emi_interest = intval($loan_amt * $rate / 100 * $emi_c / $emi_d);
@@ -123,10 +125,6 @@ class MemberLoanImport implements ToModel, WithStartRow, WithLimit, WithMultiple
                                     } else {
                                         $loan_amt = intval($loan_amt - ($emi_amount - $emi_interest));
                                     }
-
-                                    $member->loan_ledger_account->update(['current_balance' => intval($loan_amt)]);
-
-                                    // dd($loan_master);
                                     LoanEMI::create([
                                         'loan_master_id'    => $loan_master->id,
                                         'month'             => $smonth,
@@ -140,19 +138,19 @@ class MemberLoanImport implements ToModel, WithStartRow, WithLimit, WithMultiple
                                         'rest_principal'    => $loan_amt,
                                         'status'            => 1,
                                     ]);
+
                                 }
                             }
                         }
                     }
-                        // if ($i == 11) {
-                        // $cur_bal = intval($row[$j + 2]);
-                        // $bal = $member->loan_ledger_account->update(['current_balance' => $cur_bal]);
-                        // }
-                        $j = $j + 3;
-                    }
+                    // if ($i == 11) {
+                    // $cur_bal = intval($row[$j + 2]);
+                    // $bal = $member->loan_ledger_account->update(['current_balance' => $cur_bal]);
+                    // }
+                    $j = $j + 3;
                 }
-
             }
+        }
 
         // dd('d');
         return $member;

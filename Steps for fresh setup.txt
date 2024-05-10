@@ -79,3 +79,19 @@ ALTER TABLE `financial_year` ADD `total_saving` DOUBLE NULL DEFAULT NULL AFTER `
 
 
 "principal"  <====change column name in table `loan_emis`
+
+
+
+
+
+
+
+
+
+
+
+
+tasks :
+1) mutarator accessor
+2) global variables can be used in all view files and controllers (also from appservice provide)
+3) sub relationship queries

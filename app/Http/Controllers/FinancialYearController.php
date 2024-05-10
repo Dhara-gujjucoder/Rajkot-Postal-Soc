@@ -48,7 +48,7 @@ class FinancialYearController extends Controller
         $active_share_count = $active_share->count();
         $share_amount = $active_share->sum('share_amount');
         $total =  $saving + $interest + $share_amount;
-        // dd( 'saving-->' . ($saving) . 'interest' . ($interest) . 'active_share_count-->' . ($active_share_count) .  'share_amount-->' . ($share_amount) . 'balance' . ($total));
+        // dd( 'saving-->' . ($saving) . 'interest' . ($interest) . 'active_share_count-->' . ($active_share_count) . 'share_amount-->' . ($share_amount) . 'balance' . ($total));
 
 
         $request->validate([
@@ -66,25 +66,22 @@ class FinancialYearController extends Controller
         $input['balance'] = $total ?? '0';
 
 
-
-
-
-        // $input['is_current'] = 0;
-        //     // if ($request->is_current == 1) {
-        //     //     FinancialYear::query()->where('is_current', 1)->update(['is_current' => 0]);
-        //     //     $input['is_current'] = 0;
-        //     // }
-        // if ($request->is_active == 1) {
-        //     FinancialYear::query()->where('is_active', 1)->update(['is_active' => 0]);
-        //     $input['is_active'] = 1;
-        // }
+            $input['is_current'] = 0;
+                // if ($request->is_current == 1) {
+                //     FinancialYear::query()->where('is_current', 1)->update(['is_current' => 0]);
+                //     $input['is_current'] = 0;
+                // }
+            if ($request->is_active == 1) {
+                FinancialYear::query()->where('is_active', 1)->update(['is_active' => 0]);
+                $input['is_active'] = 1;
+            }
 
         $year = FinancialYear::create($input);
 
 
-        // /*for create finaciayal year records*/
-        // $printReport = new ChangeYearController;
-        // $printReport->change_year($year->id);
+        /*for create finaciayal year records*/
+        $printReport = new ChangeYearController;
+        $printReport->change_year($year->id);
         /* end for create finaciayal year records*/
 
 

@@ -28,7 +28,7 @@ loan master     -->
 laon emi        -->
 <!-- bulk entry      fixed saving commented rakkhvano thase  -->
 balance sheet   --> Done
-bulk entry --> Done 12 monthmate  joje account balance a srkhu aave che ne 1 loan padi deje tara user ni
+bulk entry --> Done
 double entry    -->
 <!-- receipt         -->  -->
 
