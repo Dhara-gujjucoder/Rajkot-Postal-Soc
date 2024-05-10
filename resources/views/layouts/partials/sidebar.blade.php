@@ -231,7 +231,7 @@
                             @canany(['rojmel-report'])
                                 <li class="submenu-item {{ request()->is('admin/rojmel-report') ? 'active' : '' }}">
                                     <a href="{{ route('ledger_reports.rojmel_report.index') }}" class='submenu-link'>
-                                        <span>{{ __('Tarij Report') }}</span>
+                                        <span>{{ __('Rojmel Report') }}</span>
                                     </a>
                                 </li>
                             @endcan
