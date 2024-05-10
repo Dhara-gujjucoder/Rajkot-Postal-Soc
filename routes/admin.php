@@ -25,7 +25,7 @@ use App\Http\Controllers\LoanSettingController;
 use App\Http\Controllers\MemberShareController;
 use App\Http\Controllers\ShareAmountController;
 use App\Http\Controllers\ShareLedgerController;
-use App\Http\Controllers\TarijReportController;
+use App\Http\Controllers\RojmelReportController;
 use App\Http\Controllers\BalanceSheetController;
 use App\Http\Controllers\FinancialYearController;
 use App\Http\Controllers\JournelReportController;
@@ -86,8 +86,8 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
     Route::get('/journel-report', [JournelReportController::class, 'index'])->name('ledger_reports.journel_report.index');
     Route::post('/journel-report-export',[JournelReportController::class,'journel_report_export'])->name('journel_report_export');
 
-    Route::get('/tarij-report', [TarijReportController::class, 'index'])->name('ledger_reports.tarij_report.index');
-    Route::post('/tarij-report-export',[TarijReportController::class, 'tarij_report_export'])->name('tarij_report_export');
+    Route::get('/rojmel-report', [RojmelReportController::class, 'index'])->name('ledger_reports.rojmel_report.index');
+    Route::post('/rojmel-report-export',[RojmelReportController::class, 'rojmel_report_export'])->name('rojmel_report_export');
 
     //***** END Excel *****/
 

@@ -47,8 +47,8 @@
                                 </div>
                             </div>
                             <div class="dash-box-det">
-                                <h6 class="text-muted font-semibold">{{ __('Total Active Share') }}</h6>
-                                <h6 class="font-extrabold mb-0">{{ $balance_financial_year->total_share ?? '0' }}({{ $balance_financial_year->total_share_amount ?? '0' }})</h6>
+                                <h6 class="text-muted font-semibold">{{ __('Total Active Share & Amount') }}</h6>
+                                <h6 class="font-extrabold mb-0">{{ $balance_financial_year->total_share ?? '0' }} ({{$balance_financial_year->total_share_amount ?? '0' }})</h6>
                             </div>
                         </div>
                     </div>

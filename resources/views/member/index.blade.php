@@ -120,6 +120,8 @@
 @push('script')
 <script>
     var table = $('#table1').DataTable({
+        "pageLength": 15,
+
         processing: true,
         serverSide: true,
         ajax: "{{ route('members.index') }}",
@@ -173,6 +175,8 @@
         ],
 
     });
+    $(".dataTables_filter").hide();
+    $(".dataTables_length").hide();
 
     $('#department_id').on('change', function() {
         table

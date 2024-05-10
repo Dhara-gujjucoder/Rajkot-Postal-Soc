@@ -46,7 +46,7 @@ class HomeController extends Controller
         $user = Auth::user();
 
         $data['balance_financial_year'] = FinancialYear::where('id',currentYear()->id)->first();
-        $data['active_loan'] = LoanMaster::active()->where('year_id',currentYear()->id)->count();
+        $data['active_loan'] = LoanMaster::active()->count();   //->where('year_id',currentYear()->id)
 
         $data['bulk_entries'] = BulkMaster::where('status', 1)->orderBy('id', 'ASC')->get();
 
