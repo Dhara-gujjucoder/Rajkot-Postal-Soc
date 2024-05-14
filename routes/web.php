@@ -39,6 +39,9 @@ Route::prefix('user')->name('user.')->middleware(['auth:users','blockIP'])->grou
     Route::get('/loan/calculator', [LoanController::class, 'calculator'])->name('loan.calculator');
     Route::post('/loan-mailed', [LoanController::class, 'LoanMailSend'])->name('loan.sendmail');
 
+    Route::get('/change-password', [UserLoginController::class, 'change_password'])->name('password.change');
+    Route::post('/change-password', [UserLoginController::class, 'update_password'])->name('password.change');
+
     Route::get('/all-share', [ShareController::class, 'show'])->name('share.show');
 
     Route::get('locale/{locale}', function ($lang) {

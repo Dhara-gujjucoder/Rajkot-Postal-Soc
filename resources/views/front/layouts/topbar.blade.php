@@ -20,18 +20,19 @@
                         <li><a href="{{route('user.share.show')}}">{{__('Share Account')}}</a></li>
                         <li><a href="{{ route('user.loan.apply') }}">{{__('Loan Account')}}</a></li>
                         <li><a href="{{ route('user.loan.calculator') }}">{{__('Loan Calculator')}}</a></li>
+                        <li><a href="{{ route('user.password.change') }}">{{__('Change password')}}</a></li>
                         <li>
                             <a href="{{ route('user.logout') }}" data-bs-toggle="tooltip" data-bs-placement="top"
                                 title="Logout"
                                 onclick="event.preventDefault();  document.getElementById('logout-form').submit();">
                                 {{ __('Logout') }}
                             </a>
-    
+
                             <form id="logout-form" action="{{ route('user.logout') }}" method="POST" class="d-none">
                                 @csrf
                             </form>
                         </li>
-    
+
                     </ul>
                 </div>
             </div>

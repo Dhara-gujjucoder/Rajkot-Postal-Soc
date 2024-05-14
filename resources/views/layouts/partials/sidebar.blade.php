@@ -184,7 +184,6 @@
                                     </a>
                                 </li>
                             @endcan
-
                             @canany(['loaninterest-setting', 'create-loaninterest-setting', 'edit-loaninterest-setting', 'view-loaninterest-setting'])
                                 <li class="submenu-item {{ request()->is('admin/loaninterest*') ? 'active' : '' }}">
                                     <a href="{{ route('loaninterest.index') }}" class='submenu-link'>
@@ -203,7 +202,6 @@
                             <span>{{ __('Ledger Reports') }}</span>
                         </a>
                         <ul class="submenu {{ request()->is('admin/ledger-fixed-saving') ? 'active submenu-open' : '' }}">
-
                             @canany(['ledger-fixed-saving-report'])
                                 <li class="submenu-item {{ request()->is('admin/ledger-fixed-saving') ? 'active' : '' }}">
                                     <a href="{{ route('ledger_reports.fixed_saving.index') }}" class='submenu-link'>
@@ -211,7 +209,6 @@
                                     </a>
                                 </li>
                             @endcan
-
                             @canany(['ledger-share-report'])
                                 <li class="submenu-item {{ request()->is('admin/ledger-share-report') ? 'active' : '' }}">
                                     <a href="{{ route('ledger_reports.share_ledger.index') }}" class='submenu-link'>
@@ -219,7 +216,6 @@
                                     </a>
                                 </li>
                             @endcan
-
                             @canany(['journel-report'])
                                 <li class="submenu-item {{ request()->is('admin/journel-report') ? 'active' : '' }}">
                                     <a href="{{ route('ledger_reports.journel_report.index') }}" class='submenu-link'>
@@ -227,7 +223,6 @@
                                     </a>
                                 </li>
                             @endcan
-
                             @canany(['rojmel-report'])
                                 <li class="submenu-item {{ request()->is('admin/rojmel-report') ? 'active' : '' }}">
                                     <a href="{{ route('ledger_reports.rojmel_report.index') }}" class='submenu-link'>
@@ -235,8 +230,6 @@
                                     </a>
                                 </li>
                             @endcan
-
-
                         </ul>
                     </li>
                 @endcan

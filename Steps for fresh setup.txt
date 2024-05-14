@@ -95,3 +95,15 @@ tasks :
 1) mutarator accessor
 2) global variables can be used in all view files and controllers (also from appservice provide)
 3) sub relationship queries
+
+
+
+
+
+
+
+UPDATE members SET `department_id`= '1' WHERE `department_id` IN (7, 9, 10,12,13,14,15,16,17,18,19,20,21,22,23,25,26,27,28,29,30,31,32,33,34,36,37);
+UPDATE members SET `department_id`= '3' WHERE `department_id` IN (8,35);
+UPDATE members SET `department_id`= '6' WHERE `department_id` IN (11,24);
+
+UPDATE members SET `department_id`= '1' WHERE `department_id` ='5';

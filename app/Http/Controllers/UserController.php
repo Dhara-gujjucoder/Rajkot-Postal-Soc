@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -142,7 +145,7 @@ class UserController extends Controller
     }
 
 
-     /**
+    /**
      * Display the specified resource for profile.
      */
     public function profile(User $user): View
@@ -154,10 +157,10 @@ class UserController extends Controller
         ]);
     }
 
-     /**
+    /**
      * Display the specified resource via profile.
      */
-    public function updateProfile(UpdateUserRequest $request,User $user): RedirectResponse
+    public function updateProfile(UpdateUserRequest $request, User $user): RedirectResponse
     {
         $input = $request->all();
         // dd($input);
@@ -174,5 +177,38 @@ class UserController extends Controller
             ->withSuccess(__('Profile is updated successfully.'));
     }
 
+    /**
+     * Display the specified resource via profile.
+     */
+    public function updatePassword(Request $request, User $user)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                //     'current_password' => ['required', 'string', function ($attribute, $value, $fail) use ($user) {
+                //         if (!Hash::check( Hash::make($value), $user->password)) {
+                //             return $fail(__('The current password is incorrect.'));
+                //         }
+                //     }],
+                'password'       => 'bail|required|string|min:4|confirmed',
 
+            ]
+        );
+        if ($validator->fails()) {
+            // Handle validation failure
+            $errors = $validator->errors();
+            return response()->json($validator->messages(), Response::HTTP_UNPROCESSABLE_ENTITY);
+        } else {
+            if (!empty($request->password)) {
+                // dd($request->password);
+                // $input['password'] = Hash::make($request->password);
+                $input['password'] = $request->password;
+            } else {
+                $input = $request->except('password');
+            }
+            $user->update($input);
+
+            return response()->json(['success' => true, 'message' => 'Password changes SuccessFully']);
+        }
+    }
 }

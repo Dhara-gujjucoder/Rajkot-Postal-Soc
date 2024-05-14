@@ -49,7 +49,6 @@ class MemberController extends Controller
 
     public function getmember_history(Member $member)
     {
-
         $data['member'] = $member;
         return response()->json(['success' => true, 'history' => view('member.history', $data)->render()]);
     }
@@ -60,8 +59,6 @@ class MemberController extends Controller
 
     public function index(Request $request)
     {
-
-
         // dd($request->all());
         $data['page_title'] = __('View Members');
         // $data['departments'] = 1;
@@ -69,9 +66,6 @@ class MemberController extends Controller
         $data['members'] = Member::orderBy('uid', 'DESC')->get();
 
         if ($request->ajax()) {
-
-
-
             //   dd($request->all());
             $data = User::usermember()->with('member'); //->orderBy('id', 'DESC')
             return DataTables::of($data)
@@ -79,15 +73,23 @@ class MemberController extends Controller
                 ->addColumn('action', function ($row) {
                     $show_btn = '<a href="' . route('members.show', $row->member->id) . '"
                     class="btn btn-outline-info btn-sm"><i class="bi bi-eye-fill"></i> ' . __('Show') . '</a>';
+
                     $edit_btn = '&nbsp;<a href="' . route('members.edit', $row->member->id) . '"
                     class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-fill"></i> ' . __('Edit') . '</a>';
+
                     $delete_btn = '&nbsp;<form action="' . route('members.destroy', $row->member->id) . '" method="post">' . csrf_field() . method_field('DELETE') . '<button type="submit" class="btn btn-outline-danger btn-sm"
                     onclick="return confirm(`' . __('Do you want to delete this user?') . '`);"><i class="bi bi-trash-fill"></i> ' . __('Delete') . '</button></form>';
+
+                    $change_pass_btn  = '&nbsp;<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changePassword" onclick="set_member_id(' . $row->id . ')"><i class="bi bi-key"></i> ' . __('Password') . '</button>';
+
                     $resign_btn = ($row->member->getRawOriginal('status') == 1 ? '&nbsp;<button type="button" class="btn btn-outline-primary btn-sm" onclick="load_member_details(' . $row->member->id . ')" data-bs-toggle="modal" data-bs-target="#loan_settle"><i class="bi bi-r-circle-fill"></i> ' . __('Resign') . '</button>' : '');
+
                     $action_btn = '';
+
                     (Auth::user()->can('view-member')) ? $action_btn .= $show_btn : '';
                     (Auth::user()->can('edit-member') && ($row->member->getRawOriginal('status') == 1)) ? $action_btn .= $edit_btn : '';
                     (Auth::user()->can('delete-member')) ? $action_btn .= $delete_btn . $resign_btn : '';
+                    (Auth::user()->can('edit-member')) ? $action_btn .= $change_pass_btn : '';
                     return $action_btn;
                 })
                 ->filterColumn('name', function ($query, $search) {
@@ -182,10 +184,10 @@ class MemberController extends Controller
         $input['user_id'] = $user->id;
         $input['uid'] = Member::latest()->pluck('uid')->first() ? Member::latest()->pluck('uid')->first() + 1 : 1;
         $input['status'] = 1;
-        if($input['payment_type'] == 'cheque'){
+        if ($input['payment_type'] == 'cheque') {
 
-            $input['payment_type_status'] =  bank_ledger_name().'(Fee+Share). cheque-'.$input['cheque_no'] ;
-        }else{
+            $input['payment_type_status'] =  bank_ledger_name() . '(Fee+Share). cheque-' . $input['cheque_no'];
+        } else {
             $input['payment_type_status'] =  'Cash(Fee+Share)';
         }
 
@@ -434,8 +436,8 @@ class MemberController extends Controller
             $member->share_ledger_account()->update(['current_balance' => 0]);
 
             $old_loan = LoanMaster::where('member_id', $member->id)->active()->first();
-            $old_loan->update(['status' => 3,'loan_settlment_month' => date('d-m-Y')]);
-            $old_loan->loan_emis()->where('status',1)->update(['status' => 3]);
+            $old_loan->update(['status' => 3, 'loan_settlment_month' => date('d-m-Y')]);
+            $old_loan->loan_emis()->where('status', 1)->update(['status' => 3]);
             $member->loan_ledger_account->update(['current_balance' => 0]);
         }
 

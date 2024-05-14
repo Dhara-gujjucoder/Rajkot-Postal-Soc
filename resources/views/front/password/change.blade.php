@@ -1,0 +1,49 @@
+@extends('front.layouts.app')
+@section('content')
+    {{-- {{ dump(session('success')) }} --}}
+    <div class="dashboard-detail-page calculator-detail-page">
+        <div class="container">
+
+            <div class="desh-listbox skybluebg-box wow fadeInDown" data-wow-delay="0.2s">
+                <div class="dash-box-title">{{ __('Change Password') }}</div>
+            </div>
+
+            <form action="{{ route('user.password.change') }}" method="post">
+                @csrf
+                <div class="row mb-3">
+                    <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Current Password') }}</label>
+                    <div class="col-md-8">
+                        <input id="current_password" type="password" placeholder="{{ __('Current Password') }}" class="form-control @error('current_password') is-invalid @enderror" name="current_password" autocomplete="new-password">
+
+                        @error('current_password')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('New Password') }}</label>
+                    <div class="col-md-8">
+                        <input id="password" type="password" placeholder="{{ __('Password') }}" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password">
+                        @error('password')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirm Password') }}</label>
+                    <div class="col-md-8">
+                        <input id="password-confirm" type="password" placeholder="{{ __('Confirm Password') }}" class="form-control" name="password_confirmation" autocomplete="new-password">
+                    </div>
+                </div>
+
+                <div class="row mb-3 float-end">
+                    <button type="submit" class="btn btn-primary">{{ __('Save Password') }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+@endsection

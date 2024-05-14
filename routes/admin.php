@@ -51,6 +51,8 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
     Route::post('/general/setting/{setting}', [App\Http\Controllers\SettingController::class, 'store'])->name('setting.update');
     Route::get('/users/profile/{user}', [App\Http\Controllers\UserController::class, 'profile'])->name('users.profile');
     Route::post('/users/profile/{user}', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('users.profile');
+    Route::post('/users/password/{user}', [App\Http\Controllers\UserController::class, 'updatePassword'])->name('users.passwword');
+
     Route::get('/import/member', [App\Http\Controllers\MemberImportController::class, 'create'])->name('member.import');
     Route::post('/import/member', [App\Http\Controllers\MemberImportController::class, 'store'])->name('member.import');
     Route::get('/import/salary', [App\Http\Controllers\SalaryDeductionController::class, 'salary_import'])->name('salary.import');

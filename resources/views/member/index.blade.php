@@ -77,6 +77,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade text-left" id="loan_settle" tabindex="-1" aria-labelledby="myModalLabel1" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
             <div class="modal-content">
@@ -106,7 +107,7 @@
                             <i class="bx bx-x d-block d-sm-none"></i>
                             <span class="d-none d-sm-block">{{ __('Cancel') }}</span>
                         </button>
-                        <button type="submit" class="btn btn-primary ms-1" >
+                        <button type="submit" class="btn btn-primary ms-1">
                             <i class="bx bx-check d-block d-sm-none"></i>
                             <span class="d-none d-sm-block">{{ __('Submit') }}</span>
                         </button>
@@ -115,6 +116,66 @@
             </div>
         </div>
     </div>
+
+    {{-- Change Password pop-up --}}
+    <!-- Button trigger modal -->
+
+    <div class="modal fade" id="changePassword" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{ route('users.profile', 1) }}" method="post" enctype="multipart/form-data" id="change_pwd_form">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">{{ __('Change password') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        {{-- <div class="row mb-3">
+                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Current Password') }}</label>
+                            <div class="col-md-8">
+                                <input id="password" type="password" placeholder="{{ __('Password') }}" class="form-control @error('password') is-invalid @enderror" name="current_password" autocomplete="new-password">
+
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div> --}}
+
+                        <div class="row mb-3">
+                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('New Password') }}</label>
+                            <div class="col-md-8">
+                                <input id="password" type="password" placeholder="{{ __('Password') }}" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password">
+
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirm Password') }}</label>
+
+                            <div class="col-md-8">
+                                <input id="password-confirm" type="password" placeholder="{{ __('Confirm Password') }}" class="form-control" name="password_confirmation" autocomplete="new-password">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Save Password') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
 </section>
 @endsection
 @push('script')
@@ -216,6 +277,54 @@
             }
         });
     }
+
+    function set_member_id(member_id) {
+        var url = "{{ route('users.passwword', ':id') }}";
+        url = url.replace(':id', member_id);
+        $('#change_pwd_form').attr('action', url);
+    }
+
+    $('#change_pwd_form').on('submit', function(e) {
+        e.preventDefault(); // prevent the form submit
+        var url = $(this).attr('action');
+        $('.invalid-feedback').remove();
+        $('.form-control').removeClass('is-invalid');
+        // alert(url);
+        // create the FormData object from the form context (this),
+        // that will be present, since it is a form event
+        var formData = new FormData(this);
+        // build the ajax call
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                // handle success response
+                show_success(response.message);
+                $('#change_pwd_form').trigger('reset');
+                $('#changePassword').modal('hide');
+            },
+            error: function(xhr, status, error) {
+                // handle error response
+                if (xhr.status == 422) {
+                    var errors = xhr.responseJSON;
+                    // $('input[name=' + column_name + ']').val(old_value);
+                    $.each(errors, function(key, value) {
+                        console.log(key, value);
+                        $('input[name=' + key + ']').closest('.form-control').addClass(
+                            'is-invalid');
+                        // console.log($('input[name=' + key + ']').find('.form-control').length);
+                        $('input[name=' + key + ']').closest('.form-control').after(
+                            '<div class="invalid-feedback" role="alert"><strong>' + value +
+                            '</strong></div>');
+                    });
+                }
+            },
+            contentType: false,
+            processData: false
+        });
+
+    })
 
     function change_payment_type() {
         $('#payment_details').hide();

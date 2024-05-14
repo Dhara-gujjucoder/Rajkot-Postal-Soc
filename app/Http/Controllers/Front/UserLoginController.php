@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Query\Builder;
 
 class UserLoginController extends Controller
@@ -43,23 +44,25 @@ class UserLoginController extends Controller
         $data['user'] = Auth::user();
         $data['member'] = $data['user']->member;
         // dd($data['user']->email);
-        return view('front.profile',$data);
+        return view('front.profile', $data);
     }
 
     public function login(Request $request)
     {
         $this->validate($request, [
             'registration_no'   => 'required',
+            'password'          => 'required',
         ]);
+
+        // dd($request->all());
         $member = User::query()
             ->whereExists(function (Builder $q) use ($request) {
                 $q->select(DB::raw(1))
                     ->from('members')
-                    ->where('members.status',1)
-                    ->whereIn('members.registration_no',['01110111','00007777'])
+                    ->where('members.status', 1)
+                    // ->whereIn('members.registration_no',['01110111','00007777'])
                     ->whereColumn('members.user_id', 'users.id')
                     ->where('members.registration_no', $request->registration_no);
-
             })
             ->whereHas(
                 'roles',
@@ -70,16 +73,17 @@ class UserLoginController extends Controller
             ->first();
 
         if (empty($member)) {
-            return redirect()->back()->withErrors(['registration_no' => 'Registration no. are wrong.']);
+            return redirect()->back()->withInput()->withErrors(['registration_no' => 'Registration no. are wrong.']);
             // return redirect()->route('user.login')->withInput()->withErrors('registration_no', __('Registration No Are wrong.'));
         }
+        // dd(Auth::guard('users')->attempt(['email' => $member->email, 'password' => $request->password]));
 
-        if (Auth::guard('users')->loginUsingId($member->id)) {
+        if (Auth::guard('users')->attempt(['email' => $member->email, 'password' => $request->password])) {
             session()->put('registration_no', $member->member->registration_no);
 
             return redirect()->route('user.home');
         } else {
-            return redirect()->route('user.login')->withInput()->with('error', __('Email-Address And Password Are Wrong.'));
+            return redirect()->route('user.login')->withInput()->withErrors(['password' => __('Password Are Wrong.')]);
         }
 
 
@@ -98,5 +102,26 @@ class UserLoginController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('user.login');
+    }
+
+
+    public function change_password()
+    {
+        return view('front.password.change');
+    }
+
+    public function update_password(Request $request)
+    {
+        $user = User::findOrFail(Auth::user()->id);
+        $user = $user->fresh();
+        $request->validate([
+            'current_password' => ['required', 'string', function ($attribute, $value, $fail) use ($user) {
+                if (!Hash::check($value, $user->password)) {
+                    return $fail(__('The current password is incorrect.'));
+                }
+            }],
+            'password'       => 'bail|required|string|min:4|confirmed',
+        ]);
+        return redirect()->back()->withSuccess(__('Password update successfully.'));
     }
 }
