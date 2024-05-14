@@ -40,7 +40,7 @@
                         </div>
 
                         <div class="mb-5">
-                            <input type="password" name="password" class="form-control input-user-icon input-bottom-border @error('password') is-invalid @enderror" value="{{ old('password') }}" id="password" placeholder="Password"><i class="toggle-password fa fa-eye" id="togglePassword" toggle="#password"></i>
+                            <input type="password" name="password" class="form-control input-user-icon input-bottom-border @error('password') is-invalid @enderror" value="{{ old('password') }}" id="password" placeholder="Password"><i class="toggle-password fa fa-eye-slash" id="togglePassword" toggle="#password"></i>
                             @error('password')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
