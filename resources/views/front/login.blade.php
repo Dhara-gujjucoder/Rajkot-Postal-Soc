@@ -40,7 +40,7 @@
                         </div>
 
                         <div class="mb-5">
-                            <input type="password" name="password" class="form-control input-user-icon input-bottom-border @error('password') is-invalid @enderror" value="{{ old('password') }}" id="password" placeholder="Password"><i class="fa fa-eye" id="togglePassword"></i>
+                            <input type="password" name="password" class="form-control input-user-icon input-bottom-border @error('password') is-invalid @enderror" value="{{ old('password') }}" id="password" placeholder="Password"><i class="toggle-password fa fa-eye" id="togglePassword" toggle="#password"></i>
                             @error('password')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -60,21 +60,33 @@
     <script src="{{ asset('front/js/wow.js') }}"></script>
     <script src="{{ asset('front/js/main.js') }}"></script>
     <script>
-        const icon = document.getElementById('togglePassword');
-        let password = document.getElementById('password');
-
-        /* Event fired when <i> is clicked */
-        icon.addEventListener('click', function() {
-            if (password.type === "password") {
-                password.type = "text";
-                icon.classList.add("fa-eye-slash");
-                icon.classList.remove("fa-eye");
-            } else {
-                password.type = "password";
-                icon.classList.add("fa-eye");
-                icon.classList.remove("fa-eye-slash");
-            }
+        $(document).ready(function() {
+            $(".toggle-password").click(function() {
+                var input = $($(this).attr("toggle"));
+                if (input.attr("type") == "password") {
+                    input.attr("type", "text");
+                    $(this).removeClass('fa-eye-slash').addClass('fa-eye');
+                } else {
+                    input.attr("type", "password");
+                    $(this).removeClass('fa-eye').addClass('fa-eye-slash');
+                }
+            });
         });
+        // const icon = document.getElementById('togglePassword');
+        // let password = document.getElementById('password');
+
+        // /* Event fired when <i> is clicked */
+        // icon.addEventListener('click', function() {
+        //     if (password.type === "password") {
+        //         password.type = "text";
+        //         icon.classList.add("fa-eye-slash");
+        //         icon.classList.remove("fa-eye");
+        //     } else {
+        //         password.type = "password";
+        //         icon.classList.add("fa-eye");
+        //         icon.classList.remove("fa-eye-slash");
+        //     }
+        // });
     </script>
 </body>
 

@@ -122,6 +122,9 @@ class UserLoginController extends Controller
             }],
             'password'       => 'bail|required|string|min:4|confirmed',
         ]);
+        $input['password'] = $request->password;
+        $user->update($input);
+
         return redirect()->back()->withSuccess(__('Password update successfully.'));
     }
 }
