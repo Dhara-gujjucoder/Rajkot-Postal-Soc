@@ -59,6 +59,35 @@ class MemberController extends Controller
 
     public function index(Request $request)
     {
+        // ************* import member images *****************
+        // $members = Member::get();
+        // // $notexist = [];
+        // foreach ($members as $m) {
+        //     $filename = $m->uid . '-P.jpg';
+        //     if (file_exists(public_path() . '/Photo/' .  $filename)) {
+        //         // dump();
+        //         $m->profile_picture = $this->dirPath . '/profile_picture/' . $filename;
+        //         $m->save();
+        //     } else {
+        //         $notexist = $m->name . '_' . $m->uid;
+        //         // dump($notexist);
+        //     }
+        // }
+        // ************* import member signature *************
+            // $members = Member::get();
+            // foreach ($members as $m) {
+            //     $filename = $m->uid . '-S.jpg';
+            //     if (file_exists(public_path() . '/Signature/' .  $filename)) {
+            //         $m->signature = $this->dirPath . '/signature/' . $filename;
+            //         $m->save();
+            //     } else {
+            //         $notexist = $m->name . '(M.no->' . $m->uid . ')';
+            //         // dump($notexist);
+            //     }
+            // }
+        //END
+        // die();
+
         // dd($request->all());
         $data['page_title'] = __('View Members');
         // $data['departments'] = 1;

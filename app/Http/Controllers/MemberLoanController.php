@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Imports\MemberLoanImport;
+
+use App\Imports\MemberLoanGuarentor;
 use Maatwebsite\Excel\Facades\Excel;
 
 class MemberLoanController extends Controller
@@ -18,7 +20,8 @@ class MemberLoanController extends Controller
 
     public function import_loan(Request $request){
 
-        $import = new MemberLoanImport;
+        // $import = new MemberLoanImport;   // main this
+        $import = new MemberLoanGuarentor;    // temporary
 
         Excel::import($import, $request->file('excel_file'));
         // dd($import->not_insert);

@@ -107,3 +107,103 @@ UPDATE members SET `department_id`= '3' WHERE `department_id` IN (8,35);
 UPDATE members SET `department_id`= '6' WHERE `department_id` IN (11,24);
 
 UPDATE members SET `department_id`= '1' WHERE `department_id` ='5';
+
+
+
+
+
+
+// ************* import member images *****************
+
+    // $members = Member::get();
+    // // $notexist = [];
+    // foreach ($members as $m) {
+    //     $filename = $m->uid . '-P.jpg';
+    //     if (file_exists(public_path() . '/Photo/' .  $filename)) {
+    //         // dump();
+    //         $m->profile_picture = $this->dirPath . '/profile_picture/' . $filename;
+    //         $m->save();
+    //     } else {
+    //         $notexist = $m->name . '_' . $m->uid;
+    //         // dump($notexist);
+    //     }
+    // }
+
+****not member image in folder****
+
+1) DESANI RAJAN P.       (M.no-> 2)
+2) KAVA KALPESH V.       (M.no-> 9)
+3) THAKKAR DEV ASHISH    (M.no-> 12)
+4) RAVAL BHAVESH B.      (M.no-> 32)
+5) VERMA RAMESH L.       (M.no-> 63)
+6) NIMAVAT PANKAJBHAI V  (M.no-> 73)
+7) RAJYAGURU BHARATKUMAR B.    (M.no-> 95)
+8) RAVAL MAHESHCHANDRA H.      (M.no-> 121)
+9) VYAS MANHARLAL B.           (M.no-> 130)
+10) PANJWANI ANWARBHAI R.      (M.no-> 139)
+11) TILAVAT SURESHDAS P.       (M.no-> 148)
+12) GALCHAR NARESHBHAI K.      (M.no-> 150)
+13) GOHEL BHAVIN B.         (M.no-> 154)
+14) CHAVDA JIGNESH L.       (M.no-> 173)
+15) BAGATHARIYA VAJIRALI A. (M.no-> 178)
+16) CHAREL RUSHIKESH A      (M.no-> 187)
+17) PARMAR DIPAK J          (M.no-> 199)
+18) MANAT BHATHIBHAI JIVABHAI       (M.no-> 220)
+19) RATHOD CHITRAJSINH MAHENDRASINH (M.no-> 248)
+20) BARANDA RAKESHKUMAR S.          (M.no-> 263)
+21) PARIKH BHAVESH P                (M.no-> 268)
+22) OLAKIYA RAGHUBHAI V             (M.no-> 286)
+
+
+
+
+
+
+  // ************* import member signature *************
+
+        // $members = Member::get();
+        // foreach ($members as $m) {
+        //     $filename = $m->uid . '-S.jpg';
+        //     if (file_exists(public_path() . '/Signature/' .  $filename)) {
+        //         $m->signature = $this->dirPath . '/signature/' . $filename;
+        //         $m->save();
+        //     } else {
+        //         $notexist = $m->name . '(M.no->' . $m->uid . ')';
+        //         dump($notexist);
+        //     }
+        // }
+//END
+
+
+**** not member signature in folder **** (as folder signature name "94-S" user not exist )
+
+
+PAREKH CHETAN N.        (M.no->3)
+RAJDEV NIRAJ P.         (M.no->6)
+MAKWANA HARISH P.       (M.no->8)
+KAVA KALPESH V.         (M.no->9)
+SARVAIYA DILIPBHAI A.   (M.no->10)
+THAKKAR DEV ASHISH      (M.no->12)
+SUMARA MOHSIN K         (M.no->13)
+RAVAL BHAVESH B.        (M.no->32)
+JADAV RASHMIN A.        (M.no->39)
+CHAUHAN PARAS C.        (M.no->51)
+NIMAVAT PANKAJBHAI V    (M.no->73)
+KAKKAD BINABEN S.       (M.no->93)
+RAJYAGURU BHARATKUMAR B.(M.no->95)
+RAVAL MAHESHCHANDRA H.  (M.no->121)
+VYAS MANHARLAL B.       (M.no->130)
+PANJWANI ANWARBHAI R.   (M.no->139)
+PARMAR HASMUKH M.       (M.no->141)
+TILAVAT SURESHDAS P.    (M.no->148)
+GOHEL BHAVIN B.         (M.no->154)
+CHAVDA JIGNESH L.       (M.no->173)
+BAGATHARIYA VAJIRALI A. (M.no->178)
+CHAREL RUSHIKESH A      (M.no->187)
+PARMAR DIPAK J          (M.no->199)
+MANAT BHATHIBHAI JIVABHAI        (M.no->220)
+RATHOD CHITRAJSINH MAHENDRASINH  (M.no->248)
+BARANDA RAKESHKUMAR S.           (M.no->263)
+PARIKH BHAVESH P        (M.no->268)
+OLAKIYA RAGHUBHAI V     (M.no->286)
+

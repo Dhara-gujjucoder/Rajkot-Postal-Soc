@@ -219,7 +219,7 @@ textarea {resize: none;}
 .tab-bar-title {display: flex; align-items: center; line-height: 24px; /*width: 85%;*/}
 .tab-bar-title span {line-height: 27px; display: inline-flex;   text-overflow: ellipsis; overflow: hidden; display: -webkit-box !important; -webkit-line-clamp: 1; -webkit-box-orient: vertical; white-space: normal;}
 .tab-bar-title a img {margin-right: 5px;}
-.tab-bar-title a {color: var(--ftwhite); font-size: 16px; font-weight: 500; display: flex;  width: 100%; } 
+.tab-bar-title a {color: var(--ftwhite); font-size: 16px; font-weight: 500; display: flex;  width: 100%; }
 .emp-cont-btn {padding-top: 5px;}
 .emp-cont-btn .btn {border-radius: 5px; font-size: 15px; font-weight: 400; line-height: normal; padding: 7px 12px; margin-right: 10px;}
 .emp-cont-btn .btn:last-child {margin-right: 0px;}
@@ -263,13 +263,13 @@ textarea {resize: none;}
 .report-area-listing-sec li .filtericon .select-selected {padding: 6px 10px 6px 10px; border-radius: 6px; box-shadow: none; border: none;}
 .report-area-listing-sec li .filtericon .select-selected::after {top: 6px; right: 4px;
   width: 20px; height: 20px; background-size: 20px;}
-.report-area-listing-sec li .filtericon .select-items div {padding: 5px 12px; 
+.report-area-listing-sec li .filtericon .select-items div {padding: 5px 12px;
   border-bottom: 1px solid #eee;}
 .report-area-listing-sec li .filtericon .select-items div.gettotalmember:last-child {border-bottom: none;}
 .report-area-listing-sec li .filtericon div.same-as-selected::after {right: 8px; top: 6px; font-size: 11px;}
 .report-area-listing-sec .roundkey {width: 36px; height: 36px; font-size: 15px;}
 .id-detail {display: flex; align-items: flex-start;}
-.insp-id, .insp-date {width: 50%;} 
+.insp-id, .insp-date {width: 50%;}
 .area-inspection-info {margin-bottom: 30px;  color: #979797;}
 .area-inspection-info li {padding-bottom:14px; margin-bottom: 14px; border-bottom: 1px solid #D8D8D8; padding-left: 10px; padding-right: 10px;}
 .area-inspection-info li:last-child {margin-bottom: 0px; padding-bottom: 0px; border-bottom: none;}
@@ -404,7 +404,7 @@ input[type=range]::-moz-range-thumb {
 	background: #fd7e2b;
 }
 
-.calculator-detail-page .final-value { 
+.calculator-detail-page .final-value {
   background-color: #f2f2f2;
   border-radius: 10px;
   padding: 10px 14px;
@@ -484,4 +484,21 @@ table .btn-primary {
 .back-btn-contain .btn.btn-primary {
   padding: 8px 14px;
 }
+
+
+.eye-settle{
+    position: relative;
+}
+.eye-settle i.fa{
+    position: absolute;
+    right: 14px;
+    top:12px;
+    cursor: pointer;
+}
+
+.eyelogin i.fa{
+    top: 17px;
+
+}
+
 
