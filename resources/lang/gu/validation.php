@@ -211,6 +211,8 @@ return [
         'ledger_ac_id.0'=> 'ખાતાવહી',
         'particular'=> 'ખાસ',
         'particular.0'=> 'ખાસ',
+        'current_password'=>'અત્યારનો પાસવર્ડ',
+        'password'=>'પાસવર્ડ',
         'phone' => 'ફોન',
         'required_share' => 'જરૂરી શેર',
         'minimum_share' => 'ન્યૂનતમ શેર',

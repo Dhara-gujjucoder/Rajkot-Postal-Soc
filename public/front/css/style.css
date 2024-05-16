@@ -498,7 +498,5 @@ table .btn-primary {
 
 .eyelogin i.fa{
     top: 17px;
-
 }
-
-
+.eye-settle .form-control.is-invalid, .was-validated .form-control:invalid {background-image: none;}
