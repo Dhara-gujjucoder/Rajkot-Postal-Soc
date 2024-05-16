@@ -38,6 +38,8 @@ class LoanMasterController extends Controller
     {
         $data['loans'] = LoanMaster::get();
         $data['page_title'] = __('Loan');
+        $data['members'] = Member::with('shares')->get();
+
         if ($request->ajax()) {
             $data = LoanMaster::runningLoan();
             return DataTables::of($data)
@@ -45,6 +47,7 @@ class LoanMasterController extends Controller
                 ->addColumn('action', function ($row) {
                     $aa = '_settle';
                     $action_btn = '';
+
                     $show_btn = '<a href="' . route('loan.show', $row->id) . '"
                     class="btn btn-outline-info btn-sm me-2"><i class="bi bi-eye"></i> ' . __('Show') . '</a>';
                     // $edit_btn = '<a href="' . route('loan.edit', $row->id) . '"
@@ -54,10 +57,18 @@ class LoanMasterController extends Controller
                     class="btn btn-outline-warning btn-sm me-2"><i class="bi bi-eye"></i> ' . __('Pay') . '</button>';
                     // (Auth::user()->can('view-ledger_account')) ? $action_btn.= $show_btn : '';
                     // (Auth::user()->can('edit-loan')) ? $action_btn .= $edit_btn : '';
+
+                    //this $guarentor_add_btn  = '&nbsp;<button type="button" class="btn btn-outline-success btn-sm me-2" data-bs-toggle="modal" data-bs-target="#guarentor_add" onclick="set_member_id(' . $row->member_id . ')"><i class="bi bi-pencil"></i> ' . __('Edit') . '</button>';
+
                     (Auth::user()->can('view-loan')) ? $action_btn .= $show_btn : '';
                     $action_btn .= ($row->getRawOriginal('status') == 1 ?  $pay_loan_btn : '');
+
                     (Auth::user()->can('delete-loan') && $row->getRawOriginal('status') == 1) ? $action_btn .= $delete_btn : '';
+
+                    //this (Auth::user()->can('edit-loan')) ? $action_btn .= $guarentor_add_btn : '';
+
                     return $action_btn;
+
                 })
                 ->filterColumn('member_id', function ($query, $search) {
                     $query->whereHas('member', function ($q) use ($search) {
@@ -78,9 +89,9 @@ class LoanMasterController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
+
         return view('loan.index', $data);
     }
-
 
     public function create()
     {
@@ -94,6 +105,23 @@ class LoanMasterController extends Controller
         return view('loan.create', $data);
     }
 
+
+    public function guarentor_store(Request $request)
+    {
+        // $request->validate([
+        //     'g1_member_id' => 'required',
+        //     'g2_member_id' => 'required',
+        //     'gcheque_no' => 'required|numeric',
+        //     'gbank_name' => 'string'
+        // ], [
+        //     'g1_member_id.required' => __('Guarantor 1 field is required'),
+        //     'g2_member_id.required' => __('Guarantor 2 field is required'),
+        // ]);
+
+
+    }
+
+
     public function store(Request $request)
     {
 
@@ -101,18 +129,18 @@ class LoanMasterController extends Controller
             'loan_id' => 'required',
             'emi_amount' => 'required',
             'member_id' => 'required',
-            // 'g1_member_id' => 'required',
-            // 'g2_member_id' => 'required',
+            'g1_member_id' => 'required',
+            'g2_member_id' => 'required',
             'stamp_duty' => 'required',
             // 'g2_member_id' => 'required',
             'payment_type' => 'required',
-            // 'bank_name' => 'required_if:payment_type,cheque',
+            'bank_name' => 'required_if:payment_type,cheque',
             'cheque_no' => 'required_if:payment_type,cheque',
-            // 'gcheque_no' => 'required|numeric',
-            // 'gbank_name' => 'string'
+            'gcheque_no' => 'required|numeric',
+            'gbank_name' => 'string'
         ], [
-            // 'g1_member_id.required' => __('Guarantor 1 field is required'),
-            // 'g2_member_id.required' => __('Guarantor 2 field is required'),
+            'g1_member_id.required' => __('Guarantor 1 field is required'),
+            'g2_member_id.required' => __('Guarantor 2 field is required'),
         ]);
 
         $loan_no = str_pad((LoanMaster::count()) + 1, 2, '0', STR_PAD_LEFT) . '/' . $this->current_year->start_year . '-' . $this->current_year->end_year;

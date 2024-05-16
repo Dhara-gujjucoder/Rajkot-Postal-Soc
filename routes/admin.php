@@ -60,7 +60,7 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
     Route::get('/export/bulk_entries/{id}', [App\Http\Controllers\BulkEntryController::class, 'export'])->name('bulk_entries.export');
     Route::get('/get/member/{member}', [App\Http\Controllers\MemberController::class, 'getmember'])->name('member.get');
     Route::get('/get/guarantor_count/{member}', [App\Http\Controllers\LoanMasterController::class, 'guarantor_count'])->name('guarantor_count.get');
-
+    Route::post('/guarentor-store/{member}',[LoanMasterController::class, 'guarentor_store'])->name('loan.guarentor_store');
 
     //***** Excel *****
     Route::get('/import/loan', [MemberLoanController::class, 'loan'])->name('loan.import');            //******//
@@ -98,7 +98,7 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
 
     Route::post('/double_entries/confirm',[DoubleEntryController::class, 'confirm'])->name('double_entries.confirm');
     Route::post('/loan/partial_pay/{loan}',[LoanMasterController::class, 'partial_pay'])->name('loan.partial_pay');
-
+    
 
     /*all modules*/
     Route::resources([

@@ -9,8 +9,7 @@
             <div class="header_add">
                 <div class="form"></div>
                 @can('create-loan')
-                    <a href="{{ route('loan.create') }}" class="btn btn-outline-success btn-md  float-end my-3"><i
-                            class="bi bi-plus-circle"></i> {{ __('Add New Loan') }}</a>
+                    <a href="{{ route('loan.create') }}" class="btn btn-outline-success btn-md  float-end my-3"><i class="bi bi-plus-circle"></i> {{ __('Add New Loan') }}</a>
                 @endcan
             </div>
             <div class="pt-2 mt-2">
@@ -24,7 +23,7 @@
                                 <th>{{ __('Amount') }}</th>
                                 <th>{{ __('EMI Amount') }}</th>
                                 <th>{{ __('Status') }}</th>
-                                <th>{{ __('Temp Loan Status') }}</th>  {{-- only temporary add this column in db --}}
+                                <th>{{ __('Temp Loan Status') }}</th> {{-- only temporary add this column in db --}}
                                 <th>{{ __('Action') }} </th>
                             </tr>
                         </thead>
@@ -36,9 +35,9 @@
             </div>
         </div>
     </div>
+
     <button type="button" class="btn btn-outline-primary block" style="display:none" id="notmatch"></button>
-    <div class="modal fade text-left" id="loan_settle" tabindex="-1" aria-labelledby="myModalLabel1"
-        style="display: none;" aria-hidden="true">
+    <div class="modal fade text-left" id="loan_settle" tabindex="-1" aria-labelledby="myModalLabel1" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
             <div class="modal-content">
                 <form id="loan_close">
@@ -46,9 +45,7 @@
                         <h5 class="modal-title" id="myModalLabel1">{{ __('Loan Settlement') }}
                         </h5>
                         <button type="button" class="close rounded-pill" data-bs-dismiss="modal" aria-label="Close">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-x">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
                                 <line x1="18" y1="6" x2="6" y2="18">
                                 </line>
                                 <line x1="6" y1="6" x2="18" y2="18">
@@ -76,8 +73,8 @@
             </div>
         </div>
     </div>
-    <div class="modal fade text-left" id="loan_pay" tabindex="-1" aria-labelledby="myModalLabel1"
-        style="display: none;" aria-hidden="true">
+
+    <div class="modal fade text-left" id="loan_pay" tabindex="-1" aria-labelledby="myModalLabel1" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
             <div class="modal-content">
                 <form id="loan_close">
@@ -85,9 +82,7 @@
                         <h5 class="modal-title" id="loan_payModalLabel1">{{ __('Loan Payment') }}
                         </h5>
                         <button type="button" class="close rounded-pill" data-bs-dismiss="modal" aria-label="Close">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-x">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
                                 <line x1="18" y1="6" x2="6" y2="18">
                                 </line>
                                 <line x1="6" y1="6" x2="18" y2="18">
@@ -111,6 +106,79 @@
                             <i class="bx bx-check d-block d-sm-none"></i>
                             <span class="d-none d-sm-block">{{ __('Submit') }}</span>
                         </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="guarentor_add" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form action="{{ route('loan.guarentor_store', 1) }}" method="post" enctype="multipart/form-data" id="guarentor_store">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">{{ __('Guarantee Details') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3 row">
+                            <label for="amount" class="col-md-2 col-form-label text-md-end text-start">{{ __('Guarantor 1') }}</label>
+                            <div class="col-md-10">
+                                <div class="gexist">
+                                    <select class="form-select @error('g1_member_id') is-invalid @enderror" aria-label="Permissions" name="g1_member_id" onchange="checkGuarantor($(this).val(),$('#g1_member_id'))">
+                                        <option value="">{{ __('Select Member') }}</option>
+                                        @foreach ($members as $member)
+                                            <option value="{{ $member->id }}">{{ $member->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('g1_member_id'))
+                                        <span class="text-danger">{{ $errors->first('g1_member_id') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label for="amount" class="col-md-2 col-form-label text-md-end text-start">{{ __('Guarantor 2') }}</label>
+                            <div class="col-md-10">
+                                <div class="gexist">
+                                    <select class="form-select @error('g2_member_id') is-invalid @enderror" aria-label="Permissions" name="g2_member_id" onchange="checkGuarantor($(this).val(),$('#g2_member_id'))">
+                                        <option value="">{{ __('Select Member') }}</option>
+                                        @foreach ($members as $member)
+                                            <option value="{{ $member->id }}">{{ $member->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('g2_member_id'))
+                                        <span class="text-danger">{{ $errors->first('g2_member_id') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="amount" class="col-md-2 col-form-label text-md-end text-start">{{ __('Guarantee Payee Cheque No') }}</label>
+                            <div class="col-md-10">
+                                <input type="number" class="form-control @error('gcheque_no') is-invalid @enderror" id="gcheque_no" name="gcheque_no" value="{{ old('gcheque_no') }}" placeholder="{{ __('Guarantee Payee Cheque No') }}">
+                                @if ($errors->has('gcheque_no'))
+                                    <span class="text-danger">{{ $errors->first('gcheque_no') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="amount" class="col-md-2 col-form-label text-md-end text-start">{{ __('Guarantee Payee Bank Name') }}</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control @error('gbank_name') is-invalid @enderror" id="gbank_name" name="gbank_name" value="{{ old('gbank_name') }}" placeholder="{{ __('Guarantee Payee Bank Name') }}">
+                                @if ($errors->has('gbank_name'))
+                                    <span class="text-danger">{{ $errors->first('gbank_name') }}</span>
+                                @endif
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <div class="mb-3 float-end">
+                            <input type="submit" class="btn btn-primary" id="submitButton" value="{{ __('Submit') }}">
+                        </div>
                     </div>
                 </form>
             </div>
@@ -168,6 +236,10 @@
 
         });
 
+        $('#g2_member_id').select2();
+        $('#g1_member_id').select2();
+
+
 
         function load_member_details(member_id, div) {
             $('#loader').show();
@@ -209,7 +281,7 @@
                             </tr>
                             <tr>
                                 <td colspan="2"> <b>{{ __('Remaining Loan') }}</b></td>
-                                <td colspan="4"><input type="number" class="form-control amount" name="amount`+div+`" placeholder="{{ __('Remaining Loan') }}" id="remaining_loan`+div+`" min="` +
+                                <td colspan="4"><input type="number" class="form-control amount" name="amount` + div + `" placeholder="{{ __('Remaining Loan') }}" id="remaining_loan` + div + `" min="` +
                             member.loan_remaining_amount + `"  value="` +
                             member.loan_remaining_amount + `"></td>
                             </tr>
@@ -245,7 +317,7 @@
                             </div></td>
                             </tr>
                             `;
-                        $('#loan_details'+div).html(html);
+                        $('#loan_details' + div).html(html);
                         $('#loan_id').val(member_loan.id);
                         // console.log(remaining_share);
                         $('#loader').hide();
@@ -300,7 +372,7 @@
                 error: function(xhr, ajaxOptions, thrownError) {
                     var err = eval("(" + xhr.responseText + ")");
                     $.each(xhr.responseJSON.errors, function(field_name, error) {
-                        if(field_name == 'amount'){
+                        if (field_name == 'amount') {
                             field_name = 'amount_settle';
                         }
                         $(document).find('[name=' + field_name + ']').addClass("is-invalid");
@@ -312,7 +384,7 @@
         }
 
         function pay_loan() {
-            if(confirm(`{{__('Are you sure to pay?')}}`)){
+            if (confirm(`{{ __('Are you sure to pay?') }}`)) {
 
                 var loan_id = $('#loan_id').val();
                 var amount = $('#remaining_loan_pay').val();
@@ -347,7 +419,7 @@
                         var err = eval("(" + xhr.responseText + ")");
 
                         $.each(xhr.responseJSON.errors, function(field_name, error) {
-                            if(field_name == 'amount'){
+                            if (field_name == 'amount') {
                                 field_name = 'amount_pay';
                             }
                             $(document).find('[name=' + field_name + ']').addClass("is-invalid");
@@ -366,5 +438,53 @@
                 $('#payment_details').show();
             }
         }
+
+        function set_member_id(member_id) {
+            var url = "{{ route('loan.guarentor_store', ':id') }}";
+            url = url.replace(':id', member_id);
+            $('#guarentor_store').attr('action', url);
+        }
+
+        $('#guarentor_store').on('submit', function(e) {
+            e.preventDefault(); // prevent the form submit
+            var url = $(this).attr('action');
+            $('.invalid-feedback').remove();
+            $('.form-control').removeClass('is-invalid');
+            // alert(url);
+            // create the FormData object from the form context (this),
+            // that will be present, since it is a form event
+            var formData = new FormData(this);
+            // build the ajax call
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    // handle success response
+                    show_success(response.message);
+                    $('#guarentor_store').trigger('reset');
+                    $('#changePassword').modal('hide');
+                },
+                error: function(xhr, status, error) {
+                    // handle error response
+                    if (xhr.status == 422) {
+                        var errors = xhr.responseJSON;
+                        // $('input[name=' + column_name + ']').val(old_value);
+                        $.each(errors, function(key, value) {
+                            console.log(key, value);
+                            $('input[name=' + key + ']').closest('.form-control').addClass(
+                                'is-invalid');
+                            // console.log($('input[name=' + key + ']').find('.form-control').length);
+                            $('input[name=' + key + ']').closest('.form-control').after(
+                                '<div class="invalid-feedback" role="alert"><strong>' + value +
+                                '</strong></div>');
+                        });
+                    }
+                },
+                contentType: false,
+                processData: false
+            });
+
+        })
     </script>
 @endpush
