@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Member;
+use App\Models\Setting;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
@@ -194,19 +197,39 @@ class UserController extends Controller
 
             ]
         );
+        
+
         if ($validator->fails()) {
             // Handle validation failure
             $errors = $validator->errors();
             return response()->json($validator->messages(), Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
             if (!empty($request->password)) {
-                // dd($request->password);
-                // $input['password'] = Hash::make($request->password);
+           
+
                 $input['password'] = $request->password;
+                
+
+                if($request->send_email == 1){
+                
+                    $member_name = $user->name;
+                    $member_reg = $user->member->registration_no;
+                    $password = $request->password;
+                    $sitename = Setting::pluck('title')->first();
+
+                    Mail::send('email.passwordchange', ['member_name' => $member_name,'member_reg' => $member_reg,'password' => $password ], function ($message) use ($user, $sitename) {
+                        $message->to($user->email);
+                        $message->subject('Updated Password - ' . $sitename);
+                    });
+                }
+
+                $user->update($input);
+
             } else {
                 $input = $request->except('password');
             }
-            $user->update($input);
+
+            // $user->update($input);
 
             return response()->json(['success' => true, 'message' => 'Password changes SuccessFully']);
         }

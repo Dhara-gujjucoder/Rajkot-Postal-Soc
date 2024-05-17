@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Front\LoanController;
 use App\Http\Controllers\Front\ShareController;
 use App\Http\Controllers\Front\UserLoginController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +53,14 @@ Route::prefix('user')->name('user.')->middleware(['auth:users','blockIP'])->grou
         // return redirect()->route('user.home')->withSuccess(__('Language changes successfully.'));
     })->name('change.locale');
 });
+
+
+
+Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
+Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');
+Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
+Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
+
 
 
 Route::get('/clear', function () {

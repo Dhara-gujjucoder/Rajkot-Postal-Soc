@@ -109,7 +109,7 @@ class MemberController extends Controller
                     $delete_btn = '&nbsp;<form action="' . route('members.destroy', $row->member->id) . '" method="post">' . csrf_field() . method_field('DELETE') . '<button type="submit" class="btn btn-outline-danger btn-sm"
                     onclick="return confirm(`' . __('Do you want to delete this user?') . '`);"><i class="bi bi-trash-fill"></i> ' . __('Delete') . '</button></form>';
 
-                    $change_pass_btn  = '&nbsp;<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changePassword" onclick="set_member_id(' . $row->id . ')"><i class="bi bi-key"></i> ' . __('Password') . '</button>';
+                    $change_pass_btn  = '&nbsp;<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changePassword" onclick="set_member_id(' . $row->id . ')"><i class="bi bi-key"></i> ' . __('Password') . '</button>';                                  //$row->id
 
                     $resign_btn = ($row->member->getRawOriginal('status') == 1 ? '&nbsp;<button type="button" class="btn btn-outline-primary btn-sm" onclick="load_member_details(' . $row->member->id . ')" data-bs-toggle="modal" data-bs-target="#loan_settle"><i class="bi bi-r-circle-fill"></i> ' . __('Resign') . '</button>' : '');
 

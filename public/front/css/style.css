@@ -500,3 +500,6 @@ table .btn-primary {
     top: 17px;
 }
 .eye-settle .form-control.is-invalid, .was-validated .form-control:invalid {background-image: none;}
+
+.forgot-pass .checkbox a { font-size: 17px; }
+.forgot-pass .checkbox a:hover { text-decoration: underline; }

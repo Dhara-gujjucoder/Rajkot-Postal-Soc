@@ -26,6 +26,7 @@ class SettingController extends Controller
         // $user->syncPermissions(Permission::pluck('name')->all());
         $data['setting'] = $setting;
         $data['page_title'] = __('Update Setting');
+
         return view('setting.create', $data);
     }
 

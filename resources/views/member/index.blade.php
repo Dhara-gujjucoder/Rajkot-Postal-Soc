@@ -158,6 +158,10 @@
                                 <input id="password-confirm" type="password" placeholder="{{ __('Confirm Password') }}" class="form-control" name="password_confirmation" autocomplete="new-password">
                             </div>
                         </div>
+                        <div class="col-md-8">
+                            <input type="checkbox" id="send_email" name="send_email" value="1">
+                            <label for="send_email">Send Email to Member</label>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>

@@ -58,14 +58,14 @@ class LoanMasterController extends Controller
                     // (Auth::user()->can('view-ledger_account')) ? $action_btn.= $show_btn : '';
                     // (Auth::user()->can('edit-loan')) ? $action_btn .= $edit_btn : '';
 
-                    //this $guarentor_add_btn  = '&nbsp;<button type="button" class="btn btn-outline-success btn-sm me-2" data-bs-toggle="modal" data-bs-target="#guarentor_add" onclick="set_member_id(' . $row->member_id . ')"><i class="bi bi-pencil"></i> ' . __('Edit') . '</button>';
+                    $guarentor_add_btn  = '&nbsp;<button type="button" class="btn btn-outline-success btn-sm me-2" data-bs-toggle="modal" data-bs-target="#guarentor_add" onclick="set_member_id(' . $row->member_id . ')"><i class="bi bi-pencil"></i> ' . __('Edit') . '</button>';
 
                     (Auth::user()->can('view-loan')) ? $action_btn .= $show_btn : '';
                     $action_btn .= ($row->getRawOriginal('status') == 1 ?  $pay_loan_btn : '');
 
                     (Auth::user()->can('delete-loan') && $row->getRawOriginal('status') == 1) ? $action_btn .= $delete_btn : '';
 
-                    //this (Auth::user()->can('edit-loan')) ? $action_btn .= $guarentor_add_btn : '';
+                    (Auth::user()->can('edit-loan')) ? $action_btn .= $guarentor_add_btn : '';
 
                     return $action_btn;
 

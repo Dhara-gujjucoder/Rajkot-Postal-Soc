@@ -20,6 +20,8 @@
                                 <div class="card-header justify-content-between">
                                     <h4 class="card-title"><b>{{ __('Site Setting') }}</b></h4>
                                 </div>
+
+
                                 <div class="card-body">
                                     <div class="form-group mb-3 row">
                                         <label class="col-2 col-form-label">{{ __('Favicon') }}</label>
@@ -100,7 +102,7 @@
                                 </div>
                                 <div class="card-body">
 
-                                    
+
 
                                     <div class="form-group mb-3 row">
                                         <label class="col-2 col-form-label">{{ __('Phone No') }}</label>

@@ -5,8 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="
-      avicon.png">
+    <meta name="description" content="avicon.png">
     <title>{{ $setting->title ?? 'Rajkot Postal SOC' }}</title>
     <link rel="shortcut icon" href="{{ asset($setting->favicon) }}">
     <link href="{{ asset('front/css/bootstrap.css') }}" rel="stylesheet">
@@ -15,6 +14,11 @@
     <link href="{{ asset('front/css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('front/css/responsive.css') }}" rel="stylesheet">
 </head>
+<style>
+    /* .hide {
+    display: none;
+} */
+</style>
 
 <body class="login-page">
     <div class="main-wrapper d-flex align-items-center w-100 h-100 login-PB">
@@ -24,12 +28,19 @@
                 <div class="login-logo mb-4 wow fadeInDown" data-wow-delay="0.4s"><img src="{{ asset('front/images/logo.png') }}" alt=""></div>
                 <div class="login-title mb-4">
                     <h3>Enter Your Registration Number</h3>
-                    <p>We will send you a Confirmation Code</p>
+                  
                 </div>
+
+                @if (Session::has('message'))
+                    <div class="alert alert-success hide" role="alert">
+                        {{ Session::get('message') }}
+                    </div>
+                @endif
+
                 <div class="mob-login-form px-3">
                     <form action="{{ route('user.login') }}" method="POST">
                         @csrf
-                        <div class="mb-5">
+                        <div class="mb-4">
                             <input type="input" name="registration_no" class="form-control input-user-icon input-bottom-border @error('registration_no') is-invalid @enderror" value="{{ old('registration_no') }}" placeholder="Registration Number">
 
                             @error('registration_no')
@@ -39,7 +50,7 @@
                             @enderror
                         </div>
 
-                        <div class="mb-5 eye-settle eyelogin">
+                        <div class="mb-4 eye-settle eyelogin">
                             <input type="password" name="password" class="form-control input-user-icon input-bottom-border @error('password') is-invalid @enderror" value="{{ old('password') }}" id="password" placeholder="Password"><i class="toggle-password fa fa-eye-slash" id="togglePassword" toggle="#password"></i>
                             @error('password')
                                 <span class="invalid-feedback" role="alert">
@@ -47,8 +58,17 @@
                                 </span>
                             @enderror
                         </div>
+                        <div class="mb-5 forgot-pass text-end">
+                            <div class="checkbox">
+                                <label>
+                                    <a href="{{ route('forget.password.get') }}">Forgot password?</a>
+                                </label>
+                            </div>
+                        </div>
 
                         <input type="submit" class="btn btn-primary w-100" value="Submit">
+
+
                     </form>
                 </div>
             </div>

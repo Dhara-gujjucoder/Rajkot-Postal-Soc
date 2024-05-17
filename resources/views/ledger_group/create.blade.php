@@ -41,7 +41,6 @@
                             </div>
                         </div>
 
-
                         <div class="mb-3 row">
                             <input type="submit" class="col-md-3 offset-md-5 btn btn-primary" value="{{__('Add Ledger Group')}}">
                         </div>
