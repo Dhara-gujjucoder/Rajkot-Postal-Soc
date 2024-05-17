@@ -16,11 +16,10 @@
 </head>
 
 <body class="login-page">
-    <div class="main-wrapper d-flex align-items-center w-100 h-100 login-PB">
+    <div class="main-wrapper d-flex align-items-center w-10 h-10 login-PB">
         <div class="cor-img-pos top-vec-img"></div>
         <div class="main-middle-section">
             <div class="container text-center">
-                <div class="login-logo mb-4 wow fadeInDown" data-wow-delay="0.4s"><img src="{{ asset('front/images/logo.png') }}" alt=""></div>
 
                 <h3>Hii, {{$member_name}}</h3>
                 Please <a href="{{ route('reset.password.get', $token) }}">click here </a>for reset your password.
