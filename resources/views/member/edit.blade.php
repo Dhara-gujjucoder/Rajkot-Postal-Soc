@@ -171,7 +171,7 @@
                                     <label for="signature">{{ __('Signature') }}<span class="text-danger">*</span></label>
                                     <input type="file" id="signature" accept="image/jpg, image/png, image/gif, image/jpeg" class="form-control  @error('signature') is-invalid @enderror" placeholder="{{ __('Signature') }}" name="signature">
 
-                                    @if (!empty($user->signature))
+                                    @if (file_exists(public_path($user->signature)))
                                         <a href="{{ asset($user->signature) }}" class="float-end" target="_blank"><img src="{{ asset($user->signature) }}" height="100" width="100"></a>
                                     @endif
                                     @if ($errors->has('signature'))
