@@ -69,7 +69,7 @@
                     <div class="mb-3 row">
                         <label for="name" class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Profile Picture') }}:</strong></label>
 
-                        @if (file_exists(public_path($user->profile_picture)))
+                        @if ($user->profile_picture))
                             <div class="col-md-6" style="line-height: 35px;">
                                 <a href="{{ asset($user->profile_picture) }}" target="_blank"><img src="{{ asset($user->profile_picture) }}" height="100" width="100"></a>
                             </div>
@@ -123,7 +123,7 @@
                     <div class="mb-3 row">
                         <label for="email" class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Signature') }}:</strong></label>
 
-                        @if (file_exists(public_path($user->signature)))
+                        @if ($user->signature))
                             <div class="col-md-6" style="line-height: 35px;">
                                 <a href="{{ asset($user->signature) }}" target="_blank"><img src="{{ asset($user->signature) }}" height="100" width="100"></a>
                             </div>
@@ -177,7 +177,7 @@
                     </div>
                     <div class="mb-3 row">
                         <label for="email" class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Aadhar card') }}:</strong></label>
-                        @if (file_exists(public_path($user->aadhar_card)))
+                        @if ($user->aadhar_card))
                             <div class="col-md-6" style="line-height: 35px;">
                                 <a href="{{ asset($user->aadhar_card) }}" target="_blank"><img src="{{ asset($user->aadhar_card) }}" height="100" width="180"> </a>
                             </div>
@@ -191,7 +191,7 @@
                     </div>
                     <div class="mb-3 row">
                         <label for="email" class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('PAN Card') }}:</strong></label>
-                        @if (file_exists(public_path($user->pan_card)))
+                        @if ($user->pan_card))
                             <div class="col-md-6" style="line-height: 35px;">
                                 <a href="{{ asset($user->pan_card) }}" target="_blank"><img src="{{ asset($user->pan_card) }}" height="100" width="180"> </a>
                             </div>
@@ -200,7 +200,7 @@
                     <div class="mb-3 row">
                         <label for="email" class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Departmental ID Proof') }}:</strong></label>
 
-                        @if (file_exists(public_path($user->department_id_proof)))
+                        @if ($user->department_id_proof))
                             <div class="col-md-6" style="line-height: 35px;">
                                 <a href="{{ asset($user->department_id_proof) }}" target="_blank"><img src="{{ asset($user->department_id_proof) }}" height="100" width="180"> </a>
                             </div>
@@ -224,7 +224,7 @@
                     </div>
                     <div class="mb-3 row">
                         <label for="email" class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Witness Signature') }}:</strong></label>
-                        @if (file_exists(public_path($user->witness_signature)))
+                        @if ($user->witness_signature))
                             <div class="col-md-6" style="line-height: 35px;">
                                 <a href="{{ asset($user->witness_signature) }}" target="_blank"><img src="{{ asset($user->witness_signature) }}" height="100" width="100"></a>
                             </div>
