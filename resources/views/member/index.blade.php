@@ -165,7 +165,10 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
-                        <button type="submit" class="btn btn-primary">{{ __('Save Password') }}</button>
+
+                        <button type="submit" id="submitBtn" class="btn btn-primary">{{ __('Save Password') }}</button>
+                        <div id="loading" style="display: none;" class="btn btn-outline-light btn-md float-start my-3">
+                            {{ __('Loading...') }}</div>
                     </div>
                 </form>
             </div>
@@ -282,6 +285,9 @@
     }
 
     $('#change_pwd_form').on('submit', function(e) {
+            $('#loading').show(); // Display the loading symbol
+            $('#submitBtn').hide();
+
         e.preventDefault(); // prevent the form submit
         var url = $(this).attr('action');
         $('.invalid-feedback').remove();
@@ -298,8 +304,11 @@
             success: function(response) {
                 // handle success response
                 show_success(response.message);
-                $('#change_pwd_form').trigger('reset');
                 $('#changePassword').modal('hide');
+
+                $('#loading').hide();
+                $('#submitBtn').show();
+                $('#change_pwd_form').trigger('reset');
             },
             error: function(xhr, status, error) {
                 // handle error response
@@ -316,6 +325,9 @@
                             '</strong></div>');
                     });
                 }
+
+                $('#loading').hide();
+                $('#submitBtn').show();
             },
             contentType: false,
             processData: false

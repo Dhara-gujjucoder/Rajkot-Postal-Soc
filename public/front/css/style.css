@@ -503,3 +503,6 @@ table .btn-primary {
 
 .forgot-pass .checkbox a { font-size: 17px; }
 .forgot-pass .checkbox a:hover { text-decoration: underline; }
+
+.rps-profile-img { display: block; }
+.rps-profile-img img { max-height: 200px; object-fit: contain; }

@@ -25,15 +25,15 @@
                                 <div class="form-group opening_balance">
                                     <label for="registration_no">
                                         <span>{{ __('Fixed Saving Opening Balance') }} :</span>
-                                        <b> {{ $user->fixed_saving_ledger_account->opening_balance ?? ''}}</b>
+                                        <b> {{ $user->fixed_saving_ledger_account->opening_balance ?? '' }}</b>
                                     </label>
                                     <label for="registration_no">
                                         <span>{{ __('Share Opening Balance') }} :</span>
-                                        <b> {{ $user->share_ledger_account->opening_balance ?? ''}}</b>
+                                        <b> {{ $user->share_ledger_account->opening_balance ?? '' }}</b>
                                     </label>
                                     <label for="registration_no">
                                         <span>{{ __('Loan Opening Balance') }} :</span>
-                                        <b> {{ $user->loan_ledger_account->opening_balance ?? ''}}</b>
+                                        <b> {{ $user->loan_ledger_account->opening_balance ?? '' }}</b>
                                     </label>
                                 </div>
                             </div>
@@ -56,13 +56,15 @@
                                 </div>
                             </div>
                             <div class="col-md-6 col-12">
-                                <div class="form-group">
+                                <div class="form-group ">
                                     <label for="profile_picture">{{ __('Profile Picture') }}<span class="text-danger">*</span></label>
                                     <input type="file" id="profile_picture" accept="image/jpg, image/png, image/gif, image/jpeg" class="form-control  @error('profile_picture') is-invalid @enderror" placeholder="{{ __('Profile Picture') }}" name="profile_picture">
 
 
                                     @if ($user->profile_picture)
-                                        <a href="{{ asset($user->profile_picture) }}" class="float-end" target="_blank"><img src="{{ asset($user->profile_picture) }}" height="100" width="100"></a>
+                                        <div class="profile-photo-img">
+                                            <a href="{{ asset($user->profile_picture) }}" class="float-end" target="_blank"><img src="{{ asset($user->profile_picture) }}" height="100" width="100"></a>
+                                        </div>
                                         {{-- {{ __('View') }} <i class="bi bi-eye-fill"></i> --}}
                                     @endif
 
@@ -173,7 +175,9 @@
                                     <input type="file" id="signature" accept="image/jpg, image/png, image/gif, image/jpeg" class="form-control  @error('signature') is-invalid @enderror" placeholder="{{ __('Signature') }}" name="signature">
 
                                     @if ($user->signature)
+                                    <div class="sign-img">
                                         <a href="{{ asset($user->signature) }}" class="float-end" target="_blank"><img src="{{ asset($user->signature) }}" height="100" width="100"></a>
+                                    </div>
                                     @endif
                                     @if ($errors->has('signature'))
                                         <span class="text-danger">{{ $errors->first('signature') }}</span>
@@ -280,8 +284,10 @@
                                     <input type="file" id="aadhar_card" accept="image/jpg, image/png, image/gif, image/jpeg" class="form-control @error('aadhar_card') is-invalid @enderror" placeholder="{{ __('aadhar_card') }}" name="aadhar_card">
 
 
-                                    @if ($user->aadhar_card))
+                                    @if ($user->aadhar_card)
+                                        <div class="profile-card">
                                         <a href="{{ asset($user->aadhar_card) }}" class="float-end" target="_blank"><img src="{{ asset($user->aadhar_card) }}" height="100" width="180"></i></a>
+                                    </div>
                                     @endif
 
                                     @if ($errors->has('aadhar_card'))
@@ -305,7 +311,9 @@
                                     <input type="file" id="pan_card" accept="image/jpg, image/png, image/gif, image/jpeg" class="form-control  @error('pan_card') is-invalid @enderror" placeholder="{{ __('PAN card') }}" name="pan_card">
 
                                     @if ($user->pan_card)
+                                    <div class="profile-card">
                                         <a href="{{ asset($user->pan_card) }}" class="float-end" target="_blank"><img src="{{ asset($user->pan_card) }}" height="100" width="180"></a>
+                                    </div>
                                     @endif
 
                                     @if ($errors->has('pan_card'))
@@ -321,7 +329,9 @@
 
 
                                     @if ($user->department_id_proof)
+                                    <div class="profile-card">
                                         <a href="{{ asset($user->department_id_proof) }}" class="float-end" target="_blank"><img src="{{ asset($user->department_id_proof) }}" height="100" width="180"></a>
+                                    </div>
                                     @endif
 
                                     @if ($errors->has('department_id_proof'))
@@ -362,7 +372,10 @@
                                     <input type="file" id="witness_signature" accept="image/jpg, image/png, image/gif, image/jpeg" class="form-control @error('witness_signature') is-invalid @enderror" placeholder="{{ __('Place') }}" name="witness_signature">
 
                                     @if ($user->witness_signature)
+                                    <div class="sign-img">
+
                                         <a href="{{ asset($user->witness_signature) }}" class="float-end" target="_blank"><img src="{{ asset($user->witness_signature) }}" height="100" width="100"></a>
+                                    </div>
                                     @endif
 
                                     @if ($errors->has('witness_signature'))
@@ -526,7 +539,7 @@
 @push('script')
 <script type="text/javascript">
     $('.date').flatpickr({
-        allowInput:true,
+        allowInput: true,
         altInput: true,
         altFormat: "d/m/Y",
         dateFormat: "Y-m-d",

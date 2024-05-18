@@ -6,7 +6,7 @@
 .ctooltip .text-info {
   color: var(--bs-heading-color) !important;
 }
-  
+
 .ctooltip .tooltiptext {
   visibility: hidden;
   width: 600px;
@@ -41,6 +41,8 @@
   opacity: 1;
 }
 
-
+.profile-photo-img  img {max-width: 100%; max-height: 125px;}
+.sign-img img{ max-width: 100%;width: auto;height: auto;max-height: 60px;}
+.profile-card img{ max-width: 100%;height: auto;max-height: 150px;width: auto;}
 
 
