@@ -60,7 +60,8 @@
                                     <label for="profile_picture">{{ __('Profile Picture') }}<span class="text-danger">*</span></label>
                                     <input type="file" id="profile_picture" accept="image/jpg, image/png, image/gif, image/jpeg" class="form-control  @error('profile_picture') is-invalid @enderror" placeholder="{{ __('Profile Picture') }}" name="profile_picture">
 
-                                    @if ($user->profile_picture)
+
+                                    @if (file_exists(public_path($user->profile_picture)))
                                         <a href="{{ asset($user->profile_picture) }}" class="float-end" target="_blank"><img src="{{ asset($user->profile_picture) }}" height="100" width="100"></a>
                                         {{-- {{ __('View') }} <i class="bi bi-eye-fill"></i> --}}
                                     @endif
@@ -278,7 +279,8 @@
                                     <label for="aadhar_card">{{ __('Aadhar card') }}</label>
                                     <input type="file" id="aadhar_card" accept="image/jpg, image/png, image/gif, image/jpeg" class="form-control @error('aadhar_card') is-invalid @enderror" placeholder="{{ __('aadhar_card') }}" name="aadhar_card">
 
-                                    @if ($user->aadhar_card)
+
+                                    @if (file_exists(public_path($user->aadhar_card)))
                                         <a href="{{ asset($user->aadhar_card) }}" class="float-end" target="_blank"><img src="{{ asset($user->aadhar_card) }}" height="100" width="180"></i></a>
                                     @endif
 
@@ -302,7 +304,7 @@
                                     <label for="pan_card">{{ __('PAN Card') }}</label>
                                     <input type="file" id="pan_card" accept="image/jpg, image/png, image/gif, image/jpeg" class="form-control  @error('pan_card') is-invalid @enderror" placeholder="{{ __('PAN card') }}" name="pan_card">
 
-                                    @if ($user->pan_card)
+                                    @if (file_exists(public_path($user->pan_card)))
                                         <a href="{{ asset($user->pan_card) }}" class="float-end" target="_blank"><img src="{{ asset($user->pan_card) }}" height="100" width="180"></a>
                                     @endif
 
@@ -317,7 +319,8 @@
                                     <label for="department_id_proof">{{ __('Departmental ID Proof') }}</label>
                                     <input type="file" id="department_id_proof" accept="image/jpg, image/png, image/gif, image/jpeg" class="form-control @error('department_id_proof') is-invalid @enderror" placeholder="{{ __('Departmental ID Proof') }}" name="department_id_proof">
 
-                                    @if (!empty($user->department_id_proof))
+
+                                    @if (file_exists(public_path($user->department_id_proof)))
                                         <a href="{{ asset($user->department_id_proof) }}" class="float-end" target="_blank"><img src="{{ asset($user->department_id_proof) }}" height="100" width="180"></a>
                                     @endif
 
@@ -358,7 +361,7 @@
                                     <label for="witness_signature">{{ __('Witness Signature') }}</label>
                                     <input type="file" id="witness_signature" accept="image/jpg, image/png, image/gif, image/jpeg" class="form-control @error('witness_signature') is-invalid @enderror" placeholder="{{ __('Place') }}" name="witness_signature">
 
-                                    @if ($user->witness_signature)
+                                    @if (file_exists(public_path($user->witness_signature)))
                                         <a href="{{ asset($user->witness_signature) }}" class="float-end" target="_blank"><img src="{{ asset($user->witness_signature) }}" height="100" width="100"></a>
                                     @endif
 
