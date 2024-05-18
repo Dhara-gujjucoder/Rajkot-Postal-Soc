@@ -115,7 +115,7 @@
     <div class="modal fade" id="guarentor_add" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form action="{{ route('loan.guarentor_store', 1) }}" method="post" enctype="multipart/form-data" id="guarentor_store">
+                <form action="{{ route('loan.guarantor_store', 1) }}" method="post" enctype="multipart/form-data" id="guarentor_store">
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">{{ __('Guarantee Details') }}</h5>
@@ -126,7 +126,7 @@
                             <label for="amount" class="col-md-2 col-form-label text-md-end text-start">{{ __('Guarantor 1') }}</label>
                             <div class="col-md-10">
                                 <div class="gexist">
-                                    <select class="form-select @error('g1_member_id') is-invalid @enderror" aria-label="Permissions" name="g1_member_id" onchange="checkGuarantor($(this).val(),$('#g1_member_id'))">
+                                    <select class="form-control @error('g1_member_id') is-invalid @enderror" aria-label="Permissions" name="g1_member_id" onchange="checkGuarantor($(this).val(),$('#g1_member_id'))">
                                         <option value="">{{ __('Select Member') }}</option>
                                         @foreach ($members as $member)
                                             <option value="{{ $member->id }}">{{ $member->name }}</option>
@@ -143,7 +143,7 @@
                             <label for="amount" class="col-md-2 col-form-label text-md-end text-start">{{ __('Guarantor 2') }}</label>
                             <div class="col-md-10">
                                 <div class="gexist">
-                                    <select class="form-select @error('g2_member_id') is-invalid @enderror" aria-label="Permissions" name="g2_member_id" onchange="checkGuarantor($(this).val(),$('#g2_member_id'))">
+                                    <select class="form-control @error('g2_member_id') is-invalid @enderror" aria-label="Permissions" name="g2_member_id" onchange="checkGuarantor($(this).val(),$('#g2_member_id'))">
                                         <option value="">{{ __('Select Member') }}</option>
                                         @foreach ($members as $member)
                                             <option value="{{ $member->id }}">{{ $member->name }}</option>
@@ -440,7 +440,7 @@
         }
 
         function set_member_id(member_id) {
-            var url = "{{ route('loan.guarentor_store', ':id') }}";
+            var url = "{{ route('loan.guarantor_store', ':id') }}";
             url = url.replace(':id', member_id);
             $('#guarentor_store').attr('action', url);
         }
@@ -463,7 +463,7 @@
                     // handle success response
                     show_success(response.message);
                     $('#guarentor_store').trigger('reset');
-                    $('#changePassword').modal('hide');
+                    $('#guarentor_add').modal('hide');
                 },
                 error: function(xhr, status, error) {
                     // handle error response
@@ -474,8 +474,13 @@
                             console.log(key, value);
                             $('input[name=' + key + ']').closest('.form-control').addClass(
                                 'is-invalid');
+                            $('select[name=' + key + ']').closest('.form-control').addClass(
+                                'is-invalid');
                             // console.log($('input[name=' + key + ']').find('.form-control').length);
                             $('input[name=' + key + ']').closest('.form-control').after(
+                                '<div class="invalid-feedback" role="alert"><strong>' + value +
+                                '</strong></div>');
+                            $('select[name=' + key + ']').closest('.form-control').after(
                                 '<div class="invalid-feedback" role="alert"><strong>' + value +
                                 '</strong></div>');
                         });

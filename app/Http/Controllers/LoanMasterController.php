@@ -7,6 +7,8 @@ use DateInterval;
 use App\Models\Member;
 use App\Models\LoanEMI;
 use App\Models\LoanMaster;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -36,6 +38,7 @@ class LoanMasterController extends Controller
      */
     public function index(Request $request)
     {
+        // dd(url('/'));
         $data['loans'] = LoanMaster::get();
         $data['page_title'] = __('Loan');
         $data['members'] = Member::with('shares')->get();
@@ -52,23 +55,32 @@ class LoanMasterController extends Controller
                     class="btn btn-outline-info btn-sm me-2"><i class="bi bi-eye"></i> ' . __('Show') . '</a>';
                     // $edit_btn = '<a href="' . route('loan.edit', $row->id) . '"
                     // class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square"></i>' . __('Edit') . '</a>';onclick="return confirm(`'.__('Do you want to delete this user?').'`);"
+
                     $delete_btn = '<button type="button"  class="btn btn-outline-danger btn-sm me-2" onclick="load_member_details(' . $row->member_id . ',`_settle`)" data-bs-toggle="modal" data-bs-target="#loan_settle"><i class="bi bi-trash"></i>' . __('Close') . '</button>&nbsp;';
+
                     $pay_loan_btn = '<button type="button" data-bs-toggle="modal" data-bs-target="#loan_pay" onclick="load_member_details(' . $row->member_id . ',`_pay`)"
                     class="btn btn-outline-warning btn-sm me-2"><i class="bi bi-eye"></i> ' . __('Pay') . '</button>';
                     // (Auth::user()->can('view-ledger_account')) ? $action_btn.= $show_btn : '';
                     // (Auth::user()->can('edit-loan')) ? $action_btn .= $edit_btn : '';
-
-                    $guarentor_add_btn  = '&nbsp;<button type="button" class="btn btn-outline-success btn-sm me-2" data-bs-toggle="modal" data-bs-target="#guarentor_add" onclick="set_member_id(' . $row->member_id . ')"><i class="bi bi-pencil"></i> ' . __('Edit') . '</button>';
+// dd($row);
+                    // if ($row->g1_member_id == null || $row->g2_member_id == null) {
+                        $guarantor_add_btn  = '&nbsp;<button type="button" class="btn btn-outline-success btn-sm me-2" data-bs-toggle="modal" data-bs-target="#guarentor_add" onclick="set_member_id(' . $row->member_id . ')"><i class="bi bi-pencil"></i> ' . __('Edit') . '</button>';
+                        // return $guarantor_add_btn;
+                    // } else {
+                    //     return '';
+                    // }
 
                     (Auth::user()->can('view-loan')) ? $action_btn .= $show_btn : '';
                     $action_btn .= ($row->getRawOriginal('status') == 1 ?  $pay_loan_btn : '');
 
                     (Auth::user()->can('delete-loan') && $row->getRawOriginal('status') == 1) ? $action_btn .= $delete_btn : '';
-
-                    (Auth::user()->can('edit-loan')) ? $action_btn .= $guarentor_add_btn : '';
+                    // if ($row->g1_guarantor == null || $row->g2_guarantor == null) {
+                        (Auth::user()->can('edit-loan') && ($row->g1_member_id == null  || $row->g2_member_id == null)) ? $action_btn .= $guarantor_add_btn : '';
+                    // } else {
+                    //     return '';
+                    // }
 
                     return $action_btn;
-
                 })
                 ->filterColumn('member_id', function ($query, $search) {
                     $query->whereHas('member', function ($q) use ($search) {
@@ -106,25 +118,38 @@ class LoanMasterController extends Controller
     }
 
 
-    public function guarentor_store(Request $request)
+    public function guarantor_store(Request $request, member $member)
     {
-        // $request->validate([
-        //     'g1_member_id' => 'required',
-        //     'g2_member_id' => 'required',
-        //     'gcheque_no' => 'required|numeric',
-        //     'gbank_name' => 'string'
-        // ], [
-        //     'g1_member_id.required' => __('Guarantor 1 field is required'),
-        //     'g2_member_id.required' => __('Guarantor 2 field is required'),
-        // ]);
+        // dd($member->id.'this');
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'g1_member_id' => 'required',
+                'g2_member_id' => 'required',
+                'gcheque_no' => 'required|numeric',
+                'gbank_name' => 'string'
+            ]
+        );
 
+        if ($validator->fails()) {
+                    // if validation failure
+            return response()->json($validator->messages(), Response::HTTP_UNPROCESSABLE_ENTITY);
+        } else {
 
+            $guarantor = LoanMaster::where('member_id', $member->id)->active()->first();
+            $guarantor->update([
+                'g1_member_id' => $request->g1_member_id,
+                'g2_member_id' => $request->g2_member_id,
+                'gcheque_no' => $request->gcheque_no,
+                'gbank_name' => $request->gbank_name,
+            ]);
+            return response()->json(['message' => __('Loan updated successfully'), 'success' => true]);
+        }
     }
 
 
     public function store(Request $request)
     {
-
         $request->validate([
             'loan_id' => 'required',
             'emi_amount' => 'required',
@@ -145,7 +170,7 @@ class LoanMasterController extends Controller
 
         $loan_no = str_pad((LoanMaster::count()) + 1, 2, '0', STR_PAD_LEFT) . '/' . $this->current_year->start_year . '-' . $this->current_year->end_year;
 
-        $yourDate = strtotime($request->month.' -1 month'); // substract 1 month from that date and converting it into timestamp
+        $yourDate = strtotime($request->month . ' -1 month'); // substract 1 month from that date and converting it into timestamp
         $desiredDate = date("Y-m-d", $yourDate);
 
 
@@ -170,7 +195,7 @@ class LoanMasterController extends Controller
         }
 
         //update share
-        if ($request->remaining_share > 0) { //aa koy ma avayata ? remianing share ?
+        if ($request->remaining_share > 0) {
             $no_of_share = $member->total_share + $request->remaining_share;
             $this->update_member_share($member, $no_of_share);
         }
@@ -210,7 +235,7 @@ class LoanMasterController extends Controller
         $member->loan_ledger_account->update(['current_balance' => 0]);
     }
 
-    public function show(string $id,Request $request)
+    public function show(string $id, Request $request)
     {
         // dd($request->all());
         $loan = LoanMaster::findOrFail($id);
@@ -340,8 +365,8 @@ class LoanMasterController extends Controller
 
                 $loan->loan_emis()->pending()->delete();
 
-                while($loan_amt > 0){
-                // for ($i = 1; $i <= $no_of_emi; $i++) {
+                while ($loan_amt > 0) {
+                    // for ($i = 1; $i <= $no_of_emi; $i++) {
                     $emi_interest = intval($loan_amt * $rate / 100 * $emi_c / $emi_d);
                     $date = new DateTime($dmonth);
                     $date->add(new DateInterval('P1M'));
@@ -351,7 +376,7 @@ class LoanMasterController extends Controller
                         if ($loan_amt < $emi_amount) {
                             $emi_amount = $loan_amt;
                             $loan_amt = 0;
-                        }else{
+                        } else {
 
                             $loan_amt = intval($loan_amt - ($emi_amount - $emi_interest));
                         }

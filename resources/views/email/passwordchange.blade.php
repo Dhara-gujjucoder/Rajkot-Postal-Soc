@@ -19,7 +19,7 @@
             </tr>
             <tr>
                 <th align="left">URL: </th>
-                <td align="left">{{ 'https://rajkotpostalsoc.in/user/login' }}</td>
+                <td align="left">{{url('/')}} </td>   {{-- {{ 'https://rajkotpostalsoc.in/user/login' }}</td> --}}
             </tr>
             <tr>
                 <th align="left">Registration No:</th>
