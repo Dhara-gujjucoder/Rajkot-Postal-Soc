@@ -50,9 +50,9 @@
                                             <div class="col-md-3 col-3 col-lg-2">
                                                 <b class="p-1 ">&nbsp;</b>
                                             </div>
-                                            <div class="col-md-1 col-1">
+                                            {{-- <div class="col-md-1 col-1">
                                                 <b class="p-1 ">{{ __('Loan Settlement') }}</b>
-                                            </div>
+                                            </div> --}}
                                             <div class="col-md-2 col-2">
                                                 <b class="p-1 ">{{ __('Principal') }}</b>
                                             </div>
@@ -138,12 +138,12 @@
                                                     placeholder="{{ __('department_id') }}">
                                             </div>
                                         </div>
-                                        <div class="col-md-1 col-1">
+                                        {{-- <div class="col-md-1 col-1">
                                             <input class="form-check-input" type="checkbox"
                                                 name="is_loan_settle_{{ $member->user_id }}" value="1"
                                                 id="is_loan_settle_{{ $member->user_id }}"
                                                 {{ old('is_loan_settle_' . $member->user_id) ? 'checked' : '' }}>
-                                        </div>
+                                        </div> --}}
                                         <div class="col-md-2 col-2">
                                             <div class="form-group">
                                                 <input type="number" step="any"

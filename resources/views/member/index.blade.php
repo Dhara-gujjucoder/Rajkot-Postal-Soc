@@ -324,6 +324,7 @@
                             '<div class="invalid-feedback" role="alert"><strong>' + value +
                             '</strong></div>');
                     });
+
                 }
 
                 $('#loading').hide();

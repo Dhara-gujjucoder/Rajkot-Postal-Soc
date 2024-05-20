@@ -26,7 +26,7 @@ class StoreMemberRequest extends FormRequest
         return [
             'name'                => 'required|string|max:250',
             'email'               => 'required|string|email|max:250|unique:users,email',
-            'password'            => 'string|min:4|confirmed',
+            'password'            => 'string|min:4',
             'department_id'       => 'required',
             'company'             => 'required',
             'salary'              => 'required',

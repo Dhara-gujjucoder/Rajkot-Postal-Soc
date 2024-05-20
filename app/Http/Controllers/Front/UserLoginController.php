@@ -120,7 +120,7 @@ class UserLoginController extends Controller
                     return $fail(__('The current password is incorrect.'));
                 }
             }],
-            'password'       => 'bail|required|string|min:4|confirmed',
+            'password'  => 'bail|required|string|min:4|confirmed',
         ]);
         $input['password'] = $request->password;
         $user->update($input);
