@@ -118,7 +118,6 @@ class BulkEntryController extends Controller
                     // $item->{$value} = $prefill->{$value} ?? 0;
                     // if($loan_emi ){
                     // }
-
                 }
             });
             $department->members = $members;

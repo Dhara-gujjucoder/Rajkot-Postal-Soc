@@ -171,7 +171,7 @@
                                                 oninput="calculate_total()"
                                                 name="principal_{{ $department->id }}_{{ $member->user_id }}"
                                                 value="{{ old('principal', $member->principal) }}"
-                                                placeholder="{{ __('Principal') }}" readonly>
+                                                placeholder="{{ __('Principal') }}" >
                                             @if ($errors->has('principal'))
                                                 <span class="text-danger">{{ $errors->first('principal') }}</span>
                                             @endif
@@ -185,7 +185,7 @@
                                                 oninput="calculate_total()"
                                                 name="interest_{{ $department->id }}_{{ $member->user_id }}"
                                                 value="{{ old('interest', $member->interest) }}"
-                                                placeholder="{{ __('Interest') }}" readonly>
+                                                placeholder="{{ __('Interest') }}">
                                                 <input type="hidden"
                                                 name="emi_id_{{ $department->id }}_{{ $member->user_id }}"
                                                 value="{{ $member->emi_id }}">
@@ -601,6 +601,9 @@
             });
             ledger_type.forEach(ledger2 => {
                 $('#summary_' + ledger2 + 'total_' + department.id).val(totals[ledger2 +
+                    department.id].toFixed(0));
+
+                    $('#exact_amount_'+department.id).val(totals[ledger2 +
                     department.id].toFixed(0));
                 totals[ledger2 + 'final'] += totals[ledger2 + department.id];
             });
