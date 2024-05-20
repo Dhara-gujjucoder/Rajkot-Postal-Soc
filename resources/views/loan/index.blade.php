@@ -23,7 +23,7 @@
                                 <th>{{ __('Amount') }}</th>
                                 <th>{{ __('EMI Amount') }}</th>
                                 <th>{{ __('Status') }}</th>
-                                <th>{{ __('Temp Loan Status') }}</th> {{-- only temporary add this column in db --}}
+                                {{-- <th>{{ __('Temp Loan Status') }}</th> only temporary add this column in db --}}
                                 <th>{{ __('Action') }} </th>
                             </tr>
                         </thead>
@@ -222,10 +222,10 @@
                     data: 'status',
                     name: 'status'
                 },
-                {
-                    data: 'temp_loan_status',
-                    name: 'temp_loan_status'
-                },
+                // {
+                //     data: 'temp_loan_status',
+                //     name: 'temp_loan_status'
+                // },
                 {
                     data: 'action',
                     name: 'action',
