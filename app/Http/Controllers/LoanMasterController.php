@@ -152,6 +152,7 @@ class LoanMasterController extends Controller
     {
         $request->validate([
             'loan_id' => 'required',
+            'date' => 'required',
             'emi_amount' => 'required',
             'member_id' => 'required',
             'g1_member_id' => 'required',
@@ -168,7 +169,9 @@ class LoanMasterController extends Controller
             'g2_member_id.required' => __('Guarantor 2 field is required'),
         ]);
 
-        $loan_no = str_pad((LoanMaster::count()) + 1, 2, '0', STR_PAD_LEFT) . '/' . $this->current_year->start_year . '-' . $this->current_year->end_year;
+        $loan_no = str_pad((LoanMaster::count()) + 1, 2, '0', STR_PAD_LEFT) . '/' . $this->current_year->start_year . '-' . substr($this->current_year->end_year, -2);
+        // dd($loan_no);
+
 
         $yourDate = strtotime($request->month . ' -1 month'); // substract 1 month from that date and converting it into timestamp
         $desiredDate = date("Y-m-d", $yourDate);

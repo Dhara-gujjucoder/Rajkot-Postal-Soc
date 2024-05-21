@@ -40,15 +40,28 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="mb-3 row">
+                                <label for="date" class="col-md-2 col-form-label text-md-end text-start">{{ __('Date') }}</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control date @error('date') is-invalid @enderror" id="date" name="date" value="{{ date('Y-m-d') }}">
+
+                                    @if ($errors->has('date'))
+                                        <span class="text-danger">{{ $errors->first('date') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+
                             <div class="mb-3 row">
                                 <label for="amount" class="col-md-2 col-form-label text-md-end text-start">{{ __('EMI amount') }}</label>
                                 <div class="col-md-10">
-                                    <input type="number" class="form-control @error('emi_amount') is-invalid @enderror" id="emi_amount" name="emi_amount" value="{{ old('emi_amount') }}" onchange="loadEMI()" placeholder="{{ __('Amount') }}">
+                                    <input type="number" class="form-control  @error('emi_amount') is-invalid @enderror" id="emi_amount" name="emi_amount" value="{{ old('emi_amount') }}" onchange="loadEMI()" placeholder="{{ __('Amount') }}">
                                     @if ($errors->has('emi_amount'))
                                         <span class="text-danger">{{ $errors->first('amount') }}</span>
                                     @endif
                                 </div>
                             </div>
+
                             <div class="mb-3 row">
                                 <label for="amount" class="col-md-2 col-form-label text-md-end text-start">{{ __('EMI Details') }}</label>
                                 <div class="col-md-10" id="emi_details">
@@ -143,7 +156,7 @@
                                 </div>
                             </div>
 
-                            <input type="hidden" class="form-control" id="month" name="month" value="{{ date('Y-m-d') }}">   {{-- , strtotime('14-03-2024') --}}
+                            <input type="hidden" class="form-control" id="month" name="month" value="{{ date('Y-m-d') }}"> {{-- , strtotime('14-03-2024') --}}
 
                             <input type="hidden" class="form-control" id="total_share_amt" name="total_share_amt" value="{{ old('total_share_amt') }}">
                             <input type="hidden" class="form-control" id="remaining_share_amount" name="remaining_share_amount" value="{{ old('remaining_share_amount') }}">
@@ -279,6 +292,13 @@
 @endsection
 @push('script')
 <script>
+    $('.date').flatpickr({
+        allowInput: true,
+        altInput: true,
+        altFormat: "d/m/Y",
+        dateFormat: "Y-m-d",
+    });
+
     $('#myForm').submit(function() {
         $('#submitButton').prop('disabled', true);
     });
