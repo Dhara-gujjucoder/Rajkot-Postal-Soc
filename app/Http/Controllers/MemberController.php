@@ -436,7 +436,7 @@ class MemberController extends Controller
         $resign->fixed_ledger_account_id = $member->fixed_saving_ledger_account->id;
         $resign->loan_ledger_account_id = $member->loan_ledger_account->id;
         $resign->member_id = $member->id;
-        $resign->principal_amount = $member->loan->principal_amt;
+        $resign->principal_amount = $member->loan->principal_amt ?? 0;
         $resign->remaining_loan_amount = $member->loan_remaining_amount;
         $resign->share_amount = $member->share_ledger_account->current_balance;
         $resign->total_fixed_saving = $member->fixed_saving_ledger_account->current_balance;

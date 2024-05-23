@@ -35,7 +35,7 @@ class UpdateMemberRequest extends FormRequest
             'birthdate' => 'required',
             'whatsapp_no' => 'numeric',
             'aadhar_card_no' => 'required',
-            'pan_no' => 'required',
+            // 'pan_no' => 'required',
             'mobile_no' => 'required|unique:members,mobile_no,' . $this->member->id,
             'current_address' => 'required',
             'parmenant_address' => 'required',
@@ -51,7 +51,7 @@ class UpdateMemberRequest extends FormRequest
             'profile_picture' => 'max:2048',
             'signature' => 'max:2048',
             'aadhar_card' => 'max:2048',
-            'pan_card' => 'max:2048',
+            // 'pan_card' => 'max:2048',
             'department_id_proof' => 'max:2048',
             'witness_signature' => 'max:2048',
         ];

@@ -53,6 +53,7 @@ class DoubleEntryController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'description' => 'required',
             'ledger_ac_id' => 'required|array|min:2',
