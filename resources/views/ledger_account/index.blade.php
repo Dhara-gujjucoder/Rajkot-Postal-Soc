@@ -94,6 +94,7 @@
                                     <th scope="col">{{ __('Ledger Group') }}</th>
                                     <th scope="col">{{ __('Member') }}</th>
                                     <th scope="col">{{ __('Opening Balance') }}</th>
+                                    <th scope="col">{{ __('Current Balance') }}</th>
                                     <th scope="col">{{ __('Type') }}</th>
                                     <th scope="col" style="width: 250px;">{{ __('Action') }}</th>
                                 </tr>
@@ -144,6 +145,10 @@
                 {
                     data: 'opening_balance',
                     name: 'opening_balance'
+                },
+                {
+                    data: 'current_balance',
+                    name: 'current_balance'
                 },
                 {
                     data: 'type',
