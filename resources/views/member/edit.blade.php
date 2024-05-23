@@ -298,7 +298,7 @@
                             </div>
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
-                                    <label for="pan_no">{{ __('PAN No') }}<span class="text-danger">*</span></label>
+                                    <label for="pan_no">{{ __('PAN No') }}<span class="text-danger"></span></label>
                                     <input type="text" id="pan_no" class="form-control @error('pan_no') is-invalid @enderror" placeholder="{{ __('PAN No') }}" name="pan_no" value="{{ old('pan_no', $user->pan_no) }}">
                                     @if ($errors->has('pan_no'))
                                         <span class="text-danger">{{ $errors->first('pan_no') }}</span>
