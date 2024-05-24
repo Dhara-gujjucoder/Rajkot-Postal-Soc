@@ -42,6 +42,7 @@ class DoubleEntryController extends Controller
     }
 
     public function create(){
+        // dd($this->current_year->id);
         $data['count'] = (MasterDoubleEntry::latest()->first()->id ?? 0) + 1;
         $data['no'] = str_pad($data['count'], 4, 0, STR_PAD_LEFT);
         $data['page_title'] = __('Add Double Entry');
@@ -128,16 +129,16 @@ class DoubleEntryController extends Controller
                             'member_id' => $ledger_account->member_id,
                             'month' => $month,
                             'fixed_amount' => $meta_entry->amount,
-                            'year_id' => 1,
+                            'year_id' => $this->current_year->id,
                             'status' => 1,
                             'is_double_entry' => 1
                             // 'created_date' => $end_date->format('Y-m-d'),
                         ]);
                         $member_fixed_saving = $member->fixed_saving_ledger_account->opening_balance + $member->fixed_saving()->sum('fixed_amount');
 
-                        $member->fixed_saving_ledger_account->update(['current_balance' => $member_fixed_saving]);
+                        // $member->fixed_saving_ledger_account->update(['current_balance' => $member_fixed_saving]);
 
-                        // $member->fixed_saving_ledger_account->update(['current_balance' => $member->fixed_saving_ledger_account->current_balance + $meta_entry->amount]);
+                        $member->fixed_saving_ledger_account->update(['current_balance' => $member->fixed_saving_ledger_account->current_balance + $meta_entry->amount]);
 
                     // }
                     // dd($ledger);

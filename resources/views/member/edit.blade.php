@@ -1,5 +1,11 @@
 @extends('layouts.app')
 @section('content')
+    <style>
+        .flatpickr-calendar {
+            display: none;
+            /* Hide the calendar */
+        }
+    </style>
 @section('title')
     {{ $page_title }}
 @endsection
@@ -108,24 +114,11 @@
                                     @endif
                                 </div>
                             </div>
-                            {{-- <div class="col-md-6 col-12">
-                                <div class="form-group">
-                                    <label for="birthdate">{{ __('Birth Date') }}<span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" id="birthdate"
-                                        class="date form-control @error('birthdate') is-invalid @enderror"
-                                        placeholder="{{ __('Birth Date') }}" name="birthdate"
-                                        value="{{ old('birthdate', $user->birthdate) }}">
-                                    @if ($errors->has('birthdate'))
-                                        <span class="text-danger">{{ $errors->first('birthdate') }}</span>
-                                    @endif
-                                </div>
-                            </div> --}}
 
-                            <div class="col-md-6 col-12">
+                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="birthdate">{{ __('Birth Date') }}<span class="text-danger">*</span></label>
-                                    <input type="date" name="birthdate" value="{{ old('birthdate', $user->birthdate) }}" class="form-control flatpickr-no-config date @error('birthdate') is-invalid @enderror" style="" placeholder="{{ __('Birth Date') }}">
+                                    <input type="date" name="birthdate" value="{{ old('birthdate', $user->birthdate) }}" class="form-control flatpickr-no-config date  @error('birthdate') is-invalid @enderror" style="" placeholder="{{ __('Birth Date') }}">
                                     @if ($errors->has('birthdate'))
                                         <span class="text-danger">{{ $errors->first('birthdate') }}</span>
                                     @endif
@@ -175,9 +168,9 @@
                                     <input type="file" id="signature" accept="image/jpg, image/png, image/gif, image/jpeg" class="form-control  @error('signature') is-invalid @enderror" placeholder="{{ __('Signature') }}" name="signature">
 
                                     @if ($user->signature)
-                                    <div class="sign-img">
-                                        <a href="{{ asset($user->signature) }}" class="float-end" target="_blank"><img src="{{ asset($user->signature) }}" height="100" width="100"></a>
-                                    </div>
+                                        <div class="sign-img">
+                                            <a href="{{ asset($user->signature) }}" class="float-end" target="_blank"><img src="{{ asset($user->signature) }}" height="100" width="100"></a>
+                                        </div>
                                     @endif
                                     @if ($errors->has('signature'))
                                         <span class="text-danger">{{ $errors->first('signature') }}</span>
@@ -286,8 +279,8 @@
 
                                     @if ($user->aadhar_card)
                                         <div class="profile-card">
-                                        <a href="{{ asset($user->aadhar_card) }}" class="float-end" target="_blank"><img src="{{ asset($user->aadhar_card) }}" height="100" width="180"></i></a>
-                                    </div>
+                                            <a href="{{ asset($user->aadhar_card) }}" class="float-end" target="_blank"><img src="{{ asset($user->aadhar_card) }}" height="100" width="180"></i></a>
+                                        </div>
                                     @endif
 
                                     @if ($errors->has('aadhar_card'))
@@ -311,9 +304,9 @@
                                     <input type="file" id="pan_card" accept="image/jpg, image/png, image/gif, image/jpeg" class="form-control  @error('pan_card') is-invalid @enderror" placeholder="{{ __('PAN card') }}" name="pan_card">
 
                                     @if ($user->pan_card)
-                                    <div class="profile-card">
-                                        <a href="{{ asset($user->pan_card) }}" class="float-end" target="_blank"><img src="{{ asset($user->pan_card) }}" height="100" width="180"></a>
-                                    </div>
+                                        <div class="profile-card">
+                                            <a href="{{ asset($user->pan_card) }}" class="float-end" target="_blank"><img src="{{ asset($user->pan_card) }}" height="100" width="180"></a>
+                                        </div>
                                     @endif
 
                                     @if ($errors->has('pan_card'))
@@ -329,9 +322,9 @@
 
 
                                     @if ($user->department_id_proof)
-                                    <div class="profile-card">
-                                        <a href="{{ asset($user->department_id_proof) }}" class="float-end" target="_blank"><img src="{{ asset($user->department_id_proof) }}" height="100" width="180"></a>
-                                    </div>
+                                        <div class="profile-card">
+                                            <a href="{{ asset($user->department_id_proof) }}" class="float-end" target="_blank"><img src="{{ asset($user->department_id_proof) }}" height="100" width="180"></a>
+                                        </div>
                                     @endif
 
                                     @if ($errors->has('department_id_proof'))
@@ -372,10 +365,10 @@
                                     <input type="file" id="witness_signature" accept="image/jpg, image/png, image/gif, image/jpeg" class="form-control @error('witness_signature') is-invalid @enderror" placeholder="{{ __('Place') }}" name="witness_signature">
 
                                     @if ($user->witness_signature)
-                                    <div class="sign-img">
+                                        <div class="sign-img">
 
-                                        <a href="{{ asset($user->witness_signature) }}" class="float-end" target="_blank"><img src="{{ asset($user->witness_signature) }}" height="100" width="100"></a>
-                                    </div>
+                                            <a href="{{ asset($user->witness_signature) }}" class="float-end" target="_blank"><img src="{{ asset($user->witness_signature) }}" height="100" width="100"></a>
+                                        </div>
                                     @endif
 
                                     @if ($errors->has('witness_signature'))
@@ -538,6 +531,7 @@
 @endsection
 @push('script')
 <script type="text/javascript">
+
     $('.date').flatpickr({
         allowInput: true,
         altInput: true,

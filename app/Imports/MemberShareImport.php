@@ -18,7 +18,7 @@ class MemberShareImport implements ToModel, WithStartRow, WithLimit, WithMultipl
 {
     public function startRow(): int
     {
-        return 4;
+        return 3;
     }
     public $not_insert = [];
     public $total = 0;
