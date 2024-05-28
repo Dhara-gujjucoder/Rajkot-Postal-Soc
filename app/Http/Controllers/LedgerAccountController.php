@@ -179,4 +179,13 @@ class LedgerAccountController extends Controller
         return redirect()->route('ledger_account.index')
             ->withSuccess(__('Ledger Account is deleted successfully.'));
     }
+
+       /**
+     * Remove the specified resource from storage.
+     */
+
+    // public function get_ledger_account(LedgerAccount $ledger_account)
+    // {
+    //    return $ledger_account;
+    // }
 }

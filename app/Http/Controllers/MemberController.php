@@ -212,6 +212,7 @@ class MemberController extends Controller
         $user->assignRole(['user']);
         $input['user_id'] = $user->id;
         $input['uid'] = Member::latest()->pluck('uid')->first() ? Member::latest()->pluck('uid')->first() + 1 : 1;
+        dd($input['uid']);
         $input['status'] = 1;
         if ($input['payment_type'] == 'cheque') {
 
@@ -480,7 +481,7 @@ class MemberController extends Controller
 
     public function getmember(Member $member)
     {
-        $member = Member::where('id', $member->id)->with(['loan', 'shares', 'loan.loan_emis' => function ($query) {
+        $member = Member::where('id', $member->id)->with(['loan', 'shares','loan.loan_emiss', 'loan.loan_emis'=> function ($query) {
             $query->paid();
         }])->get()->first();
         $member->member_fixed_saving = $member->member_fixed;

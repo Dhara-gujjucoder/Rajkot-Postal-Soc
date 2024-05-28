@@ -62,23 +62,16 @@ class LoanMasterController extends Controller
                     class="btn btn-outline-warning btn-sm me-2"><i class="bi bi-eye"></i> ' . __('Pay') . '</button>';
                     // (Auth::user()->can('view-ledger_account')) ? $action_btn.= $show_btn : '';
                     // (Auth::user()->can('edit-loan')) ? $action_btn .= $edit_btn : '';
-// dd($row);
-                    // if ($row->g1_member_id == null || $row->g2_member_id == null) {
-                        $guarantor_add_btn  = '&nbsp;<button type="button" class="btn btn-outline-success btn-sm me-2" data-bs-toggle="modal" data-bs-target="#guarentor_add" onclick="set_member_id(' . $row->member_id . ')"><i class="bi bi-pencil"></i> ' . __('Edit') . '</button>';
-                        // return $guarantor_add_btn;
-                    // } else {
-                    //     return '';
-                    // }
+
+                    $guarantor_add_btn  = '&nbsp;<button type="button" class="btn btn-outline-success btn-sm me-2" data-bs-toggle="modal" data-bs-target="#guarentor_add" onclick="set_member_id(' . $row->member_id . ')"><i class="bi bi-pencil"></i> ' . __('Edit') . '</button>';
+
 
                     (Auth::user()->can('view-loan')) ? $action_btn .= $show_btn : '';
                     $action_btn .= ($row->getRawOriginal('status') == 1 ?  $pay_loan_btn : '');
 
                     (Auth::user()->can('delete-loan') && $row->getRawOriginal('status') == 1) ? $action_btn .= $delete_btn : '';
-                    // if ($row->g1_guarantor == null || $row->g2_guarantor == null) {
-                        (Auth::user()->can('edit-loan') && ($row->g1_member_id == null  || $row->g2_member_id == null)) ? $action_btn .= $guarantor_add_btn : '';
-                    // } else {
-                    //     return '';
-                    // }
+                    (Auth::user()->can('edit-loan') && ($row->g1_member_id == null  || $row->g2_member_id == null)) ? $action_btn .= $guarantor_add_btn : '';
+
 
                     return $action_btn;
                 })
@@ -132,7 +125,7 @@ class LoanMasterController extends Controller
         );
 
         if ($validator->fails()) {
-                    // if validation failure
+            // if validation failure
             return response()->json($validator->messages(), Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Member;
+use App\Models\LoanEMI;
 use Illuminate\Http\Request;
 use App\Models\LedgerAccount;
 use App\Models\MetaDoubleEntry;
@@ -47,7 +48,8 @@ class DoubleEntryController extends Controller
         $data['no'] = str_pad($data['count'], 4, 0, STR_PAD_LEFT);
         $data['page_title'] = __('Add Double Entry');
         // $data['ledger_accounts'] = LedgerAccount::whereIn('ledger_group_id',[2,4,5,10])->get();
-        $data['ledger_accounts'] = LedgerAccount::whereNotIn('ledger_group_id',[3])->get();
+        // $data['ledger_accounts'] = LedgerAccount::whereNotIn('ledger_group_id',[3])->get();
+        $data['ledger_accounts'] = LedgerAccount::get();
 
         return view('double_entries.create', $data);
     }
@@ -111,11 +113,20 @@ class DoubleEntryController extends Controller
                     $this->update_member_share($member, $no_of_share);
                 }
 
+                if(isset($request->loan_emi_id[$i])){
+                    $emi = LoanEMI::find($request->loan_emi_id[$i]);
+                    if($emi){
+                        $emi->update(['status' => 2]);
+                        $member->loan_ledger_account->update(['current_balance' => ($member->loan_ledger_account->current_balance - $emi->principal)]);
+                    }
+                }
+
+
+
                 if($ledger_account->ledger_group_id == 1){
 
 
                     // $fixed_saving = MemberFixedSaving::where('month',$month)->where('member_id',$ledger_account->member_id)->first();
-
                     // if($fixed_saving){
                     //     $fixed_saving->fixed_amount = $fixed_saving->fixed_amount + $meta_entry->amount;
                     //     $fixed_saving->save();
@@ -132,10 +143,8 @@ class DoubleEntryController extends Controller
                             'year_id' => $this->current_year->id,
                             'status' => 1,
                             'is_double_entry' => 1
-                            // 'created_date' => $end_date->format('Y-m-d'),
                         ]);
                         $member_fixed_saving = $member->fixed_saving_ledger_account->opening_balance + $member->fixed_saving()->sum('fixed_amount');
-                        // dd($member_fixed_saving);
                         $member->fixed_saving_ledger_account->update(['current_balance' => $member_fixed_saving]);
 
                         // $member->fixed_saving_ledger_account->update(['current_balance' => $member->fixed_saving_ledger_account->current_balance + $meta_entry->amount]);

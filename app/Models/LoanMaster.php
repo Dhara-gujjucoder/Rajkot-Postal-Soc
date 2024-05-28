@@ -65,6 +65,12 @@ class LoanMaster extends Model
         return $this->hasMany(LoanEMI::class, 'loan_master_id', 'id');
     }
 
+
+    public function loan_emiss()
+    {
+        return $this->hasMany(LoanEMI::class, 'loan_master_id', 'id');
+    }
+
 //    public function get_status(){
 //         // $array = [1 => __('Active'),2  => __('Completed'), 3 => __('Settled')];
 

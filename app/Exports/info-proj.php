@@ -1,5 +1,5 @@
 <------- Ledger Reports ------->
-1) tarij report               --> created from double entry
+1) tarij report (rojmel)               --> created from double entry
 2) Journel report             --> created from bulk entry
 3) share ledger report        --> fom member and its relationship and from sharedetails
 4) ledger fixed saving report --> member and its relationship and MemberFixedSaving (for only double entry)
@@ -50,7 +50,6 @@ tomorrow ==> 19/2024
 1 bulk entry for imported
 2 share purchase date
 3 for loan import
-
 
 
 

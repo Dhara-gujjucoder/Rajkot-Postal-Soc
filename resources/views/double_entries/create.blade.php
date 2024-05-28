@@ -33,12 +33,13 @@
                             <div class="col-md-3 col-3">
                                 <div class="form-group">
                                     <label for="first-amount-column">{{ __('Date') }}<span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control date required @error('date') is-invalid @enderror" id="date" name="date" value="<?php echo date('Y-m-d'); ?>" placeholder="{{ __('Date') }}">
+                                    <input type="date" class="form-control date required @error('date') is-invalid @enderror" id="date" name="date" value="<?php echo date('Y-m-d'); ?>" placeholder="{{ __('Date') }}" onchange="changeDate(this)">
                                     @if ($errors->has('cr_date'))
                                         <span class="text-danger">{{ $errors->first('date') }}</span>
                                     @endif
                                 </div>
                             </div>
+
                             {{-- <div class="col-md-3 col-3">
                                 <div class="form-group">
                                     <label for="cr_ledger_acc_id">{{ __('Ledger Account') }}<span
@@ -60,6 +61,7 @@
                                     @endif
                                 </div>
                             </div> --}}
+
                             <div class="col-md-6 col-6">
                                 <div class="form-group">
                                     <label for="first-amount-column">{{ __('Description') }}<span class="text-danger">*</span></label>
@@ -98,20 +100,36 @@
                                     <select id="ledgerAccountId" class="select2 ledgerAccountId required @error('ledger_ac_id') is-invalid @enderror" row="0" aria-label="Permissions" name="ledger_ac_id[]" data-column="2" style="height: 210px;">
                                         <option value="">{{ __('Select Ledger Account') }}</option>
                                         @forelse ($ledger_accounts as $ac)
-                                            <option value="{{ $ac->id }}" ledger_grp_id="{{ $ac->ledger_group_id }}" {{ $ac->id == old('ledger_ac_id.0') ? 'selected' : '' }}>
+                                            <option value="{{ $ac->id }}" ledger_grp_id="{{ $ac->ledger_group_id }}" member_id="{{ $ac->member_id }}" {{ $ac->id == old('ledger_ac_id.0') ? 'selected' : '' }}>
                                                 {{ $ac->account_name }}
                                             </option>
                                         @empty
                                         @endforelse
                                     </select>
-
                                     @if ($errors->has('ledger_ac_id.*'))
                                         <span class="text-danger">{{ $errors->first('ledger_ac_id.*') }}</span>
                                     @endif
                                 </div>
+
                                 <div class="share_input0" style="display:none;"><input type="number" name="share[]" class="required_share0" placeholder="{{ __('Add Share') }}"></div>
-                                {{-- <input type="number" name="share" id="shareInput" style="display: none;" placeholder="Add Share"> --}}
+
+                                <div class="col-md-12 col-3 text-danger" style="display:none;" id="loan_details0">
+                                    {{-- <input type="text" name="loan_emi[]" class="required_loan_emi0" placeholder="{{ __('Loan Details') }}" readonly> --}}
+                                    <div  >
+                                        {{-- @if ($ac->id == 3)
+                                            Member  : {{ dd$ac->member->name }}<br>
+                                        @endif --}}
+                                        {{-- member name :
+                                        Loan ID : 27/2022-23 <br>
+                                        Principal Amount : 191141 <br>
+                                        EMI Amount : 6000 <br>
+                                        Pending EMI : 22<br>
+                                        Paid EMI : 15<br>
+                                        Note : Here you are only able to paid EMI of Loan no. #(1234) for month june (prin: 100 , Int : 10)<br> --}}
+                                    </div>
+                                </div>
                             </div>
+
                             {{-- <div class="col-md-3 col-3">
                                     <div class="form-group">
                                         <label for="ledger_ac_id">{{ __('Ledger Group') }}<span
@@ -126,7 +144,7 @@
                                             <span class="text-danger">{{ $errors->first('ledger_ac_id') }}</span>
                                         @endif
                                     </div>
-                                </div> --}}
+                            </div> --}}
 
                             <div class="col-md-4 col-3">
                                 <div class="form-group">
@@ -162,7 +180,7 @@
                             <div class="col-md-2 col-2">
                                 <div class="form-group transaction">
                                     <label for="first-amount-column">{{ __('Amount') }}<span class="text-danger">*</span></label>
-                                    <input type="number" step="any" class="form-control required @error('amount') is-invalid @enderror" id="amount" name="amount[]" value="{{ old('amount.0') }}" placeholder="{{ __('Amount') }}" oninput="calculate()">
+                                    <input type="number" step="any" class="form-control required @error('amount') is-invalid @enderror" id="amount0" name="amount[]" value="{{ old('amount.0') }}" placeholder="{{ __('Amount') }}" oninput="calculate()">
                                     @if ($errors->has('amount.*'))
                                         <span class="text-danger">{{ $errors->first('amount.*') }}</span>
                                     @endif
@@ -269,25 +287,33 @@
             var row = $(this).attr('row');
             console.log(row);
             if (selectedValue == "2") {
-                // $(".share_input" + row).show();
 
                 if (!$('.required_share' + row).val()) {
                     valid = 1;
                 };
-            }else{
+            } else {
                 $('.required_share' + row).val('');
             }
+
+            // if (selectedValue == "3") {
+
+            //     if (!$('.required_loan_emi' + row).val()) {
+            //         valid = 1;
+            //     };
+            // } else {
+            //     $('.required_loan_emi' + row).val('');
+            // }
         });
 
         if (valid) {
             // $('#not_count_match').html('All fields are required.');
-            $('#not_count_match').html('{{ __("All fields are required.") }}');
+            $('#not_count_match').html('{{ __('All fields are required.') }}');
             return false;
         }
 
         if (cr_total != dr_total) {
             // alert('Debit and Credit must be Equal.');
-            $('#not_count_match').html('{{ __("Debit and Credit must be Equal.") }}');
+            $('#not_count_match').html('{{ __('Debit and Credit must be Equal.') }}');
             return false;
         } else {
             $('#not_count_match').html('');
@@ -301,129 +327,144 @@
 
     // ***************All Form request data show in model popup***************
 
-        function confirm() {
-            $.ajax({
-                type: "POST",
-                url: "{{ route('double_entries.confirm') }}",
-                data: $('#myForm').serialize(),
-                success: function(response) {
-                    $('#confirmation').modal('show');
-                    $('#tableBody').empty();
-                    $('#tableBody').append(response.confirm);
-                    // $('#confirmation').modal('show');
-                },
-                error: function(xhr, status, error) {
-                    console.error(xhr.responseText);
-                }
-            });
-        };
-        // **********end**********
-
-        $('.date').flatpickr({
-            allowInput: true,
-            altInput: true,
-            altFormat: "d/m/Y",
-            dateFormat: "Y-m-d",
-        });
-
-        $('.select2').select2();
-        $('input[name="ctype"]').on('change', function() {
-            if ($(this).val() == 2) {
-                $('#cheque_div').show();
-            } else {
-                $('#cheque_div').hide();
+    function confirm() {
+        $.ajax({
+            type: "POST",
+            url: "{{ route('double_entries.confirm') }}",
+            data: $('#myForm').serialize(),
+            success: function(response) {
+                $('#confirmation').modal('show');
+                $('#tableBody').empty();
+                $('#tableBody').append(response.confirm);
+                // $('#confirmation').modal('show');
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
             }
         });
+    };
+    // **********end**********
 
-        function lockinput() {
-            $("#cr_ledger_acc_id").select2({
-                disabled: 'readonly'
-            });
-            $("#cr_particular").attr('readonly', true);
-            $("#cr_date").attr('readonly', true);
-            $("#cr_amount").attr('readonly', true);
-            $("#cr_cheque_no").attr('readonly', true);
+    $('.date').flatpickr({
+        allowInput: true,
+        altInput: true,
+        altFormat: "d/m/Y",
+        dateFormat: "Y-m-d",
+    });
+
+    $('.select2').select2();
+    $('input[name="ctype"]').on('change', function() {
+        if ($(this).val() == 2) {
+            $('#cheque_div').show();
+        } else {
+            $('#cheque_div').hide();
+        }
+    });
+
+    function lockinput() {
+        $("#cr_ledger_acc_id").select2({
+            disabled: 'readonly'
+        });
+        $("#cr_particular").attr('readonly', true);
+        $("#cr_date").attr('readonly', true);
+        $("#cr_amount").attr('readonly', true);
+        $("#cr_cheque_no").attr('readonly', true);
+    }
+
+
+    // $(document).on('change','input[name="share[]"]',function(e){
+    //     $(this).val();
+    //     $(this).attr('row');
+    //     var share_amount = $(this).val()*100;
+    //     $('amount').val(share_amount);
+    // });
+
+    // *****Ledger Account select dropdown*****
+    // $(document).ready(function () {
+
+    $(document).on('change', '.ledgerAccountId', function(e) {
+        // $(this).parent().find('.share_input'+$(this).val()).remove();
+        // console.log($(this).parent());
+        var selectedValue = $(this).find('option:selected').attr('ledger_grp_id');
+        var member_id = $(this).find('option:selected').attr('member_id');
+
+        var row = $(this).attr('row');
+        $(".share_input" + row).hide();
+        $(".share_input" + row).find('[name="share[]"]').length;
+
+        $(".loan_details" + row).hide();
+        $("#loan_emi_id" + row).remove();
+
+        $(".loan_details" + row).find('[name="loan_emi[]"]').length;
+
+        $(this).val();
+        console.log(row);
+
+        if (selectedValue == "2") {
+            $(".share_input" + row).show();
+        } else {
+            $(".share_input" + row).hide();
+        }
+
+        if (selectedValue == "3") {
+            load_member_loan(member_id,row);
+            $("#loan_details" + row).show();
+        } else {
+            $("#loan_details" + row).hide();
         }
 
 
-        // $(document).on('change','input[name="share[]"]',function(e){
-        //     $(this).val();
-        //     $(this).attr('row');
-        //     var share_amount = $(this).val()*100;
-        //     $('amount').val(share_amount);
-        // });
 
-        // *****Ledger Account select dropdown*****
-        // $(document).ready(function () {
+        // ***********************************************************************************
+        // if (selectedValue == "2") {
+        //     $(".share_input" + row).show();
 
-        $(document).on('change', '.ledgerAccountId', function(e) {
-            // $(this).parent().find('.share_input'+$(this).val()).remove();
-            // console.log($(this).parent());
-            var selectedValue = $(this).find('option:selected').attr('ledger_grp_id');
-            var row = $(this).attr('row');
-            $(".share_input" + row).hide();
+        //     var valid = 0;
+        //     if (!('.required_share' + row).val()) {
+        //         $('.required_share' + row).after('this field is required');
 
-            $(".share_input" + row).find('[name="share[]"]').length;
-
-            $(this).val();
-            console.log(row);
-
-            if (selectedValue == "2") {
-                $(".share_input" + row).show();
-            } else {
-                $(".share_input" + row).hide();
-            }
-
-// ***********************************************************************************
-            // if (selectedValue == "2") {
-            //     $(".share_input" + row).show();
-
-            //     var valid = 0;
-            //     if (!('.required_share' + row).val()) {
-            //         $('.required_share' + row).after('this field is required');
-
-            //         // if (!this.value.trim()) {
-            //         //     valid = 1;
-            //         // }
-            //     };
-            //     if (valid) {
-            //         $('#not_count_match').html('All fields are required.');
-            //         return false;
-            //     }
-            // } else {
-            //     $(".share_input" + row).hide();
-            // }
+        //         // if (!this.value.trim()) {
+        //         //     valid = 1;
+        //         // }
+        //     };
+        //     if (valid) {
+        //         $('#not_count_match').html('All fields are required.');
+        //         return false;
+        //     }
+        // } else {
+        //     $(".share_input" + row).hide();
+        // }
 
 
-// ***********************************************************************************
-            // if (selectedValue == "2") {
-            //     $(".share_input" + row).show();
+        // ***********************************************************************************
+        // if (selectedValue == "2") {
+        //     $(".share_input" + row).show();
 
-            //     var valid = 0;
-            //     $('.required_share').each(function() {
-            //         if (!this.value.trim()) {
-            //             valid = 1;
-            //         }
-            //     });
-            //     if (valid) {
-            //         $('#not_count_match').html('All fields are required.');
-            //         return false;
-            //     }
-            // } else {
-            //     $(".share_input" + row).hide();
-            // }
-// ***********************************************************************************
+        //     var valid = 0;
+        //     $('.required_share').each(function() {
+        //         if (!this.value.trim()) {
+        //             valid = 1;
+        //         }
+        //     });
+        //     if (valid) {
+        //         $('#not_count_match').html('All fields are required.');
+        //         return false;
+        //     }
+        // } else {
+        //     $(".share_input" + row).hide();
+        // }
+        // ***********************************************************************************
 
 
-        });
-        // });
-        // *****End*****
+    });
+    // });
+    // *****End*****
 
-        var count = 0;
+    var count = 0;
 
-        function add_ledger_entry() {
-            count = count + 1;
-            var html = `<div class="row ledger_entry">
+    function add_ledger_entry() {
+        count = count + 1;
+        var html = `<div class="row ledger_entry">
                             <div class="col-md-4 col-3">
                                 <div class="form-group">
                                     <label for="ledger_ac_id">{{ __('Ledger Account') }}<span
@@ -433,7 +474,7 @@
                                         style="height: 210px;">
                                         <option value="">{{ __('Select Ledger Account') }}</option>
                                         @forelse ($ledger_accounts as $ac)
-                                            <option value="{{ $ac->id }}" ledger_grp_id="{{ $ac->ledger_group_id }}"
+                                            <option value="{{ $ac->id }}" ledger_grp_id="{{ $ac->ledger_group_id }}" member_id="{{ $ac->member_id }}"
                                                 {{ $ac->id == old('ledger_ac_id') ? 'selected' : '' }}>
                                                 {{ $ac->account_name }}
                                             </option>
@@ -445,6 +486,12 @@
                                     @endif
                                 </div>
                                 <div class="share_input` + count + `"  style="display:none;" ><input type="number" name="share[]" class="required_share` + count + `"  placeholder="{{ __('Add Share') }}"></div>
+
+                                <div class="col-md-12 col-3 text-danger" style="display:none;" id="loan_details` + count + `">
+
+                                </div>
+
+
                             </div>
                             <div class="col-md-4 col-3">
                                 <div class="form-group">
@@ -487,7 +534,7 @@
                                     <label for="first-amount-column">{{ __('Amount') }}<span
                                             class="text-danger">*</span></label>
                                     <input type="number" step="any"
-                                        class="form-control required @error('amount') is-invalid @enderror" id="amount"
+                                        class="form-control required @error('amount') is-invalid @enderror" id="amount` + count + `"
                                         name="amount[]" value="{{ old('amount[]') }}" oninput="calculate()"
                                         placeholder="{{ __('Amount') }}">
                                     @if ($errors->has('amount'))
@@ -496,8 +543,89 @@
                                 </div>
                             </div>
                         </div>`;
-            $('.ledger_entry').last().after(html);
-            $('.select2').select2();
-        }
+        $('.ledger_entry').last().after(html);
+        $('.select2').select2();
+    }
+
+    function changeDate(input) {
+        var dateValue = input.value;
+        const date = new Date(dateValue);
+        const formattedDate = formatDate(date);
+        // $('#output').text(formattedDate);
+        $('#loan_emi_date').html(formattedDate);
+    }
+
+    function formatDate(date) {
+        const options = { year: 'numeric', month: 'long'};
+        return date.toLocaleDateString('en-US', options);
+    }
+
+    function load_member_loan(member_id,row) {
+        var url = "{{ route('member.get', ':id') }}";
+        url = url.replace(':id', member_id);
+
+        var dateValue = $('#date').val();
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            url: url,
+            type: 'GET',
+            dataType: 'JSON',
+            success: function(data) {
+                if (data.success == true) {
+                    var member = data.member;
+                    var member_loan = member.loan;
+                    // console.log(member_loan);
+
+                    var emi_date = new Date($('#date').val());
+                    const options = { month: '2-digit', year: 'numeric'};
+                    emi_month = emi_date.toLocaleDateString('en-US', options).replace('/', '-');
+                    console.log(emi_month);
+
+                    var loan_emiss = member_loan.loan_emiss;
+                    // var emi_month = '05-2024';
+
+                    var filteredEmis = $.grep(loan_emiss, function(emi) {
+                        return emi.month === emi_month;
+                    });
+                    if(filteredEmis){
+                        $('#amount'+row).val(filteredEmis[0].principal);
+                    }
+                    console.log(filteredEmis[0].id);
+
+                    const date = new Date($('#date').val());
+                    const formattedDate = formatDate(date);
+
+                    var html =`<div>
+                        <p><b>{{ __('Loan A/c') }}</b>  : ` + member_loan.loan_no + `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <b>{{ __('Amount') }}</b>  : ` + member_loan.principal_amt + `
+                        </p>
+                        <p><b>{{ __('EMI Amount') }}</b> &nbsp; : ` + member_loan.emi_amount + `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <b>{{ __('Paid Loan') }}</b> &nbsp; : ` + (member_loan.principal_amt - member.loan_remaining_amount) + `
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </p>
+                        <p><b>{{ __('Paid EMI') }}</b> &nbsp; : ` + ((member_loan.loan_emis.length)) + `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <b>{{ __('Remaining Loan') }}</b> &nbsp; : ` + member.loan_remaining_amount + `
+                        </p>
+                        <p>
+                            <b>{{ __('Here you are only able to paid EMI of loan #') }}</b>` + member_loan.loan_no + `&nbsp;&nbsp;<b>{{ __('for this month') }}</b>&nbsp;<label id="loan_emi_date">` + formattedDate + `</label>
+                        </p>
+                        <input type="hidden"  id="loan_emi_id`+row+`" value="`+filteredEmis[0].id+`" name="loan_emi_id[]">
+                    </div>`;
+
+                    // if(filteredEmis){
+                    // }
+                    // alert(row);
+                    $('#loan_details'+row).html(html);
+                    $('#loan_id').val(member_loan.id);
+                    $('#loader').hide();
+
+                }
+            }
+        });
+
+    }
 </script>
 @endpush

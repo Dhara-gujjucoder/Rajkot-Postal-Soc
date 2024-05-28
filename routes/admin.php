@@ -98,6 +98,8 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
 
     Route::post('/double_entries/confirm',[DoubleEntryController::class, 'confirm'])->name('double_entries.confirm');
     Route::post('/loan/partial_pay/{loan}',[LoanMasterController::class, 'partial_pay'])->name('loan.partial_pay');
+    // Route::post('/get_ledger_account/{ledger_account}',[LedgerAccount::class, 'get_ledger_account'])->name('double_entries.confirm');
+
 
 
     /*all modules*/

@@ -20,8 +20,8 @@ class MemberLoanController extends Controller
 
     public function import_loan(Request $request){
 
-        // $import = new MemberLoanImport;   // main this
-        $import = new MemberLoanGuarentor;    // temporary
+        $import = new MemberLoanImport;   // main this
+        // $import = new MemberLoanGuarentor;    // temporary   if MemberLoanGuarentor added time uncomment
 
         Excel::import($import, $request->file('excel_file'));
         // dd($import->not_insert);

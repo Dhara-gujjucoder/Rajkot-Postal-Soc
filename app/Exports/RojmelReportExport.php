@@ -77,6 +77,7 @@ class RojmelReportExport implements FromCollection, WithMapping, ShouldAutoSize,
         $all_member_shares = MemberShare::whereHas('share_detail', function ($user) use ($month, $year) {
             $user->where('is_purchase', 1)->whereMonth('created_at', $month)->whereYear('created_at', $year);
         })->get();
+        $entry = [];
         // dd($bulk_master,$reg_members->count(),$all_member_shares->isNotEmpty());
         if ($bulk_master || $reg_members->count() || $all_member_shares->isNotEmpty() || $master_double_entry['data']->isNotEmpty()) {
 
@@ -87,8 +88,6 @@ class RojmelReportExport implements FromCollection, WithMapping, ShouldAutoSize,
                 [],
                 ['', 'CREDIT', 'RS.', 'DEBIT', 'RS.']
             ];
-
-
 
             $member_fee = $reg_members->sum('member_fee');
             $member_share = $reg_members->sum('share_amt');
@@ -167,14 +166,18 @@ class RojmelReportExport implements FromCollection, WithMapping, ShouldAutoSize,
                 $credit_entry = $double_entry->meta_entry()->where('type', 'credit')->get();
                 $debit_entry = $double_entry->meta_entry()->where('type', 'debit')->get();
 
-                $count = max($credit_entry->count(), $debit_entry->count());
+                $credit_amount = $double_entry->meta_entry()->where('type', 'credit')->get()->sum('amount');
+                $debit_amount = $double_entry->meta_entry()->where('type', 'debit')->get()->sum('amount');
+                // dd($debit_entry);
+                // $count = max($credit_entry->count(), $debit_entry->count());
+                $count =1;
 
-                for ($i = 0; $i < $count; $i++) {
+                    for ($i = 0; $i < $count; $i++) {
 
                     $credit_particular = isset($credit_entry[$i]) && $credit_entry[$i]->type == 'credit' ? $credit_entry[$i]->particular : '';
-                    $credit_amount = isset($credit_entry[$i]) && $credit_entry[$i]->type == 'credit' ? $credit_entry[$i]->amount : '';
+                    // $credit_amount = isset($credit_entry[$i]) && $credit_entry[$i]->type == 'credit' ? $credit_entry[$i]->amount : '';
                     $debit_particular = isset($debit_entry[$i]) && $debit_entry[$i]->type == 'debit' ? $debit_entry[$i]->particular : '';
-                    $debit_amount = isset($debit_entry[$i]) && $debit_entry[$i]->type == 'debit' ? $debit_entry[$i]->amount : '';
+                    // $debit_amount = isset($debit_entry[$i]) && $debit_entry[$i]->type == 'debit' ? $debit_entry[$i]->amount : '';
 
                     $credit_total += (is_numeric($credit_amount) ? $credit_amount : 0);
                     $debit_total += (is_numeric($debit_amount) ? $debit_amount : 0);
@@ -183,19 +186,16 @@ class RojmelReportExport implements FromCollection, WithMapping, ShouldAutoSize,
                 }
             }
 
+
             $entry[] = ['', '', '', '', '',];
-            $entry[]  = ['', 'TOTAL: ', ($credit_total + $rdb_bank_total), '', ($debit_total + $rdb_bank_total)];  //+$rdb_bank_total
-            $entry[] = ['', '', '', '', '',];
-        } else {
+            $entry[] = ['', 'TOTAL: ', ($credit_total + $rdb_bank_total), '', ($debit_total + $rdb_bank_total)];  //+$rdb_bank_total
             $entry[] = ['', '', '', '', '',];
         }
-
         return $entry;
     }
 
     public function styles(Worksheet $sheet)
     {
-
 
         $data = $this->data;
         // $sheet->mergeCells('B2:E2');
@@ -239,11 +239,9 @@ class RojmelReportExport implements FromCollection, WithMapping, ShouldAutoSize,
                 $user->where('is_purchase', 1)->whereMonth('created_at', $date[0])->whereYear('created_at', $date[1]);
             })->pluck('member_id')->all();
 
-            $reg_members= Member::whereMonth('created_at', $date[0])->whereYear('created_at', $date[1])->withTrashed()->count();
-
+            $reg_members = Member::whereMonth('created_at', $date[0])->whereYear('created_at', $date[1])->withTrashed()->count();
+            // dd($bulk_masters->isNotEmpty() || $reg_members || count($member_share) > 0 || $master_double_entry->isNotEmpty());
             if ($bulk_masters->isNotEmpty() || $reg_members || count($member_share) > 0 || $master_double_entry->isNotEmpty()) {
-
-                //style for first month heading
                 $sheet->getStyle('B' . $row . ':E' . $row)->applyFromArray($style);
                 $sheet->mergeCells('B' . $row . ':E' . $row);
                 $sheet->mergeCells('B' . ($row + 1) . ':E' . ($row + 1));
@@ -261,8 +259,10 @@ class RojmelReportExport implements FromCollection, WithMapping, ShouldAutoSize,
                     ],
                 ]);
 
+                //style for first month heading
 
-                    //add bulk_masters entry
+
+                //add bulk_masters entry
                 foreach ($bulk_masters as $key => $value) {
                     $value->bulk_entries()->sum('fixed') > 0 ? $row++ : '';
                     $value->bulk_entries()->sum('interest') > 0 ? $row++ : '';
@@ -278,7 +278,8 @@ class RojmelReportExport implements FromCollection, WithMapping, ShouldAutoSize,
                     foreach ($master_double_entry as $key => $double_entry) {
                         $credit_entry = $double_entry->meta_entry()->where('type', 'credit')->get();
                         $debit_entry = $double_entry->meta_entry()->where('type', 'debit')->get();
-                        $count = max($credit_entry->count(), $debit_entry->count());
+                        // $count = max($credit_entry->count(), $debit_entry->count());
+                        $count=1;
                         $row += $count;
                     }
                     //decreaser 1 row if double entries bcs its overlap to left side
