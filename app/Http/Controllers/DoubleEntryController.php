@@ -108,21 +108,26 @@ class DoubleEntryController extends Controller
                     $dr_total = $dr_total + (isset($request->amount[$i]) ? (int)$request->amount[$i] : 0);
                 }
 
+
+                //share ledger
                 if($request->share[$i]){
                     $no_of_share = $member->total_share + $request->share[$i];
                     $this->update_member_share($member, $no_of_share);
                 }
 
-                if(isset($request->loan_emi_id[$i])){
-                    $emi = LoanEMI::find($request->loan_emi_id[$i]);
+                //loan ledger
+                if($ledger_account->ledger_group_id == 3 && isset($request->loan_emi_id[$i])){
+                    $emi = LoanEMI::where('id',$request->loan_emi_id[$i])->first();
                     if($emi){
-                        $emi->update(['status' => 2]);
+                        $emi->status = 2;
+                        $emi->emi = $meta_entry->amount;
+                        $emi->save();
                         $member->loan_ledger_account->update(['current_balance' => ($member->loan_ledger_account->current_balance - $emi->principal)]);
                     }
                 }
 
 
-
+                // fixed saving ledger
                 if($ledger_account->ledger_group_id == 1){
 
 
@@ -152,6 +157,10 @@ class DoubleEntryController extends Controller
                     // }
                     // dd($ledger);
                 }
+
+                //other ledger
+                $ledger_account->update(['current_balance' => ($ledger_account->current_balance + $meta_entry->amount)]);
+
             }
 
             // dd($cr_total.'credit----->debit'.$dr_total);

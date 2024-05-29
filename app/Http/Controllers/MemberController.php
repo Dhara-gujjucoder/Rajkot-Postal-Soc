@@ -74,17 +74,17 @@ class MemberController extends Controller
         //     }
         // }
         // ************* import member signature *************
-            // $members = Member::get();
-            // foreach ($members as $m) {
-            //     $filename = $m->uid . '-S.jpg';
-            //     if (file_exists(public_path() . '/Signature/' .  $filename)) {
-            //         $m->signature = $this->dirPath . '/signature/' . $filename;
-            //         $m->save();
-            //     } else {
-            //         $notexist = $m->name . '(M.no->' . $m->uid . ')';
-            //         // dump($notexist);
-            //     }
-            // }
+        // $members = Member::get();
+        // foreach ($members as $m) {
+        //     $filename = $m->uid . '-S.jpg';
+        //     if (file_exists(public_path() . '/Signature/' .  $filename)) {
+        //         $m->signature = $this->dirPath . '/signature/' . $filename;
+        //         $m->save();
+        //     } else {
+        //         $notexist = $m->name . '(M.no->' . $m->uid . ')';
+        //         // dump($notexist);
+        //     }
+        // }
         //END
         // die();
 
@@ -212,14 +212,20 @@ class MemberController extends Controller
         $user->assignRole(['user']);
         $input['user_id'] = $user->id;
         $input['uid'] = Member::latest()->pluck('uid')->first() ? Member::latest()->pluck('uid')->first() + 1 : 1;
-        dd($input['uid']);
+        // dd($input['uid']);
         $input['status'] = 1;
-        if ($input['payment_type'] == 'cheque') {
 
+        if ($input['payment_type'] == 'cheque') {
             $input['payment_type_status'] =  bank_ledger_name() . '(Fee+Share). cheque-' . $input['cheque_no'];
+            $ledger_account = LedgerAccount::where('ledger_group_id', 10)->first();
+            $ledger_account->update(['current_balance' => ($ledger_account->current_balance + $input['total'])]);
         } else {
             $input['payment_type_status'] =  'Cash(Fee+Share)';
+            $ledger_account = LedgerAccount::where('ledger_group_id', 4)->first();
+            $ledger_account->update(['current_balance' => ($ledger_account->current_balance + $input['total'])]);
         }
+
+
 
         unset($input['name'], $input['email'], $input['search_terms'], $input['password'], $input['is_member']);
         $member = Member::create($input);
@@ -448,6 +454,17 @@ class MemberController extends Controller
         $resign->cheque_no = $request->cheque_no;
         $resign->save();
 
+
+        if ($resign->payment_type == 'cheque') {
+
+            $ledger_account = LedgerAccount::where('ledger_group_id', 10)->first();
+            $ledger_account->update(['current_balance' => ($ledger_account->current_balance +  $resign->total_amount)]);
+        } else {
+
+            $ledger_account = LedgerAccount::where('ledger_group_id', 4)->first();
+            $ledger_account->update(['current_balance' => ($ledger_account->current_balance +  $resign->total_amount)]);
+        }
+
         if (isset($request->share_amount_check)) {
             $shares = $member->shares()->get();
             foreach ($shares as $share) {
@@ -471,6 +488,9 @@ class MemberController extends Controller
             $member->loan_ledger_account->update(['current_balance' => 0]);
         }
 
+
+
+
         $member->update(['status' => 2]);
         return response()->json(['success' => true, 'member' => $member, 'message' => __('Member Resigned SuccessFully')]);
     }
@@ -481,7 +501,7 @@ class MemberController extends Controller
 
     public function getmember(Member $member)
     {
-        $member = Member::where('id', $member->id)->with(['loan', 'shares','loan.loan_emiss', 'loan.loan_emis'=> function ($query) {
+        $member = Member::where('id', $member->id)->with(['loan', 'shares', 'loan.loan_emiss', 'loan.loan_emis' => function ($query) {
             $query->paid();
         }])->get()->first();
         $member->member_fixed_saving = $member->member_fixed;

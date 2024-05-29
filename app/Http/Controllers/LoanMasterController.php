@@ -7,10 +7,10 @@ use DateInterval;
 use App\Models\Member;
 use App\Models\LoanEMI;
 use App\Models\LoanMaster;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
+use App\Models\LedgerAccount;
+use Illuminate\Http\Response;
 use Yajra\DataTables\DataTables;
 use App\Models\MemberFixedSaving;
 use App\Traits\UpdateMemberShare;
@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\LoanCalculationMatrix;
 use Illuminate\Http\RedirectResponse;
 use App\Traits\UpdateMemberFixedSaving;
+use Illuminate\Support\Facades\Validator;
 
 class LoanMasterController extends Controller
 {
@@ -201,7 +202,7 @@ class LoanMasterController extends Controller
             $this->update_fixed_Saving($member, $request->remaining_fixed_saving, $loan_master->month);
         }
         // set member's current balance to loan principal amt
-        $member->loan_ledger_account->update(['current_balance' => $loan_master->principal_amt]);
+        $member->loan_ledger_account->update(['current_balance' => ($member->loan_ledger_account->current_balance + $loan_master->principal_amt)]);
 
         foreach ($request->emi_month as $key => $value) {
             LoanEMI::create([
@@ -229,7 +230,21 @@ class LoanMasterController extends Controller
         $old_loan->loan_emis()->where('status', 1)->update(['status' => 3]);
         $member = Member::find($member_id);
         $member->loan_ledger_account->update(['current_balance' => 0]);
+
+
+          // if ($resign->payment_type == 'cheque') {
+
+            //     $ledger_account = LedgerAccount::where('ledger_group_id', 10)->first();
+            //     $ledger_account->update(['current_balance' => ($ledger_account->current_balance +  $resign->total_amount)]);
+            // } else {
+
+            //     $ledger_account = LedgerAccount::where('ledger_group_id', 4)->first();
+            //     $ledger_account->update(['current_balance' => ($ledger_account->current_balance +  $resign->total_amount)]);
+            // }
+
+
     }
+
 
     public function show(string $id, Request $request)
     {
@@ -292,6 +307,16 @@ class LoanMasterController extends Controller
             $loan->payment_type = $request->payment_type;
             $loan->save();
             $this->settle_old_loan($loan->member_id);
+
+            // if ($loan->payment_type == 'cheque') {    done
+            //     $ledger_account = LedgerAccount::where('ledger_group_id', 10)->first();
+
+            //     $ledger_account->update(['current_balance' => ($ledger_account->current_balance +  $loan->loan_settlement_amt)]);
+            // } else {
+
+            //     $ledger_account = LedgerAccount::where('ledger_group_id', 4)->first();
+            //     $ledger_account->update(['current_balance' => ($ledger_account->current_balance +  $loan->loan_settlement_amt)]);
+            // }
         }
         if ($request->ajax()) {
             return response()->json(['success' => true, 'msg' => __('Loan Closed SucccessFully')]);
@@ -341,6 +366,18 @@ class LoanMasterController extends Controller
             $loan_emi->cheque_no = $request->cheque_no;
             $loan_emi->payment_type = $request->payment_type;
             $loan_emi->save();
+
+            // if ($resign->payment_type == 'cheque') {
+
+            //     $ledger_account = LedgerAccount::where('ledger_group_id', 10)->first();
+            //     $ledger_account->update(['current_balance' => ($ledger_account->current_balance +  $resign->total_amount)]);
+            // } else {
+
+            //     $ledger_account = LedgerAccount::where('ledger_group_id', 4)->first();
+            //     $ledger_account->update(['current_balance' => ($ledger_account->current_balance +  $resign->total_amount)]);
+            // }
+
+
             $member = Member::find($loan->member_id);
             if ($loan->member->loan_remaining_amount - $request->amount) {
 

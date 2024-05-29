@@ -582,18 +582,19 @@
                     var emi_date = new Date($('#date').val());
                     const options = { month: '2-digit', year: 'numeric'};
                     emi_month = emi_date.toLocaleDateString('en-US', options).replace('/', '-');
-                    console.log(emi_month);
+                    // console.log(emi_month);
 
                     var loan_emiss = member_loan.loan_emiss;
+                    // console.log(loan_emiss[0].interest_amt);
                     // var emi_month = '05-2024';
 
                     var filteredEmis = $.grep(loan_emiss, function(emi) {
                         return emi.month === emi_month;
                     });
                     if(filteredEmis){
-                        $('#amount'+row).val(filteredEmis[0].principal);
+                        $('#amount'+row).val(filteredEmis[0].emi);
                     }
-                    console.log(filteredEmis[0].id);
+                    // console.log(filteredEmis[0].id);
 
                     const date = new Date($('#date').val());
                     const formattedDate = formatDate(date);
@@ -604,6 +605,7 @@
                         </p>
                         <p><b>{{ __('EMI Amount') }}</b> &nbsp; : ` + member_loan.emi_amount + `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <b>{{ __('Paid Loan') }}</b> &nbsp; : ` + (member_loan.principal_amt - member.loan_remaining_amount) + `
+                            <b>{{ __('Interest') }}</b> &nbsp; : ` + (filteredEmis[0].interest_amt) + `
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         </p>
                         <p><b>{{ __('Paid EMI') }}</b> &nbsp; : ` + ((member_loan.loan_emis.length)) + `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

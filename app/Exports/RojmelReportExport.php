@@ -136,9 +136,7 @@ class RojmelReportExport implements FromCollection, WithMapping, ShouldAutoSize,
             }
 
 
-
             if ($all_member_shares) {
-
                 $members_share =  $all_member_shares->pluck('member_id')->all();
                 $members_ids = array_unique($members_share);
 
@@ -166,10 +164,12 @@ class RojmelReportExport implements FromCollection, WithMapping, ShouldAutoSize,
                 $credit_entry = $double_entry->meta_entry()->where('type', 'credit')->get();
                 $debit_entry = $double_entry->meta_entry()->where('type', 'debit')->get();
 
+                $desc = $double_entry->description;
+
                 $credit_amount = $double_entry->meta_entry()->where('type', 'credit')->get()->sum('amount');
                 $debit_amount = $double_entry->meta_entry()->where('type', 'debit')->get()->sum('amount');
-                // dd($debit_entry);
-                // $count = max($credit_entry->count(), $debit_entry->count());
+
+
                 $count =1;
 
                     for ($i = 0; $i < $count; $i++) {
@@ -182,7 +182,7 @@ class RojmelReportExport implements FromCollection, WithMapping, ShouldAutoSize,
                     $credit_total += (is_numeric($credit_amount) ? $credit_amount : 0);
                     $debit_total += (is_numeric($debit_amount) ? $debit_amount : 0);
 
-                    $entry[] = ['', $credit_particular, $credit_amount, $debit_particular, $debit_amount];
+                    $entry[] = ['', $desc , $credit_amount, $desc , $debit_amount];
                 }
             }
 
@@ -261,7 +261,6 @@ class RojmelReportExport implements FromCollection, WithMapping, ShouldAutoSize,
 
                 //style for first month heading
 
-
                 //add bulk_masters entry
                 foreach ($bulk_masters as $key => $value) {
                     $value->bulk_entries()->sum('fixed') > 0 ? $row++ : '';
@@ -269,8 +268,6 @@ class RojmelReportExport implements FromCollection, WithMapping, ShouldAutoSize,
                     $value->bulk_entries()->sum('principal') > 0 ? $row++ : '';
                     $value->bulk_entries()->sum('ms') > 0 ? $row++ : '';
                 }
-
-
 
                 //add double entry counts from its max value meta entry
                 if ($master_double_entry->isNotEmpty()) {
@@ -288,15 +285,12 @@ class RojmelReportExport implements FromCollection, WithMapping, ShouldAutoSize,
                 }
 
 
-
-
                 //add share entry counts
                 if ($member_share) {
                     $shares_array = array_unique($member_share);
                     // dd( $shares_array);
                     $row += count($shares_array);
                 }
-
 
                 //add member fee count if exist
                 if ($reg_members) {

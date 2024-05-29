@@ -28,9 +28,9 @@ class StoreMemberRequest extends FormRequest
             'email'               => 'required|string|email|max:250|unique:users,email',
             'password'            => 'string|min:4',
             'department_id'       => 'required',
-            'company'             => 'required',
-            'salary'              => 'required',
-            'designation'         => 'required',
+            // 'company'             => 'required',   temp
+            // 'salary'              => 'required',   temp
+            // 'designation'         => 'required',   temp
             'birthdate'           => 'required',
             'mobile_no'           => 'required|min:10|unique:members,mobile_no',
             'whatsapp_no'         => 'required|integer|min:10',
@@ -41,7 +41,7 @@ class StoreMemberRequest extends FormRequest
             'current_address'     => 'required',
             'parmenant_address'   => 'required',
             'nominee_name'        => 'required',
-            'nominee_relation'    => 'required',
+            // 'nominee_relation'    => 'required',   stemp
             'registration_no'     => 'required|min:8|unique:members,registration_no',
             'saving_account_no'   => 'nullable|numeric',
             'bank_name'           => 'nullable',

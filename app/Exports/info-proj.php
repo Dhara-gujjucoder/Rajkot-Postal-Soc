@@ -51,8 +51,10 @@ tomorrow ==> 19/2024
 2 share purchase date
 3 for loan import
 
-
-
+today ===> 29/05/2024
+1) resign    done
+2) loan cancel
+3) parcial paymanet of loan
 
 
 
