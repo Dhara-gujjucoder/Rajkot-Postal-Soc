@@ -91,6 +91,8 @@ Route::prefix('admin')->middleware(['auth:web'])->group(function () {
     Route::get('/rojmel-report', [RojmelReportController::class, 'index'])->name('ledger_reports.rojmel_report.index');
     Route::post('/rojmel-report-export',[RojmelReportController::class, 'rojmel_report_export'])->name('rojmel_report_export');
 
+    Route::post('/member-export',[MemberController::class,'all_member_export'])->name('all_member_export');
+
     //***** END Excel *****/
 
     Route::get('/get/member/history/{member}', [App\Http\Controllers\MemberController::class, 'getmember_history'])->name('member.history.get');

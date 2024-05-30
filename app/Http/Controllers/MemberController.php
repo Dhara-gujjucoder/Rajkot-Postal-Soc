@@ -18,12 +18,14 @@ use Illuminate\Http\Request;
 use App\Models\LedgerAccount;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
+use App\Exports\AllMemberExport;
 use Yajra\DataTables\DataTables;
 use App\Models\MemberShareDetail;
 use App\Traits\UpdateMemberShare;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreUserRequest;
 use Illuminate\Validation\Rules\Exists;
@@ -507,5 +509,12 @@ class MemberController extends Controller
         $member->member_fixed_saving = $member->member_fixed;
         $member->loan_remaining_amount = $member->loan_remaining_amount;
         return response()->json(['success' => true, 'member' => $member]);
+    }
+
+
+    public function all_member_export(Request $request)
+    {
+        // dd($request->all());
+        return Excel::download(new AllMemberExport(), 'Member '.$this->current_year->title.'.xlsx');
     }
 }

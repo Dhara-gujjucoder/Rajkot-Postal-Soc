@@ -45,6 +45,17 @@
                             </div>
                         </div>
 
+                        <div class="col-md-4">
+                            <label for="department_id" class="col-form-label">{{ __('') }}</label>
+                            <div class="col-md-12">
+                                <form method="post" action="{{ route('all_member_export') }}" id="export_member">
+                                    @csrf
+                                    <button type="submit" id="submitBtn1" class="btn btn-outline-success btn-md float-start my-3">{{ __('All Member Export') }}</button>
+                                    <div id="loading1" style="display: none;" class="btn btn-outline-light btn-md float-start my-3 disabled">{{ __('Loading...') }}</div>
+                                </form>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -284,9 +295,32 @@
         $('#change_pwd_form').attr('action', url);
     }
 
+
+    $('#export_member').submit(function() {
+
+        $('#submitBtn1').hide();
+        $('#loading1').show();
+        var formData = $('#export_member').serialize();
+
+        $.ajax({
+            url: $('#export_member').attr('action'),
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                $('#loading1').hide();
+                $('#submitBtn1').show();
+            },
+            error: function(xhr) {
+                $('#loading1').hide();
+            }
+        });
+
+    });
+
+
     $('#change_pwd_form').on('submit', function(e) {
-            $('#loading').show(); // Display the loading symbol
-            $('#submitBtn').hide();
+        $('#loading').show(); // Display the loading symbol
+        $('#submitBtn').hide();
 
         e.preventDefault(); // prevent the form submit
         var url = $(this).attr('action');
@@ -335,6 +369,8 @@
         });
 
     })
+
+
 
     function change_payment_type() {
         $('#payment_details').hide();

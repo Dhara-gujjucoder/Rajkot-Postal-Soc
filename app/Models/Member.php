@@ -67,6 +67,11 @@ class Member extends Model
         return "{$this->user->name}";
     }
 
+    public function getEmailAttribute()
+    {
+        return "{$this->user->email}";
+    }
+
     protected function Status(): Attribute
     {
         return Attribute::make(
