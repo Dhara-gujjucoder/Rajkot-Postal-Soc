@@ -51,7 +51,7 @@ class BulkEntryMaster extends Model
 
     public function bulk_entries()
     {
-        return $this->hasMany(BulkEntry::class, 'bulk_entry_master_id', 'id');
+        return $this->hasMany(BulkEntry::class, 'bulk_entry_master_id', 'id')->where('status',2);    // 1->Draft 2->complite
     }
 
     public function members()
