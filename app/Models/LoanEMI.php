@@ -15,7 +15,9 @@ class LoanEMI extends Model
     protected $fillable = [
         'loan_master_id',    'month',    'member_id',  'ledger_account_id',  'principal_amt',
         'interest',    'interest_amt',    'emi',  'principal',    'rest_principal',    'status',
-        'is_half_paid','payment_month','cheque_no','payment_type'
+        'is_half_paid','payment_month','cheque_no','payment_type' ,
+        'ledger_group_id', //related only 'payment_type_status'
+        'payment_type_status',
     ];
 
     protected static function booted(): void

@@ -33,6 +33,7 @@ class Member extends Model
         'share_amt',
         'total',
         'payment_type',
+        'ledger_group_id',       //related only 'payment_type_status'
         'payment_type_status',
         'cheque_no',
         'nominee_name',

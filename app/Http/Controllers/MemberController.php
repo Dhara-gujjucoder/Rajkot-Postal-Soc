@@ -219,10 +219,12 @@ class MemberController extends Controller
 
         if ($input['payment_type'] == 'cheque') {
             $input['payment_type_status'] =  bank_ledger_name() . '(Fee+Share). cheque-' . $input['cheque_no'];
+            $input['ledger_group_id'] = 10;
             $ledger_account = LedgerAccount::where('ledger_group_id', 10)->first();
             $ledger_account->update(['current_balance' => ($ledger_account->current_balance + $input['total'])]);
         } else {
             $input['payment_type_status'] =  'Cash(Fee+Share)';
+            $input['ledger_group_id'] = 4;
             $ledger_account = LedgerAccount::where('ledger_group_id', 4)->first();
             $ledger_account->update(['current_balance' => ($ledger_account->current_balance + $input['total'])]);
         }
@@ -454,18 +456,23 @@ class MemberController extends Controller
         $resign->total_amount = $request->total_amount;
         $resign->payment_type = $request->payment_type;
         $resign->cheque_no = $request->cheque_no;
+
+        if ($request->payment_type == 'cheque') {
+            $resign->payment_type_status = bank_ledger_name() . 'cheque-' . $resign->cheque_no;
+            $resign->ledger_group_id = 10;
+            $resign->save();
+            // $ledger_account = LedgerAccount::where('ledger_group_id', 10)->first();
+            // $ledger_account->update(['current_balance' => ($ledger_account->current_balance +  $resign->total_amount)]);
+        } else {
+            $resign->payment_type_status = 'Cash';
+            $resign->ledger_group_id = 4;
+            $resign->save();
+            // $ledger_account = LedgerAccount::where('ledger_group_id', 4)->first();
+            // $ledger_account->update(['current_balance' => ($ledger_account->current_balance +  $resign->total_amount)]);
+        }
         $resign->save();
 
 
-        if ($resign->payment_type == 'cheque') {
-
-            $ledger_account = LedgerAccount::where('ledger_group_id', 10)->first();
-            $ledger_account->update(['current_balance' => ($ledger_account->current_balance +  $resign->total_amount)]);
-        } else {
-
-            $ledger_account = LedgerAccount::where('ledger_group_id', 4)->first();
-            $ledger_account->update(['current_balance' => ($ledger_account->current_balance +  $resign->total_amount)]);
-        }
 
         if (isset($request->share_amount_check)) {
             $shares = $member->shares()->get();
@@ -485,9 +492,12 @@ class MemberController extends Controller
             $member->share_ledger_account()->update(['current_balance' => 0]);
 
             $old_loan = LoanMaster::where('member_id', $member->id)->active()->first();
-            $old_loan->update(['status' => 3, 'loan_settlment_month' => date('d-m-Y')]);
-            $old_loan->loan_emis()->where('status', 1)->update(['status' => 3]);
-            $member->loan_ledger_account->update(['current_balance' => 0]);
+            if($old_loan){
+
+                $old_loan->update(['status' => 3, 'loan_settlment_month' => date('d-m-Y')]);
+                $old_loan->loan_emis()->where('status', 1)->update(['status' => 3]);
+                $member->loan_ledger_account->update(['current_balance' => 0]);
+            }
         }
 
 

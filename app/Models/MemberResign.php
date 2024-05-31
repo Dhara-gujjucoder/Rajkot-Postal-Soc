@@ -22,6 +22,8 @@ class MemberResign extends Model
         'fixed_saving_used',
         'total_amount',
         'payment_type',
+        'ledger_group_id',     //related only 'payment_type_status'
+        'payment_type_status',
         'cheque_no'
     ];
 }

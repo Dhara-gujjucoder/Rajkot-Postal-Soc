@@ -144,6 +144,7 @@ class LoanMasterController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'loan_id' => 'required',
             'date' => 'required',
@@ -154,7 +155,7 @@ class LoanMasterController extends Controller
             'stamp_duty' => 'required',
             // 'g2_member_id' => 'required',
             'payment_type' => 'required',
-            'bank_name' => 'required_if:payment_type,cheque',
+            // 'bank_name' => 'required_if:payment_type,cheque',
             'cheque_no' => 'required_if:payment_type,cheque',
             'gcheque_no' => 'required|numeric',
             'gbank_name' => 'string'
@@ -182,6 +183,17 @@ class LoanMasterController extends Controller
         $loan_master->end_month = Arr::last($request->emi_month);
         $loan_master->status = 1;
         $loan_master->principal_amt = LoanCalculationMatrix::find($request->loan_id)->amount;
+
+        if ($request->payment_type == 'cheque') {
+            $loan_master->payment_type_status = bank_ledger_name() . 'cheque-' . $loan_master->cheque_no;
+            $loan_master->ledger_group_id = 10;
+            $loan_master->save();
+        } else {
+            $loan_master->payment_type_status = 'Cash';
+            $loan_master->ledger_group_id = 4;
+            $loan_master->save();
+        }
+
         $loan_master->save();
 
         //settle old loan
@@ -232,15 +244,15 @@ class LoanMasterController extends Controller
         $member->loan_ledger_account->update(['current_balance' => 0]);
 
 
-          // if ($resign->payment_type == 'cheque') {
+        // if ($resign->payment_type == 'cheque') {
 
-            //     $ledger_account = LedgerAccount::where('ledger_group_id', 10)->first();
-            //     $ledger_account->update(['current_balance' => ($ledger_account->current_balance +  $resign->total_amount)]);
-            // } else {
+        //     $ledger_account = LedgerAccount::where('ledger_group_id', 10)->first();
+        //     $ledger_account->update(['current_balance' => ($ledger_account->current_balance +  $resign->total_amount)]);
+        // } else {
 
-            //     $ledger_account = LedgerAccount::where('ledger_group_id', 4)->first();
-            //     $ledger_account->update(['current_balance' => ($ledger_account->current_balance +  $resign->total_amount)]);
-            // }
+        //     $ledger_account = LedgerAccount::where('ledger_group_id', 4)->first();
+        //     $ledger_account->update(['current_balance' => ($ledger_account->current_balance +  $resign->total_amount)]);
+        // }
 
 
     }
@@ -305,18 +317,19 @@ class LoanMasterController extends Controller
             $loan->bank_name = $request->bank_name;
             $loan->cheque_no = $request->cheque_no;
             $loan->payment_type = $request->payment_type;
+
+            if ($request->payment_type == 'cheque') {
+                $loan->payment_type_status = bank_ledger_name() . 'cheque-' . $loan->cheque_no;
+                $loan->ledger_group_id = 10;
+                $loan->save();
+            } else {
+                $loan->payment_type_status = 'Cash';
+                $loan->ledger_group_id = 4;
+                $loan->save();
+            }
+
             $loan->save();
             $this->settle_old_loan($loan->member_id);
-
-            // if ($loan->payment_type == 'cheque') {    done
-            //     $ledger_account = LedgerAccount::where('ledger_group_id', 10)->first();
-
-            //     $ledger_account->update(['current_balance' => ($ledger_account->current_balance +  $loan->loan_settlement_amt)]);
-            // } else {
-
-            //     $ledger_account = LedgerAccount::where('ledger_group_id', 4)->first();
-            //     $ledger_account->update(['current_balance' => ($ledger_account->current_balance +  $loan->loan_settlement_amt)]);
-            // }
         }
         if ($request->ajax()) {
             return response()->json(['success' => true, 'msg' => __('Loan Closed SucccessFully')]);
@@ -349,6 +362,7 @@ class LoanMasterController extends Controller
         $member = $loan->member;
         if ($request->amount > 0) {
             //half payment
+            // dd($request->all());
             $loan_emi  = new LoanEMI();
             $loan_emi->loan_master_id = $loan->id;
             $loan_emi->month = date('m-Y');
@@ -365,17 +379,21 @@ class LoanMasterController extends Controller
             $loan_emi->payment_month = date('d-m-Y');
             $loan_emi->cheque_no = $request->cheque_no;
             $loan_emi->payment_type = $request->payment_type;
+
+            if ($request->payment_type == 'cheque') {
+                // dd('d');
+                $loan_emi->payment_type_status = bank_ledger_name() . 'cheque-' . $loan_emi->cheque_no;
+                $loan_emi->ledger_group_id = 10;
+                $loan_emi->save();
+            } else {
+                $loan_emi->payment_type_status = 'Cash';
+                $loan_emi->ledger_group_id = 4;
+                $loan_emi->save();
+            }
+
             $loan_emi->save();
 
-            // if ($resign->payment_type == 'cheque') {
 
-            //     $ledger_account = LedgerAccount::where('ledger_group_id', 10)->first();
-            //     $ledger_account->update(['current_balance' => ($ledger_account->current_balance +  $resign->total_amount)]);
-            // } else {
-
-            //     $ledger_account = LedgerAccount::where('ledger_group_id', 4)->first();
-            //     $ledger_account->update(['current_balance' => ($ledger_account->current_balance +  $resign->total_amount)]);
-            // }
 
 
             $member = Member::find($loan->member_id);
