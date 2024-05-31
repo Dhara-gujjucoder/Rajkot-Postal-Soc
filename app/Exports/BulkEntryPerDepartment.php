@@ -29,7 +29,7 @@ class BulkEntryPerDepartment implements FromCollection, WithTitle, WithMapping, 
      */
     public function collection()
     {
-        $entries = BulkEntryModel::withTrashed()->where('month', $this->month)
+        $entries = BulkEntryModel::where('month', $this->month)   //withTrashed()->
             ->where('department_id', $this->department_id)->get();
             $entries->push(collect([
                 'Total'=> 12,
@@ -58,7 +58,7 @@ class BulkEntryPerDepartment implements FromCollection, WithTitle, WithMapping, 
             ];
         }else{
             if(!$bulk_entry->member){
-                
+
                 dd($bulk_entry);
             }
             return [
