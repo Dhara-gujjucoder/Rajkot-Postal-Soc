@@ -85,7 +85,7 @@ class BulkEntryPerDepartment implements FromCollection, WithTitle, WithMapping, 
     public function headings(): array
     {
         return [
-            'Member Id',
+            'M.no',
             'Name',
             'Rec.No.',
             'Principal',
