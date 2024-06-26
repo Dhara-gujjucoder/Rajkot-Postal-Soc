@@ -216,16 +216,13 @@
 
     $(document).ready(function() {
         $('#export_member').submit(function(event) {
-            // Prevent form submission initially
             event.preventDefault();
 
-            // Check if at least one checkbox with class 'checkbox' is checked
-            if ($('.checkbox:checked').length === 0) {
-                // If no checkbox is checked, show an error message after the form
+            if ($("input[name='columns[]']:checked").length == 0) {
                 $('#error-message').text('Please select at least one checkbox.');
             } else {
-                // If at least one checkbox is checked, submit the form
                 this.submit();
+                $('#error-message').text('');
             }
         });
     });
