@@ -194,6 +194,7 @@ class MemberController extends Controller
 
     public function store(StoreMemberRequest $request): RedirectResponse
     {
+        // dump($request->all());
         $input = $request->all();
         $input['minimum_share'] = $request->minimum_share;
         $input['password'] = Hash::make($request->password);
@@ -215,6 +216,8 @@ class MemberController extends Controller
         $input['user_id'] = $user->id;
         $input['uid'] = Member::latest()->pluck('uid')->first() ? Member::latest()->pluck('uid')->first() + 1 : 1;
         // dd($input['uid']);
+        // die();
+
         $input['status'] = 1;
 
         if ($input['payment_type'] == 'cheque') {
@@ -492,7 +495,7 @@ class MemberController extends Controller
             $member->share_ledger_account()->update(['current_balance' => 0]);
 
             $old_loan = LoanMaster::where('member_id', $member->id)->active()->first();
-            if($old_loan){
+            if ($old_loan) {
 
                 $old_loan->update(['status' => 3, 'loan_settlment_month' => date('d-m-Y')]);
                 $old_loan->loan_emis()->where('status', 1)->update(['status' => 3]);
@@ -522,9 +525,32 @@ class MemberController extends Controller
     }
 
 
+    // public function all_member_export(Request $request)
+    // {
+    //     dd($request->all());
+    //     return Excel::download(new AllMemberExport(), 'Member '.$this->current_year->title.'.xlsx');
+    // }
+
+
     public function all_member_export(Request $request)
     {
-        // dd($request->all());
-        return Excel::download(new AllMemberExport(), 'Member '.$this->current_year->title.'.xlsx');
+        $query = Member::orderBy('uid', 'ASC');
+        // dd($request);
+        // if ($request->has('registration_no')) {
+        //     $query->select('uid', 'registration_no');
+        // }
+        // if ($request->has('name')) {
+        //     $query->select('uid', 'name');
+        // }
+        // if ($request->has('profile_picture')) {
+        //     $query->select('uid');
+        // }
+        // if ($request->has('gender')) {
+        //     $query->select('uid', 'gender');
+        // }
+        $data = $query->get();
+        // dd( $data ->user->name);
+        $columns = $request->columns;
+        return Excel::download(new AllMemberExport($data,$columns), 'Member_' . $this->current_year->title . '.xlsx');
     }
 }

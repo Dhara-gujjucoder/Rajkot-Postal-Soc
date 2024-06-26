@@ -52,19 +52,29 @@ tomorrow ==> 19/2024
 3 for loan import
 
 today ===> 29/05/2024
-1) resign    done
+1) resign         done
 2) loan cancel
 3) parcial paymanet of loan
 
+1) https://allevents.in/rajkot/laravel-rajkot-meetup-june-2024/80002513422490 metup whatsup group join
 
 
 
 
 
+table added :
 
+1) members :
+    ALTER TABLE `members` ADD `ledger_group_id` INT(11) NULL DEFAULT NULL AFTER `payment_type`, ADD `payment_type_status` VARCHAR(255) NULL DEFAULT NULL AFTER `ledger_group_id`;
 
+2) member_resign :
+    ALTER TABLE `member_resign` ADD `ledger_group_id` INT(11) NULL DEFAULT NULL AFTER `payment_type`, ADD `payment_type_status` VARCHAR(255) NULL DEFAULT NULL AFTER `ledger_group_id`;
 
+3) loan_master :
+    ALTER TABLE `loan_master` ADD `ledger_group_id` INT(11) NULL DEFAULT NULL AFTER `payment_type`, ADD `payment_type_status` VARCHAR(255) NULL DEFAULT NULL AFTER `ledger_group_id`;
 
+4) loan_emis :
+    ALTER TABLE `loan_emis` ADD `ledger_group_id` INT(11) NULL DEFAULT NULL AFTER `payment_type`, ADD `payment_type_status` VARCHAR(255) NULL DEFAULT NULL AFTER `ledger_group_id`;
 
 
 

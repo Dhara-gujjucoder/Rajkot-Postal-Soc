@@ -48,11 +48,15 @@
                         <div class="col-md-4">
                             <label for="department_id" class="col-form-label">{{ __('') }}</label>
                             <div class="col-md-12">
-                                <form method="post" action="{{ route('all_member_export') }}" id="export_member">
+                                {{-- <form method="post" action="{{ route('all_member_export') }}" id="export_member">
                                     @csrf
                                     <button type="submit" id="submitBtn1" class="btn btn-outline-success btn-md float-start my-3">{{ __('All Member Export') }}</button>
                                     <div id="loading1" style="display: none;" class="btn btn-outline-light btn-md float-start my-3 disabled">{{ __('Loading...') }}</div>
-                                </form>
+                                </form> --}}
+
+                                    {{-- id="submitBtn1" --}}
+                                <button type="button"  class="btn btn-outline-success btn-md float-start my-3" data-bs-toggle="modal" data-bs-target="#member_export_popup">{{ __('All Member Export') }}</button>
+                                {{-- <div id="loading1" style="display: none;" class="btn btn-outline-light btn-md float-start my-3 disabled">{{ __('Loading...') }}</div> --}}
                             </div>
                         </div>
 
@@ -185,11 +189,48 @@
             </div>
         </div>
     </div>
+    {{-- End --}}
+
+    {{-- Member Export Modal popup --}}
+    <div class="modal fade" id="member_export_popup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog ">  {{-- modal-lg --}}
+            <div class="modal-content">
+                @include('member.export_member_detail')
+            </div>
+        </div>
+    </div>
+    {{-- End --}}
 
 
 </section>
 @endsection
 @push('script')
+
+<script>
+    $(document).ready(function() {
+        // Check/uncheck all checkboxes when master checkbox is clicked
+        $('#select-all').click(function() {
+            $('input[type="checkbox"]').prop('checked', $(this).prop('checked'));
+        });
+    });
+
+    $(document).ready(function() {
+        $('#export_member').submit(function(event) {
+            // Prevent form submission initially
+            event.preventDefault();
+
+            // Check if at least one checkbox with class 'checkbox' is checked
+            if ($('.checkbox:checked').length === 0) {
+                // If no checkbox is checked, show an error message after the form
+                $('#error-message').text('Please select at least one checkbox.');
+            } else {
+                // If at least one checkbox is checked, submit the form
+                this.submit();
+            }
+        });
+    });
+</script>
+
 <script>
     var table = $('#table1').DataTable({
         "pageLength": 15,
@@ -312,6 +353,7 @@
             },
             error: function(xhr) {
                 $('#loading1').hide();
+                $('#submitBtn1').show();
             }
         });
 
