@@ -3,14 +3,18 @@
 namespace App\Exports;
 
 use App\Models\Member;
+use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use PhpOffice\PhpSpreadsheet\Cell\Hyperlink;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 
-class AllMemberExport implements FromCollection, WithHeadings, WithMapping, WithStyles, WithStrictNullComparison
+class AllMemberExport implements FromCollection, WithHeadings, WithMapping, WithStyles, WithStrictNullComparison  //, WithEvents
+
 {
     protected $data,$columns;
 
@@ -71,7 +75,11 @@ class AllMemberExport implements FromCollection, WithHeadings, WithMapping, With
         // }
 
         $mappedData = [];
+        // $base_url = 'http://192.168.0.114/Rajkot-Postal-Soc/public/';
+        // $base_url = 'https://rajkotpostalsoc.in/';
 
+        $base_url = config('app.url');
+// dd($this->columns);
         foreach ($this->columns as $key => $value) {
 
             if($value == 'M.No'){
@@ -84,8 +92,9 @@ class AllMemberExport implements FromCollection, WithHeadings, WithMapping, With
                 $mappedData[] =  $member->user->name ;
             }
             if($value == 'Profile Picture'){
-                $mappedData[] = $member->profile_picture;
+                $mappedData[] = $member->profile_picture ? $base_url . $member->profile_picture  : '';
             }
+
             if($value == 'Gender'){
                 $mappedData[] = $member->gender;
             }
@@ -108,7 +117,7 @@ class AllMemberExport implements FromCollection, WithHeadings, WithMapping, With
                 $mappedData[] = $member->parmenant_address;
             }
             if($value == 'Signature'){
-                $mappedData[] = $member->signature;
+                $mappedData[] =  $member->signature ? $base_url . $member->signature  : '';
             }
 
             if($value == 'Department'){
@@ -131,16 +140,16 @@ class AllMemberExport implements FromCollection, WithHeadings, WithMapping, With
                 $mappedData[] = $member->aadhar_card_no;
             }
             if($value == 'Aadhar card'){
-                $mappedData[] = $member->aadhar_card;
+                $mappedData[] = $member->aadhar_card ? $base_url . $member->aadhar_card  : '';
             }
             if($value == 'PAN No'){
                 $mappedData[] = $member->pan_no;
             }
             if($value == 'PAN Card'){
-                $mappedData[] = $member->pan_card;
+                $mappedData[] = $member->pan_card ? $base_url . $member->pan_card  : '';
             }
             if($value == 'Departmental ID Proof'){
-                $mappedData[] = $member->department_id_proof;
+                $mappedData[] = $member->department_id_proof ? $base_url . $member->department_id_proof  : '';
             }
 
             if($value == 'Nominee Name'){
@@ -150,7 +159,7 @@ class AllMemberExport implements FromCollection, WithHeadings, WithMapping, With
                 $mappedData[] = $member->nominee_relation;
             }
             if($value == 'Witness Signature'){
-                $mappedData[] = $member->witness_signature;
+                $mappedData[] = $member->witness_signature ? $base_url . $member->witness_signature  : '';
             }
 
             if($value == 'Saving Account No'){
@@ -199,5 +208,39 @@ class AllMemberExport implements FromCollection, WithHeadings, WithMapping, With
         $sheet->getStyle('A1:F1')->applyFromArray($substyle);
         $sheet->getStyle('A1:F1')->applyFromArray($style);
     }
+
+    // public function registerEvents(): array
+    // {
+    //     return [
+    //         AfterSheet::class => function (AfterSheet $event) {
+    //             /** @var Worksheet $sheet */
+    //             // $this->columns = ['profile image'],['Signature'],['Aadhar card'],['PAN Card'],[''];
+
+
+
+
+    //             // foreach($this->columns as $value){
+    //             //     if($value == 'Profile Picture'){
+    //             //         $alpha = 'D';
+    //                     foreach ($event->sheet->getColumnIterator('C') as $row) {
+    //                         foreach ($row->getCellIterator() as $cell) {
+    //                             if ($cell->getValue() != "" && str_contains($cell->getValue(), '://')) {
+    //                                 $cell->setHyperlink(new Hyperlink($cell->getValue(), 'Read'));
+
+    //                                 // Upd: Link styling added
+    //                                 $event->sheet->getStyle($cell->getCoordinate())->applyFromArray([
+    //                                     'font' => [
+    //                                         'color' => ['rgb' => '0000FF'],
+    //                                         'underline' => 'single'
+    //                                     ]
+    //                                 ]);
+    //                             }
+    //                         }
+    //                     }
+    //             //     }
+    //             // }
+    //         },
+    //     ];
+    // }
 
 }

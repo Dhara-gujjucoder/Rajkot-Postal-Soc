@@ -192,4 +192,7 @@ return [
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
     ])->toArray(),
 
+
+    'url' => env('ENVIRONMENT') === 'local' ? env('APP_URL_LOCAL') : env('APP_URL_LIVE'),
+
 ];
