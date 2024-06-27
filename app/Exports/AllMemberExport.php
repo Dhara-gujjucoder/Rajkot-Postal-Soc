@@ -78,8 +78,11 @@ class AllMemberExport implements FromCollection, WithHeadings, WithMapping, With
         // $base_url = 'http://192.168.0.114/Rajkot-Postal-Soc/public/';
         // $base_url = 'https://rajkotpostalsoc.in/';
 
-        $base_url = config('app.url');
-// dd($this->columns);
+        // $base_url = config('app.url');
+
+
+        $base_url = url('/');
+// dd($base_url);
         foreach ($this->columns as $key => $value) {
 
             if($value == 'M.No'){
@@ -94,7 +97,6 @@ class AllMemberExport implements FromCollection, WithHeadings, WithMapping, With
             if($value == 'Profile Picture'){
                 $mappedData[] = $member->profile_picture ? $base_url . $member->profile_picture  : '';
             }
-
             if($value == 'Gender'){
                 $mappedData[] = $member->gender;
             }
