@@ -207,8 +207,8 @@ class AllMemberExport implements FromCollection, WithHeadings, WithMapping, With
 
         ];
 
-        $sheet->getStyle('A1:F1')->applyFromArray($substyle);
-        $sheet->getStyle('A1:F1')->applyFromArray($style);
+        $sheet->getStyle('A1:AC1')->applyFromArray($substyle);
+        $sheet->getStyle('A1:AC1')->applyFromArray($style);
     }
 
     // public function registerEvents(): array
