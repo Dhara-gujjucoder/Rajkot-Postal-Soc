@@ -150,18 +150,18 @@ class LoanMasterController extends Controller
             'date' => 'required',
             'emi_amount' => 'required',
             'member_id' => 'required',
-            'g1_member_id' => 'required',
-            'g2_member_id' => 'required',
+            // 'g1_member_id' => 'required',
+            // 'g2_member_id' => 'required',
             'stamp_duty' => 'required',
             // 'g2_member_id' => 'required',
             'payment_type' => 'required',
             // 'bank_name' => 'required_if:payment_type,cheque',
             'cheque_no' => 'required_if:payment_type,cheque',
-            'gcheque_no' => 'required|numeric',
-            'gbank_name' => 'string'
+            // 'gcheque_no' => 'required|numeric',
+            // 'gbank_name' => 'string'
         ], [
-            'g1_member_id.required' => __('Guarantor 1 field is required'),
-            'g2_member_id.required' => __('Guarantor 2 field is required'),
+            // 'g1_member_id.required' => __('Guarantor 1 field is required'),
+            // 'g2_member_id.required' => __('Guarantor 2 field is required'),
         ]);
 
         $loan_no = str_pad((LoanMaster::count()) + 1, 2, '0', STR_PAD_LEFT) . '/' . $this->current_year->start_year . '-' . substr($this->current_year->end_year, -2);
@@ -173,6 +173,15 @@ class LoanMasterController extends Controller
 
 
         $member = Member::find($request->member_id);
+
+        //settle old loan
+        if ($request->remaining_loan_amount > 0) {
+
+            $this->settle_old_loan($member->id);
+        }
+
+
+
         $loan_master = new LoanMaster;
         $loan_master->fill($request->all());
         $loan_master->ledger_account_id = $member->loan_ledger_account->id;
@@ -181,6 +190,7 @@ class LoanMasterController extends Controller
         $loan_master->month =  $desiredDate;                          //$request->month;
         $loan_master->start_month = $request->emi_month[0];
         $loan_master->end_month = Arr::last($request->emi_month);
+        $loan_master->is_old_loan_settled = $request->remaining_loan_amount > 0 ? 1 : 0;
         $loan_master->status = 1;
         $loan_master->principal_amt = LoanCalculationMatrix::find($request->loan_id)->amount;
 
@@ -196,12 +206,6 @@ class LoanMasterController extends Controller
 
         $loan_master->save();
 
-        //settle old loan
-        if ($request->remaining_loan_amount > 0) {
-            $loan_master->is_old_loan_settled = 1;
-            $loan_master->save();
-            $this->settle_old_loan($member->id);
-        }
 
         //update share
         if ($request->remaining_share > 0) {
@@ -238,9 +242,9 @@ class LoanMasterController extends Controller
     public function settle_old_loan($member_id)
     {
         $old_loan = LoanMaster::where('member_id', $member_id)->active()->first();
-        $old_loan->update(['status' => 3, 'loan_settlment_month' => date('d-m-Y')]);
-        $old_loan->loan_emis()->where('status', 1)->update(['status' => 3]);
         $member = Member::find($member_id);
+        $old_loan->update(['status' => 3,'loan_settlement_amt'=> $member->loan_remaining_amount, 'loan_settlment_month' => date('d-m-Y')]);
+        $old_loan->loan_emis()->where('status', 1)->update(['status' => 3]);
         $member->loan_ledger_account->update(['current_balance' => 0]);
 
 
