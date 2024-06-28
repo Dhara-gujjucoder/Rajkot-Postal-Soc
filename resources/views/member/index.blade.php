@@ -1,4 +1,4 @@
-@extends('layouts.app')
+    @extends('layouts.app')
 @section('content')
 @section('title')
     {{ $page_title }}
@@ -193,7 +193,7 @@
 
     {{-- Member Export Modal popup --}}
     <div class="modal fade" id="member_export_popup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog ">  {{-- modal-lg --}}
+        <div class="modal-dialog modal-xl">  {{-- modal-xl --}}
             <div class="modal-content">
                 @include('member.export_member_detail')
             </div>

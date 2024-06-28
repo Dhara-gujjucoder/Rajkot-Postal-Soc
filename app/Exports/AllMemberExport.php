@@ -176,7 +176,6 @@ class AllMemberExport implements FromCollection, WithHeadings, WithMapping, With
             if($value == 'Branch Address'){
                 $mappedData[] = $member->branch_address;
             }
-
         }
 
         return $mappedData;
@@ -246,3 +245,7 @@ class AllMemberExport implements FromCollection, WithHeadings, WithMapping, With
     // }
 
 }
+
+
+
+

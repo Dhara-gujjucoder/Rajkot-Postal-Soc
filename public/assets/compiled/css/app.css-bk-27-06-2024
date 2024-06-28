@@ -24200,12 +24200,7 @@ html[data-bs-theme=light] .btn:hover{ color: var(--bs-btn-hover-color);backgroun
 #sidebar.active .sidebar-wrapper {box-shadow: 0 16px 20px -12px rgba(0,0,0,.1),0 4px 15px 0 rgba(0,0,0,.1),0 8px 10px -5px rgba(0,0,0,.1);}
 .page-title.pb-lg-5 {padding-bottom: 10px !important;}
 
-#member_export_popup .member-grid-box .member-boxes { padding: 0 0 3px; display: grid; grid-template-columns: max-content 1fr; gap: 10px; }
-#member_export_popup .member-grid-box .member-boxes .form-check-input { cursor: pointer; }
 
-@media only screen and (min-width: 575px) and (max-width: 991px) {
-    #member_export_popup .modal-xl { max-width: 80%; }
-}	
 @media only screen and (max-width: 1199px) {	
     .page-heading {padding:0px 15px !important;}
     .header .burger-btn {display: inline-flex; margin-left: 15px; margin-top: 5px;}
@@ -24213,8 +24208,6 @@ html[data-bs-theme=light] .btn:hover{ color: var(--bs-btn-hover-color);backgroun
   
   @media only screen and (max-width: 767px) {	
     .dashboard-box h6.font-extrabold {font-size: 20px;}
-
-    #member_export_popup .member-grid-box .member-boxes label { font-size: 15px; }
     
   }
   
@@ -24222,4 +24215,3 @@ html[data-bs-theme=light] .btn:hover{ color: var(--bs-btn-hover-color);backgroun
     .dashboard-box h6.font-extrabold {font-size: 25px;}
     .header_add {grid-template-columns: 1fr; gap: 0;}
   }
-
