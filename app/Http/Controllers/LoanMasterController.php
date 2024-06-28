@@ -45,7 +45,7 @@ class LoanMasterController extends Controller
         $data['members'] = Member::with('shares')->get();
 
         if ($request->ajax()) {
-            $data = LoanMaster::runningLoan();
+            $data = LoanMaster::query();                  //(runningLoan();<--- get active loan only)
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
