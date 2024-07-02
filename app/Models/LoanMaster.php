@@ -22,7 +22,7 @@ class LoanMaster extends Model
         'end_month',
         'loan_id',
         'principal_amt',
-        'emi_amount','date', 'loan_settlement_amt', 'loan_settlment_month', 'is_old_loan_settled' , 'total_share_amt', 'stamp_duty', 'fixed_saving', 'total_amt',
+        'emi_amount','date', 'loan_settlement_amt', 'loan_settlment_month', 'is_old_loan_settled' , 'total_share_amt', 'payment_comment', 'fixed_saving', 'total_amt',
         'payment_type', 'ledger_group_id', //related only 'payment_type_status'
         'payment_type_status',
          'bank_name',    'cheque_no',    'g1_member_id',    'g2_member_id',    'cheque_no', 'bank_name',

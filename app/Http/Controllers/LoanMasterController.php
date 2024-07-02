@@ -150,18 +150,19 @@ class LoanMasterController extends Controller
             'date' => 'required',
             'emi_amount' => 'required',
             'member_id' => 'required',
-            // 'g1_member_id' => 'required',
-            // 'g2_member_id' => 'required',
-            'stamp_duty' => 'required',
+            'g1_member_id' => 'required',
+            'g2_member_id' => 'required',
+            // 'stamp_duty' => 'required',
+            // 'payment_comment' => 'required',
             // 'g2_member_id' => 'required',
             'payment_type' => 'required',
             // 'bank_name' => 'required_if:payment_type,cheque',
             'cheque_no' => 'required_if:payment_type,cheque',
-            // 'gcheque_no' => 'required|numeric',
-            // 'gbank_name' => 'string'
+            'gcheque_no' => 'required|numeric',
+            'gbank_name' => 'string'
         ], [
-            // 'g1_member_id.required' => __('Guarantor 1 field is required'),
-            // 'g2_member_id.required' => __('Guarantor 2 field is required'),
+            'g1_member_id.required' => __('Guarantor 1 field is required'),
+            'g2_member_id.required' => __('Guarantor 2 field is required'),
         ]);
 
         $loan_no = str_pad((LoanMaster::count()) + 1, 2, '0', STR_PAD_LEFT) . '/' . $this->current_year->start_year . '-' . substr($this->current_year->end_year, -2);
@@ -176,14 +177,15 @@ class LoanMasterController extends Controller
 
         //settle old loan
         if ($request->remaining_loan_amount > 0) {
-
+            $old_loan = LoanMaster::where('member_id', $member->id)->active()->first();
+            $old_loan->update(['payment_comment' => $request->payment_comment]);
             $this->settle_old_loan($member->id);
         }
 
-
-
+        $request_all = $request->all();
+        unset($request_all['payment_comment']);
         $loan_master = new LoanMaster;
-        $loan_master->fill($request->all());
+        $loan_master->fill($request_all); 
         $loan_master->ledger_account_id = $member->loan_ledger_account->id;
         $loan_master->loan_no = $loan_no;                         // $loan_no
         $loan_master->year_id = $this->current_year->id;
@@ -332,6 +334,7 @@ class LoanMasterController extends Controller
                 $loan->save();
             }
 
+            $loan->payment_comment = $request->payment_comment;  //add
             $loan->save();
             $this->settle_old_loan($loan->member_id);
         }
@@ -394,14 +397,13 @@ class LoanMasterController extends Controller
                 $loan_emi->ledger_group_id = 4;
                 $loan_emi->save();
             }
-
+            $loan_emi->payment_comment = $request->payment_comment; 
             $loan_emi->save();
 
 
 
-
             $member = Member::find($loan->member_id);
-            if ($loan->member->loan_remaining_amount - $request->amount) {
+            if (($loan->member->loan_remaining_amount - $request->amount) > 0) {
 
                 //all remaining emi Entries
 
@@ -414,12 +416,12 @@ class LoanMasterController extends Controller
                 $rate = current_loan_interest()->loan_interest;
 
                 $dmonth = date('d-m-Y');
-                //  $dmonth = date('d-m-Y',strtotime('01-03-2024'));
+                //  $dmonth = date('d-m-Y',strtotime('01-03-2024')); 
 
                 $member->loan_ledger_account->update(['current_balance' => $loan_amt]);
-
+                
                 $loan->loan_emis()->pending()->delete();
-
+                
                 while ($loan_amt > 0) {
                     // for ($i = 1; $i <= $no_of_emi; $i++) {
                     $emi_interest = intval($loan_amt * $rate / 100 * $emi_c / $emi_d);
@@ -453,9 +455,10 @@ class LoanMasterController extends Controller
                 }
             } else {
                 $loan->loan_emis()->pending()->delete();
-                $loan->bank_name = $request->bank_name;
+                // $loan->bank_name = $request->bank_name;
                 $loan->cheque_no = $request->cheque_no;
                 $loan->payment_type = $request->payment_type;
+                $loan->payment_comment = $request->payment_comment;
                 $loan->status = 2;
                 $loan->save();
                 $member->loan_ledger_account->update(['current_balance' => 0]);

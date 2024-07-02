@@ -259,7 +259,8 @@
                         var member = data.member;
                         var member_loan = member.loan;
                         console.log(member_loan);
-                        var html = `<tr>
+                        var html =
+                            `<tr>
                                 <td><b>{{ __('Loan A/c') }}</b></td>
                                 <td>` + member_loan.loan_no + `</td>
                                 <td><b>{{ __('Amount') }}</b></td>
@@ -272,13 +273,15 @@
                                 <td><b>{{ __('Paid Loan') }}</b></td>
                                 <td>&#8377; ` + (member_loan.principal_amt - member.loan_remaining_amount) + `</td>
                                 <td><b>{{ __('Paid EMI') }}</b></td>
-                                <td>` + ((member_loan.loan_emis.length)) +
-                            `</td>
+                                <td>` + ((member_loan.loan_emis.length)) + `</td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                             </tr>
-                            <tr>    <td colspan="6">&nbsp;</td>
+
+                            <tr>
+                                <td colspan="6">&nbsp;</td>
                             </tr>
+
                             <tr>
                                 <td colspan="2"> <b>{{ __('Remaining Loan') }}</b></td>
                                 <td colspan="4"><input type="number" class="form-control amount" name="amount` + div + `" placeholder="{{ __('Remaining Loan') }}" id="remaining_loan` + div + `" min="` +
@@ -316,6 +319,14 @@
                                 </div>
                             </div></td>
                             </tr>
+
+                             <tr>
+                                <td colspan="2"> <b>{{ __('Particular') }}</b></td>
+                                <td colspan="4">
+                                    <textarea class="form-control amount" name="payment_comment" id="payment_comment" placeholder="{{ __('Particular') }}" ></textarea>
+                                </td>
+                            </tr>
+
                             `;
                         $('#loan_details' + div).html(html);
                         $('#loan_id').val(member_loan.id);
@@ -343,6 +354,7 @@
             var amount = $('#remaining_loan_settle').val();
             var bank_name = $('#bank_name').val();
             var cheque_no = $('#cheque_no').val();
+            var payment_comment = $('#payment_comment').val();
             var payment_type = $('input[name=payment_type]:checked').val()
             $(document).find('.is-invalid').removeClass('is-invalid');
             $(document).find('.text-danger').remove();
@@ -361,7 +373,10 @@
                     "amount": amount,
                     "bank_name": bank_name,
                     "cheque_no": cheque_no,
-                    "payment_type": payment_type
+                    "payment_type": payment_type,
+                    "payment_comment":payment_comment,
+
+
                 },
                 success: function(data) {
                     show_success(data.msg);
@@ -390,6 +405,8 @@
                 var amount = $('#remaining_loan_pay').val();
                 var bank_name = $('#bank_name').val();
                 var cheque_no = $('#cheque_no').val();
+               var payment_comment = $('#payment_comment').val();
+
                 var payment_type = $('input[name=payment_type]:checked').val()
                 $(document).find('.is-invalid').removeClass('is-invalid');
                 $(document).find('.text-danger').remove();
@@ -407,7 +424,9 @@
                         "amount": amount,
                         "bank_name": bank_name,
                         "cheque_no": cheque_no,
-                        "payment_type": payment_type
+                        "payment_type": payment_type,
+                        "payment_comment":payment_comment,
+
                     },
                     success: function(data) {
                         show_success(data.msg);

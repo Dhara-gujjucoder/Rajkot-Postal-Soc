@@ -33,9 +33,7 @@ class BulkEntryController extends Controller
         parent::__construct();
     }
 
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
 
@@ -63,9 +61,7 @@ class BulkEntryController extends Controller
         return view('bulk_entries.index', $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
         $data['page_title'] = __('Add New Bulk Entry');
@@ -98,7 +94,7 @@ class BulkEntryController extends Controller
                 $prefill = BulkEntry::where('user_id', $item->user_id)->where('department_id', $department->id)->where('month', $data['previous_month'])->first();
                 // dump($item->id);
                 // dd($data['next_month']);
-                $loan_emi = LoanEMI::where('member_id', $item->id)->where('month', $data['next_month'])->first(); //->where('status', 1)
+                $loan_emi = LoanEMI::where('member_id', $item->id)->where('month', $data['next_month'])->where('status', 1)->first(); //->where('status', 1)
                 $item->principal = $loan_emi->principal ?? 0;
                 $item->emi_id = $loan_emi->id ?? '';
                 $item->interest = $loan_emi->interest_amt ?? 0;
@@ -136,9 +132,6 @@ class BulkEntryController extends Controller
         return view('bulk_entries.create', $data);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
 
     public function store(Request $request)
     {
@@ -260,17 +253,12 @@ class BulkEntryController extends Controller
             ->withSuccess(__('Bulk Entry added successfully.'));
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+
     public function edit(string $id)
     {
 
@@ -332,9 +320,7 @@ class BulkEntryController extends Controller
         return view('bulk_entries.edit', $data);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, string $id)
     {
         // $request->validate([
@@ -424,9 +410,7 @@ class BulkEntryController extends Controller
             ->withSuccess(__('Bulk Entry Edited successfully.'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(string $id)
     {
         //

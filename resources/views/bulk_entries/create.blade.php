@@ -70,9 +70,12 @@
                                         <div class="col-md-3 col-3 col-lg-2">
                                             <b class="p-1 ">&nbsp;</b>
                                         </div>
-                                        <div class="col-md-1 col-1">
+
+                                        {{-- <div class="col-md-1 col-1">
                                             <b class="p-1 ">{{ __('Loan Settlement') }}</b>
-                                        </div>
+                                        </div> --}}
+
+
                                         <div class="col-md-2 col-2">
                                             <b class="p-1 ">{{ __('Principal') }}</b>
                                         </div>
@@ -105,7 +108,9 @@
                                         </div>
                                     </div>
                                 @endif
+
                                 <div class="row">
+
                                     <div class="col-md-3 col-3 col-lg-2">
                                         <div class="form-group">
                                             <label for="first-particular-column">{{ $member->name }}
@@ -118,11 +123,13 @@
                                                                 <div class="col-md-4">{{ __('Member') }}</div>
                                                                 <div class="col-md-8">{{ $member->name }}</div>
                                                             </div>
+
                                                             <div class="row">
                                                                 <div class="col-md-4">{{ __('Loan ID') }}</div>
                                                                 <div class="col-md-8">
                                                                     {{ $member->loan->loan_no ?? '' }}</div>
                                                             </div>
+
                                                             <div class="row">
                                                                 <div class="col-md-4">{{ __('Principal Amount') }}
                                                                 </div>
@@ -154,7 +161,8 @@
                                                 value="{{ $member->user_id }}" placeholder="{{ __('particular') }}">
                                         </div>
                                     </div>
-                                    <div class="col-md-1 col-1">
+
+                                    {{-- <div class="col-md-1 col-1">
                                         @if ($member->loan)
                                             <input class="form-check-input" type="checkbox"
                                                 name="is_loan_settle_{{ $member->user_id }}" value="1"
@@ -162,7 +170,8 @@
                                                 onclick="if(this.checked){getLoan({{ $member->id }})}"
                                                 {{ old('is_loan_settle_' . $member->user_id) ? 'checked' : '' }}>
                                         @endif
-                                    </div>
+                                    </div> --}}
+
                                     <div class="col-md-2 col-2">
                                         <div class="form-group">
                                             <input type="number" step="any"

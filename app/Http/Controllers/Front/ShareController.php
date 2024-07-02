@@ -24,9 +24,7 @@ class ShareController extends Controller
         $data['active_share_count'] = $data['active_share']->count();
         $data['share_amount'] = $data['active_share']->sum('share_amount');
 
-        // dd($data['active_share']->count());
-
-        $data['shares'] = MemberShare::where('member_id', $user->member->id)->get();
+        // $data['shares'] = MemberShare::where('member_id', $user->member->id)->get();   //share listing 'Active'
 
         return view('front.share.show', $data);
     }

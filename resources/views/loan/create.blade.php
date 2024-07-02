@@ -169,7 +169,7 @@
                             <input type="hidden" class="form-control" id="remaining_fixed_saving" name="remaining_fixed_saving" value="{{ old('fixed_saving') }}">
                             <input type="hidden" class="form-control" id="total_required_amt" name="total_required_amt" value="{{ old('total_required_amt') }}">
 
-                            <div class="mb-3 row">
+                            {{-- <div class="mb-3 row">
                                 <label for="amount" class="col-md-2 col-form-label text-md-end text-start">{{ __('Stamp Duty') }}</label>
                                 <div class="col-md-10">
                                     <input type="number" class="form-control @error('stamp_duty') is-invalid @enderror" id="stamp_duty" name="stamp_duty" value="{{ old('stamp_duty', 0) }}" placeholder="{{ __('Stamp Duty') }}" oninput="calculate()">
@@ -177,7 +177,9 @@
                                         <span class="text-danger">{{ $errors->first('stamp_duty') }}</span>
                                     @endif
                                 </div>
-                            </div>
+                            </div> --}}
+
+
 
                             <div class="mb-3 row">
                                 <label for="amount" class="col-md-2 col-form-label text-md-end text-start">{{ __('Total Amount') }}</label>
@@ -223,6 +225,17 @@
                                             <span class="text-danger">{{ $errors->first('cheque_no') }}</span>
                                         @endif
                                     </div>
+                                </div>
+                            </div>
+
+
+                            <div class="mb-3 row">
+                                <label for="amount" class="col-md-2 col-form-label text-md-end text-start">{{ __('Particular') }}</label>
+                                <div class="col-md-10">
+                                    <textarea class="form-control @error('payment_comment') is-invalid @enderror" id="payment_comment" name="payment_comment" placeholder="{{ __('Particular') }}">{{ old('payment_comment') }}</textarea>
+                                    @if ($errors->has('payment_comment'))
+                                        <span class="text-danger">{{ $errors->first('payment_comment') }}</span>
+                                    @endif
                                 </div>
                             </div>
 
@@ -472,7 +485,7 @@
         // total = total-($('#fixed_saving').val()+$('#total_share_amt').val());
         $('#total_required_amt').val(total);
         $('#total_amt').attr('min', total);
-        total += Number($('#stamp_duty').val());
+        // total += Number($('#stamp_duty').val());
         $('#total_amt').val(total);
     }
 

@@ -24,7 +24,7 @@
                 </div>
             </div>
 
-            <div class="desh-listbox skybluebg-box wow fadeInDown" data-wow-delay="0.2s">
+        {{--<div class="desh-listbox skybluebg-box wow fadeInDown" data-wow-delay="0.2s">
                 <div class="dash-box-title">{{ __('All Share') }}</div>
             </div>
             <table class="table table-bordered" id="table1">
@@ -45,8 +45,6 @@
                                 <td data-label="Date">{{ date('d-M-Y', strtotime($share->purchase_on)) }}</td>
                                 <td data-label="Status">
                                     @if ($share->status == 1)
-                                        {{-- <button type="button" class="btn btn-outline-warning btn-sm" id="share_acc{{ $share->id }}" onclick="changeStatus('{{ $share->id }}')">{{ __('Sell') }}</button> --}}
-                                        {{-- <a href="{{ route('member_share.edit', $share->id) }}" class="btn btn-outline-warning btn-sm">{{__('Close')}}</a> --}}
                                         {{ __('Active') }}
                                     @else
                                         <b>{{ __('Sold') }}</b>
@@ -57,7 +55,7 @@
                     @else
                         {{ __('Not Found') }}
                     @endif
-            </table>
+            </table> --}}
         </div>
     </div>
 </div>

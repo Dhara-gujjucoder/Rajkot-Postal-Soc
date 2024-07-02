@@ -49,7 +49,7 @@
                         </div>
                     </div>
 
-                    <div class="mb-3 row">
+                    {{-- <div class="mb-3 row">
                         <label for="email"
                             class="col-md-4 col-form-label text-md-end text-start"><strong>{{ __('Stamp Duty') }}:</strong></label>
                         <div class="col-md-6" style="line-height: 35px;">
@@ -63,7 +63,8 @@
                         <div class="col-md-6" style="line-height: 35px;">
                             &#8377;{{ $loan->total_amt }}
                         </div>
-                    </div>
+                    </div> --}}
+
                     <div class="mb-3 row">
                         <label for="email"
                             class="col-md-4 col-form-label text-md-end text-start"><strong>{{ __('Payment Type') }}:</strong></label>
@@ -131,7 +132,7 @@
                                 <table class="table table-borderd">
                                     @php
                                         $emis = $loan_show_dashboard ? $loan->loan_emis()->pending()->get() : $loan->loan_emis;
-                                                //url pass in dashboard                               //url pass in controller
+                                                //url pass in dashboard                          //url pass in controller
                                     @endphp
                                     <thead>
                                         <tr>

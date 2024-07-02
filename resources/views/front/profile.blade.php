@@ -67,17 +67,18 @@
                                 </div>
                             @endif
                         </div>
-                    </div>
+                    </div>--}}
+
                     <div class="col-md-6">
                         <div class="dashboard-detail-data">
                             <label class="col-form-label"><strong>{{ __('Signature') }}:</strong></label>
                             @if (!empty($member->signature))
                                 <div class="col-form-info">
-                                    <img src="{{ asset($member->signature) }}" alt="">
+                                    <a href="{{ asset($member->signature) }}" target="_blank"><img src="{{ asset($member->signature) }}" alt=""></a>
                                 </div>
                             @endif
                         </div>
-                    </div> --}}
+                    </div>
                 </div>
 
                 <div class="desh-listbox skybluebg-box pt-2 mt-4 wow fadeInLeft" data-wow-delay="0.2s">
