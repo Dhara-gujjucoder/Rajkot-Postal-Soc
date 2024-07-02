@@ -13,7 +13,7 @@ class JournelReportController extends Controller
     public function index(Request $request)
     {
         // dd(bcrypt('1234'));
-        $data['page_title'] = __('Journel Report');
+        $data['page_title'] = __('Journal Report');
 
         return view('ledger_reports.journel_report.index', $data);
     }

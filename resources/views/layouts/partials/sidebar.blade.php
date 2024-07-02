@@ -219,7 +219,7 @@
                             @canany(['journel-report'])
                                 <li class="submenu-item {{ request()->is('admin/journel-report') ? 'active' : '' }}">
                                     <a href="{{ route('ledger_reports.journel_report.index') }}" class='submenu-link'>
-                                        <span>{{ __('Journel Report') }}</span>
+                                        <span>{{ __('Journal Report') }}</span>
                                     </a>
                                 </li>
                             @endcan
