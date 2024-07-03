@@ -6,6 +6,7 @@ use App\Models\Member;
 use App\Models\BulkEntry;
 use App\Models\LoanMaster;
 use App\Models\BulkEntryMaster;
+use App\Models\LoanEMI;
 use App\Models\MasterDoubleEntry;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\WithTitle;
@@ -22,7 +23,7 @@ use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 class JournelReportExport implements FromCollection, WithTitle, WithMapping, ShouldAutoSize, WithStrictNullComparison, WithStyles, WithDrawings
 {
     // public $index = 0, $total_row = 0;
-    protected $month, $data, $month_from, $month_to, $settlement;
+    protected $month, $data, $month_from, $month_to, $settlement,$half_payment;
 
     public function __construct($month)
     {
@@ -35,6 +36,8 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
         $this->data = BulkEntryMaster::where('month', $this->month)->orderBy('id', 'desc')->get();
         // dd($this->month);
         $this->settlement = LoanMaster::where('loan_settlment_month', 'like', '%' . $this->month)->get();
+        $this->half_payment = LoanEMI::where('is_half_paid',1)->where('month', 'like', '%' . $this->month)->get();
+
         $total = [];
 
         foreach ($this->data as $key => $value) {
@@ -57,7 +60,7 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
         $other_exp_dobule = MasterDoubleEntry::whereMonth('date', $member_date[0])->whereYear('date', $member_date[1])->get()->count() + 2;
 
         $newData = collect([
-            'summary' => ['department_total' => $total, 'loan_settlment' => $this->settlement, 'other_exp_dobule' => $other_exp_dobule]
+            'summary' => ['department_total' => $total, 'loan_settlment' => $this->settlement,'half_payment'=> $this->half_payment, 'other_exp_dobule' => $other_exp_dobule]
         ]);
 
         $this->data = $this->data->concat($newData);
@@ -119,6 +122,17 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
 
                 array_push($entry, [$key + 1,  $value->member->uid, $value->member->registration_no, $value->member->name, '', $value->loan_settlement_amt, '0', '0', '0', $value->loan_settlement_amt, $value->payment_comment]);
             }
+            // if($bulk_entry_master['half_payment']){
+
+            //     dd($bulk_entry_master['half_payment']);
+            // }
+            foreach ($bulk_entry_master['half_payment'] as $key => $value) {
+                $loan_settlement_amt = $loan_settlement_amt + $value->principal;
+
+                array_push($entry, [$key + 1,  $value->member->uid, $value->member->registration_no, $value->member->name, '', $value->principal, '0', '0', '0', $value->principal, $value->payment_comment ?? 'Half payment']);
+            }
+
+
 
             $entry[] = [];
             $entry[] = ['', '', '', '', 'TOTAL: ', $loan_settlement_amt, '0', '0', '0', $loan_settlement_amt];
@@ -308,7 +322,8 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                     $line_of_total = $rowTotal + 1;
 
                     // Loan settlement Style
-                    if ($record['loan_settlment']->count()) {
+                    $loan_settlment_count = $record['loan_settlment']->count() + $record['half_payment']->count();
+                    if ($loan_settlment_count) {
                         $line_of_total = $line_of_total + 2;
 
                         /*this is for loan settlement style*/
@@ -325,7 +340,7 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
                                 ]
                             ],
                         ]);
-                        $line_of_total = $line_of_total + 3 + $record['loan_settlment']->count();
+                        $line_of_total = $line_of_total + 3 + $loan_settlment_count;
 
                         // dd($line_of_total);
 

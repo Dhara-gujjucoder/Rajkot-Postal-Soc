@@ -42,4 +42,9 @@ class LoanEMI extends Model
     {
         return $query->where('status', 2)->where('is_half_paid',0);
     }
+
+    public function member()
+    {
+        return $this->hasOne(Member::class, 'id', 'member_id');
+    }
 }
