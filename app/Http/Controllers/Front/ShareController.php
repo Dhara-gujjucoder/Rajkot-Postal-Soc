@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Front;
 use App\Models\Member;
 use App\Models\MemberShare;
 use Illuminate\Http\Request;
+use App\Models\MemberFixedSaving;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,6 +28,19 @@ class ShareController extends Controller
         // $data['shares'] = MemberShare::where('member_id', $user->member->id)->get();   //share listing 'Active'
 
         return view('front.share.show', $data);
+    }
+
+    public function saving_show()
+    {
+        $data['page_title'] = __('All Saving');
+        $user = Auth::user();
+
+        // dump($user->member->id);
+
+        $data['saving_amount'] = MemberFixedSaving::withoutGlobalScope('year')->where('member_id',$user->member->id)->sum('fixed_amount');
+        $data['savings'] = MemberFixedSaving::withoutGlobalScope('year')->where('member_id',$user->member->id)->orderBy('id','DESC')->latest()->take(12)->get();
+
+        return view('front.saving.show', $data);
     }
 
 }

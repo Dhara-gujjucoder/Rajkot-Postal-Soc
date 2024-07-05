@@ -17,9 +17,10 @@
                     <ul>
                         <li><a href="{{ route('user.home') }}">{{__('Dashboard')}}</a></li>
                         <li><a href="{{ route('user.profile') }}">{{__('My Profile')}}</a></li>
+                        <li><a href="{{ route('user.saving.show') }}">{{__('My Saving')}}</a></li>
                         <li><a href="{{route('user.share.show')}}">{{__('Share Account')}}</a></li>
                         <li><a href="{{ route('user.loan.apply') }}">{{__('Loan Account')}}</a></li>
-                        <li><a href="{{ route('user.loan.calculator') }}">{{__('Loan Calculator')}}</a></li>
+                        <li><a href="{{ route('user.loan.calculator') }}">{{__('Loan Calculator ')}}</a></li>
                         <li><a href="{{ route('user.password.change') }}">{{__('Change Password')}}</a></li>
                         <li>
                             <a href="{{ route('user.logout') }}" data-bs-toggle="tooltip" data-bs-placement="top"

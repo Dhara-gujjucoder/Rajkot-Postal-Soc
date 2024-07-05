@@ -44,6 +44,7 @@ Route::prefix('user')->name('user.')->middleware(['auth:users','blockIP'])->grou
     Route::post('/change-password', [UserLoginController::class, 'update_password'])->name('password.change');
 
     Route::get('/all-share', [ShareController::class, 'show'])->name('share.show');
+    Route::get('/all-saving', [ShareController::class, 'saving_show'])->name('saving.show');
 
     Route::get('locale/{locale}', function ($lang) {
         Session::put('locale', $lang);
