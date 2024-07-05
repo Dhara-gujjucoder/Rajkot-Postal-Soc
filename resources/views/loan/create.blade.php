@@ -44,7 +44,8 @@
                             <div class="mb-3 row">
                                 <label for="date" class="col-md-2 col-form-label text-md-end text-start">{{ __('Date') }}</label>
                                 <div class="col-md-5">
-                                    <input type="text" class="form-control date @error('date') is-invalid @enderror" id="date" name="date" value="{{ date('Y-m-d') }}">
+                                    <input type="text" id="month" name="date" value="{{ date('Y-m-d') }}"
+                                    class="form-control date @error('date') is-invalid @enderror" onchange="loadEMI()" >
 
                                     @if ($errors->has('date'))
                                         <span class="text-danger">{{ $errors->first('date') }}</span>
@@ -156,7 +157,8 @@
                                 </div>
                             </div>
 
-                            <input type="hidden" class="form-control" id="month" name="month" value="{{ date('Y-m-d') }}"> {{-- , strtotime('14-03-2024') --}}
+                            {{-- <input type="text" class="form-control" id="month" name="month" value="{{ date('Y-m-d', strtotime('14-05-2024')) }}">  --}}
+                            {{-- , strtotime('14-03-2024') --}}
 
                             <input type="hidden" class="form-control" id="total_share_amt" name="total_share_amt" value="{{ old('total_share_amt') }}">
                             <input type="hidden" class="form-control" id="remaining_share_amount" name="remaining_share_amount" value="{{ old('remaining_share_amount') }}">
@@ -374,7 +376,8 @@
     }
 
     function loadEMI() {
-
+        var month = $('#month').val();
+        let dt = new Date(month);
         var emi_amount = Number($('#emi_amount').val());
         var no_of_emi = Number(loan_amount / emi_amount);
         var loan_amt = loan_amount;
@@ -397,8 +400,8 @@
                 // for (let index = 1; index <= no_of_emi; index++) {
                 var emi_interest = ((loan_amt * rate) / 100) * (emi_c / emi_d);
                 // var emi_interest = Number((loan_amt * (rate * 0.01))/no_of_emi);
-                console.log((loan_amt * rate) / 100);
-                console.log((emi_c / emi_d));
+                // console.log((loan_amt * rate) / 100);
+                // console.log((emi_c / emi_d));
                 if (display_month === 12) {
                     display_month = 0;
                     year++;

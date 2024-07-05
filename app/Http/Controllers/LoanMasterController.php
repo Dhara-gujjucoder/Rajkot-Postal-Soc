@@ -185,7 +185,7 @@ class LoanMasterController extends Controller
         $request_all = $request->all();
         unset($request_all['payment_comment']);
         $loan_master = new LoanMaster;
-        $loan_master->fill($request_all); 
+        $loan_master->fill($request_all);
         $loan_master->ledger_account_id = $member->loan_ledger_account->id;
         $loan_master->loan_no = $loan_no;                         // $loan_no
         $loan_master->year_id = $this->current_year->id;
@@ -397,7 +397,7 @@ class LoanMasterController extends Controller
                 $loan_emi->ledger_group_id = 4;
                 $loan_emi->save();
             }
-            $loan_emi->payment_comment = $request->payment_comment; 
+            $loan_emi->payment_comment = $request->payment_comment;
             $loan_emi->save();
 
 
@@ -416,12 +416,12 @@ class LoanMasterController extends Controller
                 $rate = current_loan_interest()->loan_interest;
 
                 $dmonth = date('d-m-Y');
-                //  $dmonth = date('d-m-Y',strtotime('01-03-2024')); 
+                //  $dmonth = date('d-m-Y',strtotime('01-03-2024'));
 
                 $member->loan_ledger_account->update(['current_balance' => $loan_amt]);
-                
+
                 $loan->loan_emis()->pending()->delete();
-                
+
                 while ($loan_amt > 0) {
                     // for ($i = 1; $i <= $no_of_emi; $i++) {
                     $emi_interest = intval($loan_amt * $rate / 100 * $emi_c / $emi_d);
