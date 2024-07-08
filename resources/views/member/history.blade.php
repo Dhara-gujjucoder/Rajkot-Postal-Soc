@@ -79,7 +79,7 @@
 
                     <input type="hidden" name="amount" placeholder="{{ __('Remaining Loan') }}" id="remaining_loan" min="{{ $member->loan_remaining_amount }}" value="{{ $member->loan_remaining_amount }}">
                     {{-- <tr>
-                            <td> <b>{{ __('Loan Settlement amount') }}</b></td>
+                            <td><b>{{ __('Loan Settlement amount') }}</b></td>
                             <td colspan="2">
                                 <input type="number" class="form-control amount" name="amount"
                                     placeholder="{{ __('Remaining Loan') }}" id="remaining_loan"
@@ -152,6 +152,35 @@
                             </div>
                         </td>
                     </tr>
+
+
+
+
+                    <tr>
+                        <td class="text-center"><b>{{ __('Extra Amount') }}</b></td>
+                        <td>
+                            <input type="checkbox" class="form-check-input ms-3" name="extra_amt" id="extra_amt" value="1" onchange="change_extra_amt_type()">
+                        </td>
+                    </tr>
+                    <tr id="extra_amt_principle" style="display: {{ old('extra_amt') == '1' ? 'block' : 'none' }};">
+                        <td><label for="principle" class="col-form-label">{{ __('Principle') }}</label></td>
+                        <td><input type="number" class="form-control" id="principle" name="principle" placeholder="Principle"></td>
+                    </tr>
+                    <tr id="extra_amt_interest" style="display: {{ old('extra_amt') == '1' ? 'block' : 'none' }};">
+                        <td><label for="interest" class="col-form-label">{{ __('Interest') }}</label></td>
+                        <td><input type="number" class="form-control" id="interest" name="interest" placeholder="Interest"></td>
+                    </tr>
+                    <tr id="extra_amt_other" style="display: {{ old('extra_amt') == '1' ? 'block' : 'none' }};">
+                        <td><label for="other" class="col-form-label">{{ __('Other') }}</label></td>
+                        <td><textarea class="form-control" id="other" name="other" placeholder="Other"></textarea></td>
+                    </tr>
+
+
+
+
+
+
+
                     <tr>
                         <td><b>{{ __('Payment Type') }}</b></td>
                         <td colspan="2">

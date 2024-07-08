@@ -409,6 +409,17 @@
 
     })
 
+    function change_extra_amt_type() {
+        $('#extra_amt_principle').hide();
+        $('#extra_amt_interest').hide();
+        $('#extra_amt_other').hide();
+        var payment_type = $('input[name="extra_amt"]:checked').val();
+        if (payment_type == '1') {
+            $('#extra_amt_principle').show();
+            $('#extra_amt_interest').show();
+            $('#extra_amt_other').show();
+        }
+    }
 
 
     function change_payment_type() {
