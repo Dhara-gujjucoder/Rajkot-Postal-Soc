@@ -24,6 +24,7 @@ class StoreMemberRequest extends FormRequest
     {
         // :rfc,dns
         return [
+            'reg_date'            => 'required',
             'name'                => 'required|string|max:250',
             'email'               => 'required|string|email|max:250|unique:users,email',
             'password'            => 'string|min:4',
@@ -41,7 +42,7 @@ class StoreMemberRequest extends FormRequest
             'current_address'     => 'required',
             'parmenant_address'   => 'required',
             'nominee_name'        => 'required',
-            // 'nominee_relation'    => 'required',   stemp
+            // 'nominee_relation'    => 'required',   temp
             'registration_no'     => 'required|min:8|unique:members,registration_no',
             'saving_account_no'   => 'nullable|numeric',
             'bank_name'           => 'nullable',

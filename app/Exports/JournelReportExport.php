@@ -34,8 +34,8 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
     public function collection()
     {
         $this->data = BulkEntryMaster::where('month', $this->month)->orderBy('id', 'desc')->get();
-        // dd($this->month);
-        $this->settlement = LoanMaster::where('loan_settlment_month', 'like', '%' . $this->month)->get();
+        $member_date = explode('-', $this->month);
+        $this->settlement = LoanMaster::whereMonth('loan_settlment_month', $member_date[0])->whereYear('loan_settlment_month', $member_date[1])->get();
         $this->half_payment = LoanEMI::where('is_half_paid',1)->where('month', 'like', '%' . $this->month)->get();
 
         $total = [];
@@ -56,7 +56,7 @@ class JournelReportExport implements FromCollection, WithTitle, WithMapping, Sho
 
 
         // $total[$key + 1] = ['LOAN SETTLEMENT  Pri.', '', 0, 0, 0, 0];
-        $member_date = explode('-', $this->month);
+
         $other_exp_dobule = MasterDoubleEntry::whereMonth('date', $member_date[0])->whereYear('date', $member_date[1])->get()->count() + 2;
 
         $newData = collect([

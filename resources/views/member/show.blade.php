@@ -60,6 +60,13 @@
                             {{ $user->registration_no }}
                         </div>
                     </div>
+
+                    <div class="mb-3 row">
+                        <label for="email" class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Registration Date') }}:</strong></label>
+                        <div class="col-md-6" style="line-height: 35px;">
+                            {{ date('d/m/Y', strtotime($user->reg_date)) }}
+                        </div>
+                    </div>
                     <div class="mb-3 row">
                         <label for="name" class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Name') }}:</strong></label>
                         <div class="col-md-6" style="line-height: 35px;">

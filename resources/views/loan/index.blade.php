@@ -242,6 +242,7 @@
 
 
         function load_member_details(member_id, div) {
+
             $('#loader').show();
             $('#loan_details_pay').html('');
             $('#loan_details_settle').html('');
@@ -272,11 +273,17 @@
                             <tr>
                                 <td><b>{{ __('Paid Loan') }}</b></td>
                                 <td>&#8377; ` + (member_loan.principal_amt - member.loan_remaining_amount) + `</td>
+
                                 <td><b>{{ __('Paid EMI') }}</b></td>
-                                <td>` + ((member_loan.loan_emis.length)) + `</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                            </tr>
+                                <td>` + ((member_loan.loan_emis.length)) + `</td>`;
+                                    if (div == '_settle') {
+                                        html += `<td><b>{{ __('Date') }}</b></td>
+                                                <td><input type="text" class="form-control date_picker"
+                                                    id="close_date" name="loan_settlment_month"  >
+                                                </td>`;
+                                    }
+
+                        html += `</tr>
 
                             <tr>
                                 <td colspan="6">&nbsp;</td>
@@ -285,7 +292,7 @@
                             <tr>
                                 <td colspan="2"> <b>{{ __('Remaining Loan') }}</b></td>
                                 <td colspan="4"><input type="number" class="form-control amount" name="amount` + div + `" placeholder="{{ __('Remaining Loan') }}" id="remaining_loan` + div + `" min="` +
-                            member.loan_remaining_amount + `"  value="` +
+                            member.loan_remaining_amount + `" value="` +
                             member.loan_remaining_amount + `"></td>
                             </tr>
                             <tr>
@@ -331,6 +338,17 @@
                         $('#loan_details' + div).html(html);
                         $('#loan_id').val(member_loan.id);
                         // console.log(remaining_share);
+
+
+                        $('.date_picker').flatpickr({
+                            allowInput: true,
+                            altInput: true,
+                            altFormat: "d/m/Y",
+                            dateFormat: "Y-m-d",
+                            defaultDate: "{{ date('Y-m-d') }}"
+                        });
+
+
                         $('#loader').hide();
                         $('#remaining_loan').focus();
                         // <div class="mb-3 row">
@@ -355,6 +373,7 @@
             var bank_name = $('#bank_name').val();
             var cheque_no = $('#cheque_no').val();
             var payment_comment = $('#payment_comment').val();
+            var close_date = $('#close_date').val();
             var payment_type = $('input[name=payment_type]:checked').val()
             $(document).find('.is-invalid').removeClass('is-invalid');
             $(document).find('.text-danger').remove();
@@ -374,8 +393,8 @@
                     "bank_name": bank_name,
                     "cheque_no": cheque_no,
                     "payment_type": payment_type,
-                    "payment_comment":payment_comment,
-
+                    "payment_comment": payment_comment,
+                    "loan_settlment_month": close_date,
 
                 },
                 success: function(data) {
@@ -405,7 +424,7 @@
                 var amount = $('#remaining_loan_pay').val();
                 var bank_name = $('#bank_name').val();
                 var cheque_no = $('#cheque_no').val();
-               var payment_comment = $('#payment_comment').val();
+                var payment_comment = $('#payment_comment').val();
 
                 var payment_type = $('input[name=payment_type]:checked').val()
                 $(document).find('.is-invalid').removeClass('is-invalid');
@@ -425,7 +444,7 @@
                         "bank_name": bank_name,
                         "cheque_no": cheque_no,
                         "payment_type": payment_type,
-                        "payment_comment":payment_comment,
+                        "payment_comment": payment_comment,
 
                     },
                     success: function(data) {

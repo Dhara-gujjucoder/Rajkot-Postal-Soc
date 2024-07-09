@@ -31,6 +31,15 @@
                             </div>
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
+                                    <label for="reg_date">{{ __('Registration Date') }}<span class="text-danger">*</span></label>
+                                    <input type="text" name="reg_date" value="{{ date('Y-m-d') }}" class="form-control date @error('reg_date') is-invalid @enderror">
+                                    @if ($errors->has('reg_date'))
+                                        <span class="text-danger">{{ $errors->first('reg_date') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
                                     <label for="first-name-column">{{ __('Name') }}<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" placeholder="{{ __('Name') }}">
                                     @if ($errors->has('name'))
@@ -54,13 +63,13 @@
                                     </div>
                                 </div>
                                 <div class="row ms-lg-5 p-2 ps-4">
-                                    <div class="col-md-5 col-lg-2 form-check">
+                                    <div class="col-md-5 col-lg-3 form-check">
                                         <input class="form-check-input" type="radio" name="gender" id="male" value="male" checked="">
                                         <label class="form-check-label" for="male">
                                             {{ __('Male') }}
                                         </label>
                                     </div>
-                                    <div class="col-md-5 col-lg-2  form-check">
+                                    <div class="col-md-5 col-lg-3  form-check">
                                         <input class="form-check-input" type="radio" name="gender" id="female" value="female">
                                         <label class="form-check-label" for="female">
                                             {{ __('Female') }}

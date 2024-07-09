@@ -497,7 +497,7 @@ class MemberController extends Controller
             $old_loan = LoanMaster::where('member_id', $member->id)->active()->first();
             if ($old_loan) {
 
-                $old_loan->update(['status' => 3, 'loan_settlment_month' => date('d-m-Y')]);
+                $old_loan->update(['status' => 3, 'loan_settlment_month' => date('Y-m-d')]);
                 $old_loan->loan_emis()->where('status', 1)->update(['status' => 3]);
                 $member->loan_ledger_account->update(['current_balance' => 0]);
             }

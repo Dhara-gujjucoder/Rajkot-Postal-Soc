@@ -39,6 +39,7 @@ class Member extends Model
         'nominee_name',
         'nominee_relation',
         'registration_no',
+        'reg_date',
         'department_id_proof',
         'saving_account_no',
         'bank_name',

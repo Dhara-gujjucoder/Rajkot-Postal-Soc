@@ -241,11 +241,12 @@ class LoanMasterController extends Controller
             ->withSuccess(__('New Loan is added successfully.'));
     }
 
-    public function settle_old_loan($member_id)
+    public function settle_old_loan($member_id, $date = null)
     {
         $old_loan = LoanMaster::where('member_id', $member_id)->active()->first();
         $member = Member::find($member_id);
-        $old_loan->update(['status' => 3,'loan_settlement_amt'=> $member->loan_remaining_amount, 'loan_settlment_month' => date('d-m-Y')]);
+        $old_loan->update(['status' => 3,'loan_settlement_amt'=> $member->loan_remaining_amount,
+         'loan_settlment_month' => ($date ?? date('Y-m-d'))]);
         $old_loan->loan_emis()->where('status', 1)->update(['status' => 3]);
         $member->loan_ledger_account->update(['current_balance' => 0]);
 
@@ -305,7 +306,7 @@ class LoanMasterController extends Controller
     {
         // dd($request->amount<=$loan->member->loan_remaining_amount);
         $request->validate([
-            'amount' => 'required',
+            'amount' => 'required|gt:0',
             'payment_type' => 'required',
             // 'bank_name' => 'required_if:payment_type,cheque',
             'cheque_no' => 'required_if:payment_type,cheque'
@@ -316,10 +317,16 @@ class LoanMasterController extends Controller
                 'message' => 'The given data was invalid.',
             ], 422);
         }
+        // dd($request->all());
         if ($request->amount > 0) {
+
+            // set dynamic date
+            $loan_settlment_month = $request->loan_settlment_month ?? date('d-m-Y');           //date('d-m-Y');
+
+
+
             $loan->is_old_loan_settled = 1;
             $loan->loan_settlement_amt = $request->amount;
-            $loan->loan_settlment_month = date('d-m-Y');
             $loan->bank_name = $request->bank_name;
             $loan->cheque_no = $request->cheque_no;
             $loan->payment_type = $request->payment_type;
@@ -336,7 +343,7 @@ class LoanMasterController extends Controller
 
             $loan->payment_comment = $request->payment_comment;  //add
             $loan->save();
-            $this->settle_old_loan($loan->member_id);
+            $this->settle_old_loan($loan->member_id,  $loan_settlment_month );
         }
         if ($request->ajax()) {
             return response()->json(['success' => true, 'msg' => __('Loan Closed SucccessFully')]);
