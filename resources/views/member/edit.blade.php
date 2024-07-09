@@ -55,7 +55,7 @@
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="reg_date">{{ __('Registration Date') }}<span class="text-danger">*</span></label>
-                                    <input type="text" name="reg_date" value="{{ date('d/m/Y', strtotime($user->reg_date)) }}" class="form-control  @error('reg_date') is-invalid @enderror" readonly>
+                                    <input type="text" name="reg_date" value="{{ isset($user->reg_date) && !empty($user->reg_date) ? date('d/m/Y', strtotime($user->reg_date)) : '' }}" class="form-control  @error('reg_date') is-invalid @enderror" readonly>
                                     @if ($errors->has('reg_date'))
                                         <span class="text-danger">{{ $errors->first('reg_date') }}</span>
                                     @endif
