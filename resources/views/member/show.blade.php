@@ -64,7 +64,9 @@
                     <div class="mb-3 row">
                         <label for="email" class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Registration Date') }}:</strong></label>
                         <div class="col-md-6" style="line-height: 35px;">
-                            {{ date('d/m/Y', strtotime($user->reg_date)) }}
+                            @if (!empty($user->reg_date))
+                                {{ date('d/m/Y', strtotime($user->reg_date)) }}
+                            @endif
                         </div>
                     </div>
                     <div class="mb-3 row">
@@ -98,7 +100,9 @@
                         <label for="email" class="col-md-5 col-form-label text-md-end text-start"><strong>{{ __('Birth Date') }}:</strong></label>
                         <div class="col-md-6" style="line-height: 35px;">
                             {{-- {{ $user->birthdate }} --}}
-                            {{ date('d/m/Y', strtotime($user->birthdate)) }}
+                            @if (!empty($user->birthdate))
+                                {{ date('d/m/Y', strtotime($user->birthdate)) }}
+                            @endif
 
                         </div>
                     </div>

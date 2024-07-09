@@ -26,7 +26,7 @@ class UpdateMemberRequest extends FormRequest
         $max_share = (int)$max_share;
         //email:rfc,dns
         return [
-            'reg_date' => 'required',
+            // 'reg_date' => 'required',
             'name' => 'required|string|max:250',
             'email' => 'required|string|max:250|unique:users,email,' . $this->member->user->id,
             'department_id' => 'required',
